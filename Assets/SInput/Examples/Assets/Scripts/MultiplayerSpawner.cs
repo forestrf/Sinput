@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace SinputSystems.Examples{
@@ -16,9 +15,9 @@ namespace SinputSystems.Examples{
 		
 		// Update is called once per frame
 		void Update () {
-			SinputSystems.InputDeviceSlot slot = Sinput.GetSlotPress("Join");
+			InputDeviceSlot slot = Sinput.GetSlotPress("Join");
 
-			if (slot != SinputSystems.InputDeviceSlot.any) {
+			if (slot != InputDeviceSlot.any) {
 				//a player has pressed join!
 
 				//first we check if this player has already joined
@@ -40,13 +39,12 @@ namespace SinputSystems.Examples{
 					newPlayer.GetComponent<ShootyPlayer>().playerSlot = slot;
 					players.Add(newPlayer.GetComponent<ShootyPlayer>());
 
-					//lets prevent any new inputs from this slot for a few frames
+					//lets prevent any new inputs from this slot for a frame
 					//This isn't necessary, but will prevent people accidentally pressing join twice quickly :)
 					Sinput.ResetInputs(slot);
 				}
 
 			}
 		}
-
 	}
 }

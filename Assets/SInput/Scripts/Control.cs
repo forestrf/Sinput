@@ -4,16 +4,15 @@ using UnityEngine;
 
 namespace SinputSystems{
 	// If this class inherits from ScriptableObject, Instantiate of this easily makes a clone
-	public class Control : ISerializationCallbackReceiver {
+	public class Control : BaseControl {
 		//name of control
 		public string name;
-		public int nameHashed { get; private set; }
 
 		//is this control a hold or a toggle type
 		public bool isToggle = false;
 
 		//list of inputs we will check when the control is polled
-		public List<DeviceInput> inputs;
+		public List<DeviceInput> inputs = new List<DeviceInput>();
 
 		public List<CommonGamepadInputs> commonMappings = new List<CommonGamepadInputs>();
 		public List<CommonXRInputs> commonXRMappings = new List<CommonXRInputs>();
@@ -21,48 +20,27 @@ namespace SinputSystems{
 		//control constructor
 		public Control(string controlName){
 			name = controlName;
-			inputs = new List<DeviceInput>();
-			Hash();
 		}
 
-		public void OnBeforeSerialize() { }
-		public void OnAfterDeserialize() { Hash(); }
+		private readonly ControlState[] controlStates = ((Func<ControlState[]>) (() => {
+			ControlState[] controlStates = new ControlState[Sinput.totalPossibleDeviceSlots];
+			for (int i = 0; i < controlStates.Length; i++) {
+				controlStates[i] = new ControlState();
+			}
+			return controlStates;
+		}))();
 
-		public void Hash() {
-			nameHashed = Animator.StringToHash(name);
-		}
-
-		private ControlState[] controlStates;
 		//called no more than once a frame from Sinput.SinputUpdate
 		public void Update() {
-
-			if (null == controlStates) {
-				controlStates = new ControlState[Sinput.totalPossibleDeviceSlots];
-				for (int i = 0; i < controlStates.Length; i++) {
-					controlStates[i] = new ControlState();
-				}
-				ResetControlStates();
+			//Update for devices that are probably connected
+			for (int i = 1; i <= Sinput.connectedGamepads; i++) {
+				UpdateControlState(controlStates[i], (InputDeviceSlot) i);
+			}
+			for (int i = (int) InputDeviceSlot.gamepad16 + 1; i < controlStates.Length; i++) {
+				UpdateControlState(controlStates[i], (InputDeviceSlot) i);
 			}
 
-			//do update here
-			//int connectedGamepads = Sinput.gamepads.Length;
-			for (int i = 1; i < controlStates.Length; i++) {
-				// Check if slot represents any of this:
-				bool checkslot = i <= Sinput.connectedGamepads || // a connected pad?
-					i >= 17; // a keyboard, mouse, or virtual slot?
-
-				if (checkslot) {
-					//this is a (probably) connected device so lets update it
-					UpdateControlState(controlStates[i], (InputDeviceSlot)i);
-				} else {
-					//this device isn't connected & shouldn't be influencing this control
-					//reset it
-					controlStates[i].Reset();
-				}
-				
-			}
 			UpdateAnyControlState();//checked other slots, now check the 'any' slot
-			//UpdateControlState(0, InputDeviceSlot.any);//checked other slots, now check the 'any' slot
 		}
 
 		void UpdateControlState(ControlState controlState, InputDeviceSlot slot) {
@@ -70,10 +48,12 @@ namespace SinputSystems{
 			controlState.held = false;
 
 			controlState.value = 0f;
+			float controlStateValueAbs = 0f;
 			controlState.valuePrefersDeltaUse = true;
 			
 			foreach (var input in inputs) {
 				var v = input.AxisCheck(slot);
+				var vAbs = Math.Abs(v);
 
 				//update axis-as-button and button state (When checking axis we also check for button state)
 				switch (input.inputType) {
@@ -81,7 +61,7 @@ namespace SinputSystems{
 						controlState.held |= v > input.axisButtoncompareVal;
 						break;
 					case InputDeviceType.Mouse:
-						controlState.held |= Math.Abs(v) > 0.5f;
+						controlState.held |= vAbs > 0.5f;
 						break;
 					case InputDeviceType.Keyboard:
 					case InputDeviceType.GamepadButton:
@@ -96,9 +76,10 @@ namespace SinputSystems{
 						break;
 				}
 
-				if (Math.Abs(v) > Math.Abs(controlState.value)) {
+				if (vAbs > controlStateValueAbs) {
 					//this is the value we're going with
 					controlState.value = v;
+					controlStateValueAbs = vAbs;
 					//now find out if what set this value was something we shouldn't multiply by deltaTime
 					controlState.valuePrefersDeltaUse =
 						input.inputType != InputDeviceType.Mouse ||
@@ -118,13 +99,20 @@ namespace SinputSystems{
 			controlState.held = false;
 
 			controlState.value = 0f;
-
+			float controlStateValueAbs = 0;
+			
 			for (int i = 1; i < controlStates.Length; i++) {
-				var v = controlStates[i].value;
+				if (i > Sinput.connectedGamepads && i < (int) InputDeviceSlot.gamepad16 + 1) {
+					i = (int) InputDeviceSlot.gamepad16 + 1;
+				}
 
-				if (Math.Abs(v) > Math.Abs(controlState.value)) {
+				var v = controlStates[i].value;
+				var vAbs = Math.Abs(v);
+
+				if (vAbs > controlStateValueAbs) {
 					//this is the value we're going with
 					controlState.value = v;
+					controlStateValueAbs = vAbs;
 					//now find out if what set this value was something we shouldn't multiply by deltaTime
 					controlState.valuePrefersDeltaUse = controlStates[i].valuePrefersDeltaUse;
 				}
@@ -178,7 +166,7 @@ namespace SinputSystems{
 		}
 
 		//button checks
-		public bool GetButtonState(ButtonAction bAction, InputDeviceSlot slot, bool getRaw) {
+		public override bool GetButtonState(ButtonAction bAction, InputDeviceSlot slot, bool getRaw) {
 
 			if (!getRaw && isToggle) {
 				if (bAction == ButtonAction.HELD) return controlStates[(int)slot].toggleHeld;
@@ -200,7 +188,7 @@ namespace SinputSystems{
 	
 
 		//axis checks
-		public float GetAxisState(InputDeviceSlot slot, out bool prefersDeltaUse) {
+		public override float GetAxisState(InputDeviceSlot slot, out bool prefersDeltaUse) {
 			prefersDeltaUse = controlStates[(int)slot].valuePrefersDeltaUse;
 			return controlStates[(int)slot].value;
 		}
@@ -352,6 +340,11 @@ namespace SinputSystems{
 					}
 					inputs[i].allowedSlots = allowedSlots.ToArray();
 				}
+			}
+
+			// Reset unused gamepads
+			for (int i = Sinput.connectedGamepads + 1; i < 17; i++) {
+				controlStates[i].Reset();
 			}
 		}
 

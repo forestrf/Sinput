@@ -136,10 +136,6 @@ namespace SinputSystems{
 
 			public float deadzone;//=0.001f;
 
-			public float gravity;//=3;
-			public float speed;//=3;
-			public bool snap;//=true;
-
 			public float scale;// =1f;
 			public bool invert;//default inversion setting
 		}
@@ -161,9 +157,6 @@ namespace SinputSystems{
 				positiveControl = positiveControl,
 				negativeControl = negativeControl,
 				deadzone = 0.001f,
-				gravity = 3f,
-				speed = 3f,
-				snap = false,
 				scale = 1f,
 				invert = false
 			};

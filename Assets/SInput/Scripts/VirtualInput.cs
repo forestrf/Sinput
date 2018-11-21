@@ -39,7 +39,6 @@ namespace SinputSystems {
 		}
 
 		public static void SetVirtualAxis(string virtualInputName, float newAxisValue) {
-			Sinput.SinputUpdate(); //make sure sinput is set up, so any bound virtual inputs have been instantiated
 			for (int i = 0; i < inputs.Count; i++) {
 				if (inputs[i].name == virtualInputName) {
 					inputs[i].SetAxisValue(newAxisValue);
@@ -50,7 +49,6 @@ namespace SinputSystems {
 		}
 
 		public static void SetVirtualButton(string virtualInputName, bool held) {
-			Sinput.SinputUpdate(); //make sure sinput is set up, so any bound virtual inputs have been instantiated
 			for (int i = 0; i < inputs.Count; i++) {
 				if (inputs[i].name == virtualInputName) {
 					inputs[i].UpdateButtonState(held);
@@ -61,7 +59,6 @@ namespace SinputSystems {
 		}
 
 		public static void SetDeltaPreference(string virtualInputName, bool preferFrameDelta) {
-			Sinput.SinputUpdate(); //make sure sinput is set up, so any bound virtual inputs have been instantiated
 			for (int i = 0; i < inputs.Count; i++) {
 				if (inputs[i].name == virtualInputName) {
 					inputs[i].preferDeltaUse = preferFrameDelta;

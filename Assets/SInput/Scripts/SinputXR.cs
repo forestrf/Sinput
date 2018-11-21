@@ -180,8 +180,6 @@ namespace SinputSystems.XR {
 		public bool GetButtonDownRepeating(string controlName) { return ButtonCheck(controlName, ButtonAction.HELD); }
 
 		private bool ButtonCheck(string controlname, ButtonAction bAction) {
-			Sinput.SinputUpdate();
-
 			for (int i = 0; i < joystickIndeces.Count; i++) {
 				if (bAction == ButtonAction.DOWN && Sinput.GetButtonDown(controlname, (InputDeviceSlot)joystickIndeces[i])) return true;
 				if (bAction == ButtonAction.HELD && Sinput.GetButton(controlname, (InputDeviceSlot)joystickIndeces[i])) return true;
@@ -196,13 +194,11 @@ namespace SinputSystems.XR {
 		public float GetAxis(string controlName) { return AxisCheck(controlName, false); }
 		public float GetAxisRaw(string controlName) { return AxisCheck(controlName, true); }
 		private float AxisCheck(string controlname, bool getRawValue = false) {
-			Sinput.SinputUpdate();
-
 			float returnV = 0f;
 			float v = 0f;
 			for (int i = 0; i < joystickIndeces.Count; i++) {
 				if (!getRawValue) {
-					v = Sinput.GetAxis(controlname, (InputDeviceSlot)joystickIndeces[i]);
+					v = Sinput.GetAxisRaw(controlname, (InputDeviceSlot)joystickIndeces[i]);
 				} else {
 					v = Sinput.GetAxisRaw(controlname, (InputDeviceSlot)joystickIndeces[i]);
 				}

@@ -49,6 +49,7 @@ namespace SinputSystems{
 		public bool rescaleAxis;//for rescaling input axis from something else to 0-1
 		public float rescaleAxisMin;
 		public float rescaleAxisMax;
+		public float deadZone;//TO DO. Setting to allow each gamepad to have its own deadzone.
 
 		//stuff for treating axis like a button
 		//ButtonAction[] axisButtonState; //state of the axis for when used as a button, updated on the first button checks of a frame. list contains state of this axis for each gamepad slot
@@ -122,6 +123,9 @@ namespace SinputSystems{
 					}
 
 					if (clampAxis) axisValue = Mathf.Clamp01(axisValue);
+
+					// For this to work, axisValue must go from 0 to 1. Another option would be cuttoff instead of rescaling to the deadzone (or rescaleAxisMin and rescaleAxisMax could be used to set the deadzone)
+					axisValue = deadZone + axisValue * (1 - deadZone);
 
 					//we return every axis' default value unless we measure a change first
 					//this prevents weird snapping and false button presses if the pad is reporting a weird value to start with
