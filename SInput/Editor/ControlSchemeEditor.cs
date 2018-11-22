@@ -93,7 +93,6 @@ public class ControlSchemeEditor : Editor {
 				}
 			}
 
-			ControlScheme.ControlSetup activeControl = new ControlScheme.ControlSetup();
 			for (int i=0; i<controlScheme.controls.Count; i++){
 				bool deleteControl = false;
 				bool moveUp = false;
@@ -116,7 +115,7 @@ public class ControlSchemeEditor : Editor {
 					//GUI.backgroundColor = Color.black;
 
 					//if (controlFoldouts[i]){
-					activeControl = controlScheme.controls[i];
+					var activeControl = controlScheme.controls[i];
 
 					//EditorGUILayout.BeginHorizontal();
 
@@ -318,6 +317,8 @@ public class ControlSchemeEditor : Editor {
 					//EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
 
 					EditorGUILayout.EndVertical();
+
+					controlScheme.controls[i] = activeControl;
 				}
 				EditorGUILayout.EndFadeGroup();
 

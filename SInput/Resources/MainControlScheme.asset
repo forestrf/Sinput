@@ -113,35 +113,23 @@ MonoBehaviour:
     positiveControl: Right
     negativeControl: Left
     deadzone: 0.001
-    gravity: 3
-    speed: 3
-    snap: 0
     scale: 1
     invert: 0
   - name: Vertical
     positiveControl: Up
     negativeControl: Down
     deadzone: 0.001
-    gravity: 3
-    speed: 3
-    snap: 0
     scale: 1
     invert: 0
   - name: Look Horizontal
     positiveControl: Look Right
     negativeControl: Look Left
     deadzone: 0.001
-    gravity: 3
-    speed: 3
-    snap: 0
     scale: 1
     invert: 0
   - name: Look Vertical
     positiveControl: Look Up
     negativeControl: Look Down
     deadzone: 0.001
-    gravity: 3
-    speed: 3
-    snap: 0
     scale: 1
     invert: 0
