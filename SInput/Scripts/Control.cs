@@ -86,7 +86,6 @@ namespace SinputSystems{
 						input.mouseInputType < MouseInputType.MouseMoveLeft ||
 						input.mouseInputType > MouseInputType.MouseScroll;
 				}
-
 			}
 
 			UpdateButtonStates(controlState, wasHeld);
@@ -125,7 +124,6 @@ namespace SinputSystems{
 		}
 
 		private void UpdateButtonStates(ControlState controlState, bool wasHeld) {
-
 			//held state
 			controlState.pressed = !wasHeld && controlState.held;
 			controlState.released = wasHeld && !controlState.held;
@@ -155,7 +153,6 @@ namespace SinputSystems{
 			else {
 				controlState.repeatTime = 0f;
 			}
-
 		}
 
 		public void ResetControlStates() {
@@ -167,25 +164,19 @@ namespace SinputSystems{
 
 		//button checks
 		public override bool GetButtonState(ButtonAction bAction, InputDeviceSlot slot, bool getRaw) {
-
 			if (!getRaw && isToggle) {
 				if (bAction == ButtonAction.HELD) return controlStates[(int)slot].toggleHeld;
 				if (bAction == ButtonAction.DOWN) return controlStates[(int)slot].togglePressed;
 				if (bAction == ButtonAction.UP) return controlStates[(int)slot].toggleReleased;
 			} else { 
 				if (bAction == ButtonAction.HELD) return controlStates[(int)slot].held;
-				if (bAction == ButtonAction.DOWN) {
-					if (null==controlStates) Debug.Log("yup");
-					return controlStates[(int)slot].pressed;
-
-				}
+				if (bAction == ButtonAction.DOWN) return controlStates[(int)slot].pressed;
 				if (bAction == ButtonAction.UP) return controlStates[(int)slot].released;
 			}
 			if (bAction == ButtonAction.REPEATING) return controlStates[(int)slot].repeatPressed;
 
 			return false;
 		}
-	
 
 		//axis checks
 		public override float GetAxisState(InputDeviceSlot slot, out bool prefersDeltaUse) {
