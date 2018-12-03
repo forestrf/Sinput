@@ -1,8 +1,8 @@
 using System;
 using UnityEngine;
 
-namespace SinputSystems{
-	public class DeviceInput{
+namespace SinputSystems {
+	public class DeviceInput {
 
 		public InputDeviceType inputType;
 		public string displayName;
@@ -11,23 +11,23 @@ namespace SinputSystems{
 		public bool isCustom = false;
 		public string deviceName = "";
 
-		public string GetDisplayName(){
-			if (inputType == InputDeviceType.Keyboard){
+		public string GetDisplayName() {
+			if (inputType == InputDeviceType.Keyboard) {
 				return keyboardKeyCode.ToString();
 			}
-			if (inputType == InputDeviceType.Mouse){
+			if (inputType == InputDeviceType.Mouse) {
 				return mouseInputType.ToString();
 			}
 			return displayName;
 		}
 
 
-		public DeviceInput(InputDeviceType type){
+		public DeviceInput(InputDeviceType type) {
 			inputType = type;
 
 			//if (inputType==InputDeviceType.Virtual){
 			//	virtualAxisValue = 0f;
-				//virtualInputState = ButtonAction.NOTHING;
+			//virtualInputState = ButtonAction.NOTHING;
 			//}
 		}
 
@@ -58,38 +58,38 @@ namespace SinputSystems{
 		//all GetAxis() checks will return default value until a measured change occurs, since readings before then can be wrong
 		private bool useDefaultAxisValue = true;
 		public float defaultAxisValue;
-		private float measuredAxisValue=-54.321f;
+		private float measuredAxisValue = -54.321f;
 
 		//////////// ~ virtual specific stuff ~ ////////////
 		public string virtualInputID;
 		//private ButtonAction virtualInputState;
 		//public float virtualAxisValue;
 
-		public float AxisCheck(InputDeviceSlot slot){
+		public float AxisCheck(InputDeviceSlot slot) {
 
 			//keyboard checks
-			if (inputType == InputDeviceType.Keyboard){
-				if (slot == InputDeviceSlot.any || slot == InputDeviceSlot.keyboard || slot == InputDeviceSlot.keyboardAndMouse){
-					if (Input.GetKey( keyboardKeyCode )) return 1f;
+			if (inputType == InputDeviceType.Keyboard) {
+				if (slot == InputDeviceSlot.any || slot == InputDeviceSlot.keyboard || slot == InputDeviceSlot.keyboardAndMouse) {
+					if (Input.GetKey(keyboardKeyCode)) return 1f;
 				}
 
 				return 0f;
 			}
 
 			//gamepad button and axis checks
-			if (inputType == InputDeviceType.GamepadButton || inputType == InputDeviceType.GamepadAxis){
+			if (inputType == InputDeviceType.GamepadButton || inputType == InputDeviceType.GamepadAxis) {
 				if (slot == InputDeviceSlot.keyboard || slot == InputDeviceSlot.mouse || slot == InputDeviceSlot.keyboardAndMouse) return 0f;
 
 				//if checking any slot, call this function for each possible slot
-				if (slot == InputDeviceSlot.any){
+				if (slot == InputDeviceSlot.any) {
 					float greatestV = 0f;
-					for (int i=1; i<=Sinput.connectedGamepads; i++){
-						greatestV = Math.Max(greatestV, Math.Abs( AxisCheck((InputDeviceSlot)i) ));
+					for (int i = 1; i <= Sinput.connectedGamepads; i++) {
+						greatestV = Math.Max(greatestV, Math.Abs(AxisCheck((InputDeviceSlot) i)));
 					}
 					return greatestV;
 				}
 
-				int slotIndex = ((int)slot)-1;
+				int slotIndex = ((int) slot) - 1;
 
 
 
@@ -97,8 +97,8 @@ namespace SinputSystems{
 				if (Sinput.connectedGamepads <= slotIndex) return 0f;
 
 				//make sure the gamepad in this slot is one this input is allowed to check (eg don't check PS4 pad bindings for an XBOX pad)
-				bool allowInputFromThisPad=false;
-				for (int i=0; i<allowedSlots.Length; i++){
+				bool allowInputFromThisPad = false;
+				for (int i = 0; i < allowedSlots.Length; i++) {
 					if (slotIndex == allowedSlots[i]) {
 						allowInputFromThisPad = true;
 						break;
@@ -108,16 +108,16 @@ namespace SinputSystems{
 				if (!allowInputFromThisPad) return 0f;
 
 				//button as axis checks
-				if (inputType == InputDeviceType.GamepadButton){
+				if (inputType == InputDeviceType.GamepadButton) {
 					//button check now
 					if (Input.GetKey(SInputEnums.GetGamepadKeyCode(slotIndex, gamepadButtonNumber))) return 1f;
 				}
 
 				//gamepad axis check
-				if (inputType == InputDeviceType.GamepadAxis){
+				if (inputType == InputDeviceType.GamepadAxis) {
 					float axisValue = Input.GetAxisRaw(SInputEnums.GetAxisString(slotIndex, gamepadAxisNumber - 1));
-					if (invertAxis) axisValue*=-1f;
-					if (rescaleAxis){
+					if (invertAxis) axisValue *= -1f;
+					if (rescaleAxis) {
 						//some gamepad axis are -1 to 1 or something when you want them as 0 to 1, EG; triggers on XBONE pad on OSX
 						axisValue = Mathf.InverseLerp(rescaleAxisMin, rescaleAxisMax, axisValue);
 					}
@@ -129,11 +129,12 @@ namespace SinputSystems{
 
 					//we return every axis' default value unless we measure a change first
 					//this prevents weird snapping and false button presses if the pad is reporting a weird value to start with
-					if (useDefaultAxisValue){
-						if (measuredAxisValue!=-54.321f){
-							if (axisValue!=measuredAxisValue) useDefaultAxisValue = false;
-						}else{
-							measuredAxisValue=axisValue;
+					if (useDefaultAxisValue) {
+						if (measuredAxisValue != -54.321f) {
+							if (axisValue != measuredAxisValue) useDefaultAxisValue = false;
+						}
+						else {
+							measuredAxisValue = axisValue;
 						}
 						if (useDefaultAxisValue) axisValue = defaultAxisValue;
 					}
@@ -146,7 +147,7 @@ namespace SinputSystems{
 
 
 			//virtual device axis input checks
-			if (inputType == InputDeviceType.Virtual){
+			if (inputType == InputDeviceType.Virtual) {
 				if (slot == InputDeviceSlot.any || slot == InputDeviceSlot.virtual1) {
 					return VirtualInputs.GetVirtualAxis(virtualInputID);
 				}
@@ -154,10 +155,10 @@ namespace SinputSystems{
 			}
 
 			//mouseaxis button checks (these don't happen)
-			if (inputType == InputDeviceType.Mouse){
+			if (inputType == InputDeviceType.Mouse) {
 				if (slot != InputDeviceSlot.any && slot != InputDeviceSlot.mouse && slot != InputDeviceSlot.keyboardAndMouse) return 0f;
 
-				switch (mouseInputType){
+				switch (mouseInputType) {
 					case MouseInputType.MouseHorizontal:
 						return Input.GetAxisRaw("Mouse Horizontal") * Sinput.mouseSensitivity;
 					case MouseInputType.MouseMoveLeft:
@@ -261,6 +262,6 @@ namespace SinputSystems{
 		}
 		*/
 
-		
+
 	}
 }

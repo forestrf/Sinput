@@ -1,13 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 //using SinputSystems;
 
-namespace SinputSystems{
+namespace SinputSystems {
 	[CreateAssetMenu(fileName = "New Common Mapping", menuName = "Sinput/Common Mapping", order = 1)]
 	public class CommonMapping : ScriptableObject {
 
-		
+
 
 		public List<string> names = new List<string>();//names of gamepads that this mapping can apply to
 		public List<string> partialNames = new List<string>();//if an exact name match isn't found for a pad, use this mapping if it has a partial match with this
@@ -24,7 +23,7 @@ namespace SinputSystems{
 
 
 		[System.Serializable]
-		public struct GamepadButtonInput{
+		public struct GamepadButtonInput {
 			public CommonGamepadInputs buttonType;
 			public CommonXRInputs vrButtonType;
 			public int buttonNumber;
@@ -32,7 +31,7 @@ namespace SinputSystems{
 		}
 
 		[System.Serializable]
-		public struct GamepadAxisInput{
+		public struct GamepadAxisInput {
 			public CommonGamepadInputs buttonType;
 			public CommonXRInputs vrButtonType;
 			public int axisNumber;

@@ -27,7 +27,7 @@ namespace SinputSystems.Touch {
 
 		private bool debugMouse = false;
 
-		
+
 		//how far can the stick travel
 		public float stickRange = 0.25f;
 		private float rangeFactor = 1f;
@@ -36,7 +36,7 @@ namespace SinputSystems.Touch {
 
 		// Use this for initialization
 		void Start() {
-			if (stickRange!=0f) rangeFactor = 1f / stickRange;
+			if (stickRange != 0f) rangeFactor = 1f / stickRange;
 
 			stickBase = GetComponent<SpriteRenderer>();
 			stickTopTransform = stickTop.transform;
@@ -49,7 +49,7 @@ namespace SinputSystems.Touch {
 
 		// Update is called once per frame
 		void Update() {
-			
+
 
 			//if we have a touch, make sure it's still there
 			if (claimedTouch != -1) {
@@ -64,8 +64,8 @@ namespace SinputSystems.Touch {
 
 			//lets find a touch press if we don't have a touch yet
 			if (claimedTouch == -1) {
-				for (int i=0; i<Input.touchCount; i++) {
-					if (claimedTouch ==-1 && Input.touches[i].phase == TouchPhase.Began && !SinputTouchManager.IsClaimed(Input.touches[i].fingerId)) {
+				for (int i = 0; i < Input.touchCount; i++) {
+					if (claimedTouch == -1 && Input.touches[i].phase == TouchPhase.Began && !SinputTouchManager.IsClaimed(Input.touches[i].fingerId)) {
 						//this touch press is free, but does it touch the stick?
 
 						Vector3 hitPoint = Vector3.zero;
@@ -80,7 +80,7 @@ namespace SinputSystems.Touch {
 
 					}
 				}
-				
+
 				if (debugMouse && claimedTouch == -1 && Input.GetKeyDown(KeyCode.Mouse0)) {
 					Vector3 hitPoint = Vector3.zero;
 					if (TouchCollision(Input.mousePosition, out hitPoint, !followTouch)) {
@@ -92,10 +92,10 @@ namespace SinputSystems.Touch {
 						touchOrigin = transform.InverseTransformPoint(hitPoint);
 					}
 				}
-				
+
 			}
 
-			
+
 
 			if (claimedTouch != -1) {
 				//still touching, work out distance from the origin (in local space) and that's our stick value
@@ -129,7 +129,8 @@ namespace SinputSystems.Touch {
 						touchOrigin = Vector3.zero;
 					}
 				}
-			} else {
+			}
+			else {
 				stickInputVector = Vector3.zero;
 			}
 
@@ -138,17 +139,19 @@ namespace SinputSystems.Touch {
 			if (virtualInputID_DOWN != "") VirtualInputs.SetVirtualAxis(virtualInputID_DOWN, Mathf.Clamp(stickInputVector.y * -1f, 0f, 1f));
 			if (virtualInputID_RIGHT != "") VirtualInputs.SetVirtualAxis(virtualInputID_RIGHT, Mathf.Clamp(stickInputVector.x, 0f, 1f));
 			if (virtualInputID_LEFT != "") VirtualInputs.SetVirtualAxis(virtualInputID_LEFT, Mathf.Clamp(stickInputVector.x * -1f, 0f, 1f));
-			
+
 			//animate stick
 			stickTopTransform.localPosition = stickInputVector * stickRange;
 			if (claimedTouch == -1) {
 				fade -= Time.deltaTime;
 				if (followTouch) {
 					fade = Mathf.Clamp(fade, 0.05f, 1f);
-				} else {
+				}
+				else {
 					fade = Mathf.Clamp(fade, 0.5f, 1f);
 				}
-			} else {
+			}
+			else {
 				fade += Time.deltaTime;
 				fade = Mathf.Clamp(fade, 0f, 1f);
 			}
@@ -172,7 +175,8 @@ namespace SinputSystems.Touch {
 						hitPoint = ray.origin + ray.direction.normalized * hitDistance;
 						return true;
 					}
-				} else {
+				}
+				else {
 					hitPoint = ray.origin + ray.direction.normalized * hitDistance;
 					return true;
 				}
@@ -184,6 +188,6 @@ namespace SinputSystems.Touch {
 		}
 	}
 
-	
+
 
 }

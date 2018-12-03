@@ -55,7 +55,7 @@ namespace SinputSystems {
 
 					if (gamepadConnected) commonMappings.Add(commonMappingAssets[i]);
 					if (partialMatch && !gamepadConnected) commonMappings.Add(commonMappingAssets[i]);
-					if (!partialMatch && !gamepadConnected && (commonMappingAssets[i]).isDefault) commonMappings.Add((CommonMapping)commonMappingAssets[i]);
+					if (!partialMatch && !gamepadConnected && (commonMappingAssets[i]).isDefault) commonMappings.Add((CommonMapping) commonMappingAssets[i]);
 
 					if ((commonMappingAssets[i]).isDefault) defaultMappingIndex = commonMappings.Count - 1;
 				}

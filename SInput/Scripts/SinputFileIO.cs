@@ -1,11 +1,10 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
-using System;
 using System.IO;
+using UnityEngine;
 
-namespace SinputSystems{
-	public static  class SinputFileIO {
+namespace SinputSystems {
+	public static class SinputFileIO {
 
 		private static bool forceUsePlayerPrefs = false; //set to true to force sinput to use player prefs on all platforms
 
@@ -31,13 +30,14 @@ namespace SinputSystems{
 		}
 
 
-		public static bool SaveDataExists(string schemeName){
+		public static bool SaveDataExists(string schemeName) {
 			Init();
 
 			//string schemeName = "ControlScheme";
 			if (usePlayerPrefs) {
 				if (PlayerPrefs.GetString("snpt_" + saveFileName + schemeName, "") != "") return true;
-			} else {
+			}
+			else {
 				if (!Directory.Exists(savePath)) return false;
 
 				string[] files = Directory.GetFiles(savePath);
@@ -53,10 +53,11 @@ namespace SinputSystems{
 		}
 
 		static string LoadString(string schemeName) {
-			
+
 			if (usePlayerPrefs) {
 				return PlayerPrefs.GetString("snpt_" + saveFileName + schemeName, "");
-			} else {
+			}
+			else {
 				if (!Directory.Exists(savePath)) return "";
 
 				string[] files = Directory.GetFiles(savePath);
@@ -75,7 +76,7 @@ namespace SinputSystems{
 		//loading stuff
 		//static string activeControlName = "";
 		static string[] joysticks;
-		public static Control[] LoadControls(Control[] schemeToReplace, string schemeName){
+		public static Control[] LoadControls(Control[] schemeToReplace, string schemeName) {
 			//we pass the existing control scheme so that info on needed common bindings can be kept
 			Init();
 
@@ -115,10 +116,10 @@ namespace SinputSystems{
 							//build the control
 							//Control currentControl = new Control(thisLine[0]);
 							//currentControl.isToggle = thisLine[1] == "True";
-							
+
 
 							int currentControlIndex = -1;
-							for (int cc=0; cc<controls.Count; cc++) {
+							for (int cc = 0; cc < controls.Count; cc++) {
 								if (controls[cc].name == thisLine[0]) currentControlIndex = cc;
 							}
 							if (currentControlIndex == -1) {
@@ -136,17 +137,17 @@ namespace SinputSystems{
 								//get the string that describes this input
 								thisLine = loadLines[l].Split(seperator[0]);
 								//build the input
-								DeviceInput currentInput = new DeviceInput((InputDeviceType)Enum.Parse(typeof(InputDeviceType), thisLine[0]));
+								DeviceInput currentInput = new DeviceInput((InputDeviceType) Enum.Parse(typeof(InputDeviceType), thisLine[0]));
 
 								currentInput.displayName = thisLine[1];
 								currentInput.isCustom = thisLine[2] == "True";
 								currentInput.deviceName = thisLine[3];
 
 								if (currentInput.inputType == InputDeviceType.Keyboard) {
-									currentInput.keyboardKeyCode = (KeyCode)Enum.Parse(typeof(KeyCode), thisLine[4]);
+									currentInput.keyboardKeyCode = (KeyCode) Enum.Parse(typeof(KeyCode), thisLine[4]);
 								}
 								if (currentInput.inputType == InputDeviceType.Mouse) {
-									currentInput.mouseInputType = (MouseInputType)Enum.Parse(typeof(MouseInputType), thisLine[4]);
+									currentInput.mouseInputType = (MouseInputType) Enum.Parse(typeof(MouseInputType), thisLine[4]);
 								}
 								if (currentInput.inputType == InputDeviceType.GamepadButton) {
 									currentInput.gamepadButtonNumber = int.Parse(thisLine[4]);
@@ -183,7 +184,8 @@ namespace SinputSystems{
 							//controls.Add(currentControl);
 						}
 
-					} else {
+					}
+					else {
 						Debug.LogError("Can't read number of saved controls.");
 					}
 				}
@@ -200,19 +202,20 @@ namespace SinputSystems{
 							l++;
 							thisLine = loadLines[l].Split(seperator[0]);
 							for (int i = 0; i < thisLine.Length; i++) {
-								Sinput.SetInverted(currentSmartControl, thisLine[i] == "True", (InputDeviceSlot)i);
+								Sinput.SetInverted(currentSmartControl, thisLine[i] == "True", (InputDeviceSlot) i);
 							}
 
 							//get the scale settings
 							l++;
 							thisLine = loadLines[l].Split(seperator[0]);
 							for (int i = 0; i < thisLine.Length; i++) {
-								Sinput.SetScale(currentSmartControl, float.Parse(thisLine[i]), (InputDeviceSlot)i);
+								Sinput.SetScale(currentSmartControl, float.Parse(thisLine[i]), (InputDeviceSlot) i);
 							}
 
 						}
 
-					} else {
+					}
+					else {
 						Debug.LogError("Can't read number of saved smart controls.");
 					}
 				}
@@ -226,7 +229,7 @@ namespace SinputSystems{
 			return controls.ToArray();
 		}
 
-		
+
 
 		static void SaveControlsToFile(string schemeName, string saveString) {
 
@@ -242,28 +245,29 @@ namespace SinputSystems{
 		}
 
 		//saving stuff
-		public static void SaveControls(Control[] controls, string schemeName){
+		public static void SaveControls(Control[] controls, string schemeName) {
 			Init();
 
 			DeleteSavedControls(schemeName);//delete existing controls so we dont have stray inputs saved that have since been removed
 
 			if (usePlayerPrefs) {
 				SaveControlsToPlayerPrefs(schemeName, GenerateSaveString(controls));
-				
-			} else {
+
+			}
+			else {
 				SaveControlsToFile(schemeName, GenerateSaveString(controls));
 			}
-			
+
 		}
 
-		
+
 
 		public static string SanitiseStringForSaving(string s) {
 			if (!s.Contains(seperator) && !s.Contains("\n")) return s;
 
 			string retStr = "";
 			string substr = "";
-			for (int i=0; i<s.Length; i++) {
+			for (int i = 0; i < s.Length; i++) {
 				substr = s.Substring(i, 1);
 				if (substr != "\n" && substr != seperator) retStr += substr;
 			}
@@ -277,7 +281,7 @@ namespace SinputSystems{
 
 			//save controls to the string
 			saveStr += "controls" + seperator + controls.Length.ToString() + "\n";
-			for (int c=0; c<controls.Length; c++) {
+			for (int c = 0; c < controls.Length; c++) {
 				saveStr += controls[c].name + seperator + controls[c].isToggle.ToString() + seperator + controls[c].inputs.Count.ToString() + "\n";
 				for (int i = 0; i < controls[c].inputs.Count; i++) {
 					saveStr += controls[c].inputs[i].inputType.ToString() + seperator;
@@ -343,17 +347,18 @@ namespace SinputSystems{
 
 			return saveStr;
 		}
-		
+
 
 		//deleting stuff
-		public static void DeleteSavedControls(string schemeName){
+		public static void DeleteSavedControls(string schemeName) {
 
 			Init();
 
 			//string schemeName = "ControlScheme";
 			if (usePlayerPrefs) {
 				PlayerPrefs.DeleteKey("snpt_" + saveFileName + schemeName);
-			} else {
+			}
+			else {
 				if (!File.Exists(savePath)) {
 					Directory.CreateDirectory(savePath);
 				}
@@ -364,9 +369,9 @@ namespace SinputSystems{
 
 			return;
 
-			
+
 		}
-		
+
 
 	}
 }

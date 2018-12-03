@@ -1,8 +1,8 @@
 ﻿using System;
 using UnityEngine;
 
-namespace SinputSystems{
-	public enum ButtonAction{
+namespace SinputSystems {
+	public enum ButtonAction {
 		HELD, //held down
 		DOWN, //pressed this frame
 		UP, //released this frame
@@ -11,7 +11,7 @@ namespace SinputSystems{
 		REPEATING //for repeating presses, it can be a type of check but NOT a state a button can itself be in
 	}
 
-	public enum MouseInputType{
+	public enum MouseInputType {
 		None,
 		MouseMoveLeft,
 		MouseMoveRight,
@@ -32,7 +32,7 @@ namespace SinputSystems{
 		Mouse5,
 		Mouse6
 	}
-	public enum KeyboardInputType{
+	public enum KeyboardInputType {
 		None,
 		UpArrow,
 		DownArrow,
@@ -169,7 +169,7 @@ namespace SinputSystems{
 		Menu,
 	}
 
-	public enum UnityGamepadKeyCode{
+	public enum UnityGamepadKeyCode {
 		JoystickButton0 = KeyCode.JoystickButton0,
 		JoystickButton1,
 		JoystickButton2,
@@ -424,7 +424,7 @@ namespace SinputSystems{
 
 	}
 
-	public enum InputDeviceType{
+	public enum InputDeviceType {
 		Keyboard,
 		GamepadButton,
 		GamepadAxis,
@@ -433,7 +433,7 @@ namespace SinputSystems{
 		XR
 	}
 
-	public enum OSFamily{
+	public enum OSFamily {
 		Other,
 		MacOSX,
 		Windows,
@@ -446,64 +446,64 @@ namespace SinputSystems{
 		Switch
 	}
 
-	public enum InputDeviceSlot{
-		gamepad1=1,
-		gamepad2=2,
-		gamepad3=3,
-		gamepad4=4,
-		gamepad5=5,
-		gamepad6=6,
-		gamepad7=7,
-		gamepad8=8,
-		gamepad9=9,
-		gamepad10=10,
-		gamepad11=11,
-		gamepad12=12,
-		gamepad13=13,
-		gamepad14=14,
-		gamepad15=15,
-		gamepad16=16,
-		keyboardAndMouse=17,
-		keyboard=18,
-		mouse=19,
-		virtual1=20,
-		any=0,
+	public enum InputDeviceSlot {
+		gamepad1 = 1,
+		gamepad2 = 2,
+		gamepad3 = 3,
+		gamepad4 = 4,
+		gamepad5 = 5,
+		gamepad6 = 6,
+		gamepad7 = 7,
+		gamepad8 = 8,
+		gamepad9 = 9,
+		gamepad10 = 10,
+		gamepad11 = 11,
+		gamepad12 = 12,
+		gamepad13 = 13,
+		gamepad14 = 14,
+		gamepad15 = 15,
+		gamepad16 = 16,
+		keyboardAndMouse = 17,
+		keyboard = 18,
+		mouse = 19,
+		virtual1 = 20,
+		any = 0,
 	}
 
-	public enum CommonGamepadInputs{
-		NOBUTTON=0,
-		A=1,
-		B=2,
-		X=3,
-		Y=4,
-		LB=5,
-		RB=6,
-		LT=7,
-		RT=8,
-		L3=9,
-		R3=10,
-		DPAD_LEFT=11,
-		DPAD_RIGHT=12,
-		DPAD_UP=13,
-		DPAD_DOWN=14,
-		LSTICK_LEFT=15,
-		LSTICK_RIGHT=16,
-		LSTICK_UP=17,
-		LSTICK_DOWN=18,
-		RSTICK_LEFT=19,
-		RSTICK_RIGHT=20,
-		RSTICK_UP=21,
-		RSTICK_DOWN=22,
-		START=23,
-		BACK=24,//AKA select/menu/whatever
-		HOME=25,//AKA system
+	public enum CommonGamepadInputs {
+		NOBUTTON = 0,
+		A = 1,
+		B = 2,
+		X = 3,
+		Y = 4,
+		LB = 5,
+		RB = 6,
+		LT = 7,
+		RT = 8,
+		L3 = 9,
+		R3 = 10,
+		DPAD_LEFT = 11,
+		DPAD_RIGHT = 12,
+		DPAD_UP = 13,
+		DPAD_DOWN = 14,
+		LSTICK_LEFT = 15,
+		LSTICK_RIGHT = 16,
+		LSTICK_UP = 17,
+		LSTICK_DOWN = 18,
+		RSTICK_LEFT = 19,
+		RSTICK_RIGHT = 20,
+		RSTICK_UP = 21,
+		RSTICK_DOWN = 22,
+		START = 23,
+		BACK = 24,//AKA select/menu/whatever
+		HOME = 25,//AKA system
 
-		LSTICK_X=26,
-		LSTICK_Y=27,
-		RSTICK_X=28,
-		RSTICK_Y=29,
-		DPAD_X=30,
-		DPAD_Y=31,
+		LSTICK_X = 26,
+		LSTICK_Y = 27,
+		RSTICK_X = 28,
+		RSTICK_Y = 29,
+		DPAD_X = 30,
+		DPAD_Y = 31,
 	}
 
 	public enum CommonXRInputs {

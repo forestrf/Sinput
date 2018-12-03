@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace SinputSystems {
@@ -8,7 +7,7 @@ namespace SinputSystems {
 		private static List<VirtualInput> inputs = new List<VirtualInput>();
 
 		public static void AddInput(string virtualInputName) {
-			for (int i=0; i<inputs.Count; i++) {
+			for (int i = 0; i < inputs.Count; i++) {
 				if (inputs[i].name == virtualInputName) return;
 			}
 			inputs.Add(new VirtualInput(virtualInputName));
@@ -92,7 +91,8 @@ namespace SinputSystems {
 		public void SetAxisValue(float newValue) {
 			if (newValue > 0.4f) {
 				held = true;
-			} else {
+			}
+			else {
 				held = false;
 			}
 

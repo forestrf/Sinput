@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class TouchControlExample : MonoBehaviour {
 
@@ -8,8 +6,8 @@ public class TouchControlExample : MonoBehaviour {
 
 	public SinputSystems.ControlScheme controlScheme;
 
-	void Awake () {
+	void Awake() {
 		Sinput.LoadControlScheme(controlScheme, false);
 	}
-	
+
 }

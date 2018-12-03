@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CustomMenu : MonoBehaviour {
 
@@ -9,12 +7,12 @@ public class CustomMenu : MonoBehaviour {
 	public Transform cursor;
 
 	// Use this for initialization
-	void Start () {
+	void Start() {
 		currentMenuItem.highlighted = true;
 	}
-	
+
 	// Update is called once per frame
-	void Update () {
+	void Update() {
 		if (Sinput.GetButtonDownRepeating("Up")) {
 			//highlight item above
 			currentMenuItem.highlighted = false;

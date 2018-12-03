@@ -1,12 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-//using UnityEngine.EventSystems;
+﻿//using UnityEngine.EventSystems;
 
 namespace UnityEngine.EventSystems {
 	public class StandaloneSinputModule : StandaloneInputModule {
 
-		
+
 
 		//[SerializeField]
 		public string m_SinputUpButton = "Up";

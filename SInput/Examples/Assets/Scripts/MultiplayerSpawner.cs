@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace SinputSystems.Examples{
+namespace SinputSystems.Examples {
 	public class MultiplayerSpawner : MonoBehaviour {
 
 		public GameObject playerPrefab;
@@ -9,12 +9,12 @@ namespace SinputSystems.Examples{
 		private List<ShootyPlayer> players = new List<ShootyPlayer>();
 
 		// Use this for initialization
-		void Start () {
-			
+		void Start() {
+
 		}
-		
+
 		// Update is called once per frame
-		void Update () {
+		void Update() {
 			InputDeviceSlot slot = Sinput.GetSlotPress("Join");
 
 			if (slot != InputDeviceSlot.any) {
@@ -32,9 +32,9 @@ namespace SinputSystems.Examples{
 					}
 				}
 
-				if (!alreadyJoined) { 
+				if (!alreadyJoined) {
 					//this is a new player looking to join, so lets let them!
-					GameObject newPlayer = (GameObject)GameObject.Instantiate(playerPrefab);
+					GameObject newPlayer = (GameObject) GameObject.Instantiate(playerPrefab);
 					newPlayer.transform.position = new Vector3(Random.Range(-4f, 4f), 3f, Random.Range(-4f, 4f));
 					newPlayer.GetComponent<ShootyPlayer>().playerSlot = slot;
 					players.Add(newPlayer.GetComponent<ShootyPlayer>());

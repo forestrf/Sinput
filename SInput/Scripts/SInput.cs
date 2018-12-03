@@ -10,10 +10,10 @@ public static class Sinput {
 	//Sinput can handle as many of these as you want to throw at it buuuuut, unty can only handle so many and Sinput is wrapping unity input for now
 	//You can try bumping up the range of these but you might have trouble
 	//(EG, you can probably get axis of gamepads in slots over 8, but maybe not buttons?)
-	public static int MAXCONNECTEDGAMEPADS { get {return 11; } }
-	public static int MAXAXISPERGAMEPAD { get {return 28; } }
-	public static int MAXBUTTONSPERGAMEPAD { get {return 20; } }
-	
+	public static int MAXCONNECTEDGAMEPADS { get { return 11; } }
+	public static int MAXAXISPERGAMEPAD { get { return 28; } }
+	public static int MAXBUTTONSPERGAMEPAD { get { return 20; } }
+
 
 	//are keyboard & mouse used by two seperate players (distinct=true) or by a single player (distinct=false)
 	private static bool keyboardAndMouseAreDistinct = false;
@@ -66,7 +66,7 @@ public static class Sinput {
 	public static SinputSystems.SmartControl[] smartControls { get; private set; }
 
 	//gamepads list is checked every GetButton/GetAxis call, when it updates all common mapped inputs are reapplied appropriately
-	static int nextGamepadCheck=-99;
+	static int nextGamepadCheck = -99;
 	private static string[] _gamepads = new string[0];
 	/// <summary>
 	/// List of connected gamepads that Sinput is aware of.
@@ -93,10 +93,10 @@ public static class Sinput {
 		var projectControlSchemes = Resources.LoadAll<SinputSystems.ControlScheme>("");
 
 		int schemeIndex = -1;
-		for (int i=0; i<projectControlSchemes.Length; i++){
+		for (int i = 0; i < projectControlSchemes.Length; i++) {
 			if (projectControlSchemes[i].name == schemeName) schemeIndex = i;
 		}
-		if (schemeIndex==-1){
+		if (schemeIndex == -1) {
 			Debug.LogError("Couldn't find control scheme \"" + schemeName + "\" in project resources.");
 			return;
 		}
@@ -119,20 +119,20 @@ public static class Sinput {
 
 		//Generate controls from controlScheme asset
 		List<SinputSystems.Control> loadedControls = new List<SinputSystems.Control>();
-		for (int i=0; i<scheme.controls.Count; i++){
+		for (int i = 0; i < scheme.controls.Count; i++) {
 			SinputSystems.Control newControl = new SinputSystems.Control(scheme.controls[i].name);
 
-			for (int k=0; k<scheme.controls[i].keyboardInputs.Count; k++){
-				newControl.AddKeyboardInput( (KeyCode)Enum.Parse(typeof(KeyCode), scheme.controls[i].keyboardInputs[k].ToString()) );
+			for (int k = 0; k < scheme.controls[i].keyboardInputs.Count; k++) {
+				newControl.AddKeyboardInput((KeyCode) Enum.Parse(typeof(KeyCode), scheme.controls[i].keyboardInputs[k].ToString()));
 			}
-			for (int k=0; k<scheme.controls[i].gamepadInputs.Count; k++){
-				newControl.AddGamepadInput( scheme.controls[i].gamepadInputs[k] );
+			for (int k = 0; k < scheme.controls[i].gamepadInputs.Count; k++) {
+				newControl.AddGamepadInput(scheme.controls[i].gamepadInputs[k]);
 			}
-			for (int k=0; k<scheme.controls[i].mouseInputs.Count; k++){
-				newControl.AddMouseInput( scheme.controls[i].mouseInputs[k] );
+			for (int k = 0; k < scheme.controls[i].mouseInputs.Count; k++) {
+				newControl.AddMouseInput(scheme.controls[i].mouseInputs[k]);
 			}
-			for (int k=0; k<scheme.controls[i].virtualInputs.Count; k++){
-				newControl.AddVirtualInput( scheme.controls[i].virtualInputs[k] );
+			for (int k = 0; k < scheme.controls[i].virtualInputs.Count; k++) {
+				newControl.AddVirtualInput(scheme.controls[i].virtualInputs[k]);
 			}
 			for (int k = 0; k < scheme.controls[i].xrInputs.Count; k++) {
 				newControl.AddGamepadInput(scheme.controls[i].xrInputs[k]);
@@ -148,7 +148,7 @@ public static class Sinput {
 
 		//Generate smartControls from controlScheme asset
 		List<SinputSystems.SmartControl> loadedSmartControls = new List<SinputSystems.SmartControl>();
-		for (int i=0; i<scheme.smartControls.Count; i++){
+		for (int i = 0; i < scheme.smartControls.Count; i++) {
 			SinputSystems.SmartControl newControl = new SinputSystems.SmartControl(scheme.smartControls[i].name);
 
 			newControl.positiveControl = scheme.smartControls[i].positiveControl;
@@ -170,12 +170,12 @@ public static class Sinput {
 			ControlsDict.Add(newControl.name, newControl);
 		}
 		smartControls = loadedSmartControls.ToArray();
-		for (int i=0; i<smartControls.Length; i++) smartControls[i].Init();
+		for (int i = 0; i < smartControls.Length; i++) smartControls[i].Init();
 
 		//now load any saved control scheme with custom rebound inputs
-		if (loadCustomControls && SinputSystems.SinputFileIO.SaveDataExists(controlSchemeName)){
+		if (loadCustomControls && SinputSystems.SinputFileIO.SaveDataExists(controlSchemeName)) {
 			//Debug.Log("Found saved binding!");
-			_controls = SinputSystems.SinputFileIO.LoadControls( _controls, controlSchemeName);
+			_controls = SinputSystems.SinputFileIO.LoadControls(_controls, controlSchemeName);
 		}
 
 		//make sure controls have any gamepad-relevant stuff set correctly
@@ -239,7 +239,7 @@ public static class Sinput {
 			}
 		}
 	}
-    
+
 
 	//update gamepads
 	static int lastCheckedGamepadRefreshFrame = -99;
@@ -247,7 +247,7 @@ public static class Sinput {
 	/// Checks whether connected gamepads have changed.
 	/// <para>This is called before every input check so it is uneccesary for you to use it.</para>
 	/// </summary>
-	public static void CheckGamepads(bool refreshGamepadsNow = false){
+	public static void CheckGamepads(bool refreshGamepadsNow = false) {
 		if (Time.frameCount == lastCheckedGamepadRefreshFrame && !refreshGamepadsNow) return;
 		lastCheckedGamepadRefreshFrame = Time.frameCount;
 
@@ -255,25 +255,25 @@ public static class Sinput {
 
 		var tempInputGamepads = Input.GetJoystickNames();
 		if (connectedGamepads != tempInputGamepads.Length) refreshGamepadsNow = true; //number of connected gamepads has changed
-		if (!refreshGamepadsNow && nextGamepadCheck < Time.frameCount){
+		if (!refreshGamepadsNow && nextGamepadCheck < Time.frameCount) {
 			//this check is for the rare case gamepads get re-ordered in a single frame & the length of GetJoystickNames() stays the same
 			nextGamepadCheck = Time.frameCount + 500;
-			for (int i=0; i<connectedGamepads; i++){
+			for (int i = 0; i < connectedGamepads; i++) {
 				if (!_gamepads[i].Equals(tempInputGamepads[i], StringComparison.InvariantCultureIgnoreCase)) refreshGamepadsNow = true;
 			}
 		}
-		if (refreshGamepadsNow){
+		if (refreshGamepadsNow) {
 			//Debug.Log("Refreshing gamepads");
 
 			//connected gamepads have changed, lets update them
 			_gamepads = tempInputGamepads; // reuse array given that we already have generated it using Input.GetJoystickNames()
-			for (int i=0; i<_gamepads.Length; i++){
+			for (int i = 0; i < _gamepads.Length; i++) {
 				_gamepads[i] = tempInputGamepads[i].ToUpper();
 			}
 
 			//reload common mapping information for any new gamepads
 			SinputSystems.CommonGamepadMappings.ReloadCommonMaps();
-			
+
 			//refresh control information relating to gamepads
 			if (schemeLoaded) RefreshGamepadControls();
 
@@ -286,21 +286,21 @@ public static class Sinput {
 
 	private static void RefreshGamepadControls() {
 		//if (null != _controls) {
-			for (int i = 0; i < _controls.Length; i++) {
-				//reapply common bindings
-				_controls[i].ReapplyCommonBindings();
+		for (int i = 0; i < _controls.Length; i++) {
+			//reapply common bindings
+			_controls[i].ReapplyCommonBindings();
 
-				//reset axis button states
-				//_controls[i].ResetAxisButtonStates();
+			//reset axis button states
+			//_controls[i].ResetAxisButtonStates();
 
-				//make sure inputs are linked to correct gamepad slots
-				_controls[i].SetAllowedInputSlots();
-			}
+			//make sure inputs are linked to correct gamepad slots
+			_controls[i].SetAllowedInputSlots();
+		}
 		//}
 		//if (null != smartControls) {
-			for (int i = 0; i < smartControls.Length; i++) {
-				smartControls[i].Init();
-			}
+		for (int i = 0; i < smartControls.Length; i++) {
+			smartControls[i].Init();
+		}
 		//}
 	}
 
@@ -329,7 +329,7 @@ public static class Sinput {
 	/// <para>will return InputDeviceSlot.any if no device pressed the button this frame</para>
 	/// <para>use it for 'Pres A to join!' type multiplayer, and instantiate a player for the returned slot (if it isn't DeviceSlot.any)</para>
 	/// </summary>
-	public static SinputSystems.InputDeviceSlot GetSlotPress(string controlName){
+	public static SinputSystems.InputDeviceSlot GetSlotPress(string controlName) {
 		return GetSlotPress(GetControlByName(controlName));
 	}
 	/// <summary>
@@ -341,10 +341,11 @@ public static class Sinput {
 		//like GetButtonDown() but returns ~which~ keyboard/gamepad input slot pressed the control
 		//use it for 'Pres A to join!' type multiplayer, and instantiate a player for the returned slot (if it isn't DeviceSlot.any)
 
-		if (keyboardAndMouseAreDistinct){
+		if (keyboardAndMouseAreDistinct) {
 			if (ButtonCheck(controlWithName, SinputSystems.InputDeviceSlot.keyboard, SinputSystems.ButtonAction.DOWN)) return SinputSystems.InputDeviceSlot.keyboard;
 			if (ButtonCheck(controlWithName, SinputSystems.InputDeviceSlot.mouse, SinputSystems.ButtonAction.DOWN)) return SinputSystems.InputDeviceSlot.mouse;
-		}else{
+		}
+		else {
 			if (ButtonCheck(controlWithName, SinputSystems.InputDeviceSlot.keyboardAndMouse, SinputSystems.ButtonAction.DOWN)) return SinputSystems.InputDeviceSlot.keyboardAndMouse;
 			if (ButtonCheck(controlWithName, SinputSystems.InputDeviceSlot.keyboard, SinputSystems.ButtonAction.DOWN)) return SinputSystems.InputDeviceSlot.keyboardAndMouse;
 			if (ButtonCheck(controlWithName, SinputSystems.InputDeviceSlot.mouse, SinputSystems.ButtonAction.DOWN)) return SinputSystems.InputDeviceSlot.keyboardAndMouse;
@@ -353,7 +354,7 @@ public static class Sinput {
 		for (int i = (int) SinputSystems.InputDeviceSlot.gamepad1; i <= (int) SinputSystems.InputDeviceSlot.gamepad11; i++) {
 			if (ButtonCheck(controlWithName, (SinputSystems.InputDeviceSlot) i, SinputSystems.ButtonAction.DOWN)) return (SinputSystems.InputDeviceSlot) i;
 		}
-		
+
 		if (ButtonCheck(controlWithName, SinputSystems.InputDeviceSlot.virtual1, SinputSystems.ButtonAction.DOWN)) return SinputSystems.InputDeviceSlot.virtual1;
 
 		return SinputSystems.InputDeviceSlot.any;
@@ -411,7 +412,7 @@ public static class Sinput {
 		if (null == control) return false;
 
 		//Debug.LogError("Sinput Error: Control \"" + control.name + "\" not found in list of controls or SmartControls.");
-		
+
 		else return control.GetButtonState(bAction, slot, getRawValue);
 	}
 
@@ -421,7 +422,7 @@ public static class Sinput {
 	/// Returns the raw value of a Sinput Control or Smart Control.
 	/// </summary>
 	public static float GetAxisRaw(string controlName, SinputSystems.InputDeviceSlot slot = SinputSystems.InputDeviceSlot.any) { return AxisCheck(GetControlByName(controlName), out var _, slot); }
-	
+
 	internal static float AxisCheck(SinputSystems.BaseControl control, SinputSystems.InputDeviceSlot slot = SinputSystems.InputDeviceSlot.any) {
 		bool _;
 		return AxisCheck(control, out _, slot);
@@ -475,7 +476,7 @@ public static class Sinput {
 
 		return returnVec3;
 	}
-	
+
 	//frame delta preference
 	/// <summary>
 	/// Returns false if the value returned by GetAxis(controlName) on this frame should NOT be multiplied by delta time.
@@ -495,7 +496,7 @@ public static class Sinput {
 		return preferDelta;
 	}
 
-	
+
 	/// <summary>
 	/// sets whether a control treats GetButton() calls with press or with toggle behaviour
 	/// </summary>
@@ -508,7 +509,7 @@ public static class Sinput {
 
 		control.isToggle = toggle;
 	}
-	
+
 	/// <summary>
 	/// returns true if a control treats GetButton() calls with toggle behaviour
 	/// </summary>
@@ -518,11 +519,11 @@ public static class Sinput {
 	/// </summary>
 	public static bool GetToggle(SinputSystems.Control control) {
 		if (null == control) return false;
-		
+
 		return control.isToggle;
 	}
 
-	
+
 	/// <summary>
 	/// set a smart control to be inverted or not
 	/// </summary>
@@ -534,14 +535,15 @@ public static class Sinput {
 		if (null == smartControl) return;
 
 		if (slot == SinputSystems.InputDeviceSlot.any) {
-			for (int k=0; k<totalPossibleDeviceSlots; k++) {
+			for (int k = 0; k < totalPossibleDeviceSlots; k++) {
 				smartControl.inversion[k] = invert;
 			}
-		} else {
-			smartControl.inversion[(int)slot] = invert;
+		}
+		else {
+			smartControl.inversion[(int) slot] = invert;
 		}
 	}
-	
+
 	/// <summary>
 	/// returns true if a smart control is inverted
 	/// </summary>
@@ -552,10 +554,10 @@ public static class Sinput {
 	public static bool GetInverted(SinputSystems.SmartControl smartControl, SinputSystems.InputDeviceSlot slot = SinputSystems.InputDeviceSlot.any) {
 		if (null == smartControl) return false;
 
-		return smartControl.inversion[(int)slot];
+		return smartControl.inversion[(int) slot];
 	}
 
-	
+
 	/// <summary>
 	/// sets scale ("sensitivity") of a smart control
 	/// </summary>
@@ -570,11 +572,12 @@ public static class Sinput {
 			for (int k = 0; k < totalPossibleDeviceSlots; k++) {
 				smartControl.scales[k] = scale;
 			}
-		} else {
-			smartControl.scales[(int)slot] = scale;
+		}
+		else {
+			smartControl.scales[(int) slot] = scale;
 		}
 	}
-	
+
 	/// <summary>
 	/// gets scale of a smart control
 	/// </summary>
@@ -584,7 +587,7 @@ public static class Sinput {
 	/// </summary>
 	public static float GetScale(SinputSystems.SmartControl smartControl, SinputSystems.InputDeviceSlot slot = SinputSystems.InputDeviceSlot.any) {
 		if (null == smartControl) return 0f;
-		
-		return smartControl.scales[(int)slot];
+
+		return smartControl.scales[(int) slot];
 	}
 }

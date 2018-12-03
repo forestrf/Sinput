@@ -1,16 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 //using SinputSystems;
-namespace SinputSystems.Rebinding{
+namespace SinputSystems.Rebinding {
 	public class SinputRebinder : MonoBehaviour {
 
 		public SinputMonitor inputMonitor;
 
 		private Control[] controls;
 		private Control[] controlsDefaults;
-		
+
 		public RectTransform rebindMenuContainer;
 
 		public GameObject devicePanelPrefab;
@@ -27,32 +26,32 @@ namespace SinputSystems.Rebinding{
 		public GameObject togglePanelPrefab;
 		public GameObject invertPanelPrefab;
 
-		
+
 
 		// Use this for initialization
 		void Start() {
 			Init();
 		}
 
-		void Init () {
+		void Init() {
 			Sinput.LoadControlScheme("MainControlScheme", false);
 			controlsDefaults = Sinput.controls;
-			
+
 			Sinput.LoadControlScheme("MainControlScheme", true);
 			controls = Sinput.controls;
-			
+
 			InitSettingsPanels();
-			
+
 			recordedPads = Sinput.gamepads;
-			
+
 			BuildRebindingPanels();
 		}
 
-		
+
 		private bool rebinding = false;
-		private int rebindingFrames=0;
-		private int rebindingControlIndex=-1;
-		private int rebindingInputIndex=-1;
+		private int rebindingFrames = 0;
+		private int rebindingControlIndex = -1;
+		private int rebindingInputIndex = -1;
 		private string rebindingDevice;
 		private Text rebindInputText;
 
@@ -61,7 +60,7 @@ namespace SinputSystems.Rebinding{
 		private Vector2 targetScrollPos = Vector2.zero;
 		//public RectTransform contentPanel;
 		public void ScrollTheMenu() {
-			
+
 
 			Canvas.ForceUpdateCanvases();
 
@@ -70,21 +69,21 @@ namespace SinputSystems.Rebinding{
 			RectTransform target;
 			if (UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject != null) {
 				target = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.GetComponent<RectTransform>();
-				if (target.gameObject.GetComponent<Scrollbar>()==null) autoscroll = true;
+				if (target.gameObject.GetComponent<Scrollbar>() == null) autoscroll = true;
 				if (!target.IsChildOf(rebindMenuContainer)) autoscroll = false;
-				
+
 
 				Vector2 targetLocalPosition = scrollRect.transform.InverseTransformPoint(target.position);
 				Rect scrollRectRect = scrollRect.GetComponent<RectTransform>().rect;
 
 				targetScrollPos = rebindMenuContainer.anchoredPosition;
 
-				float amountAbove = targetLocalPosition.y - scrollRectRect.height*0.5f + autoScrollBuffer.y;
+				float amountAbove = targetLocalPosition.y - scrollRectRect.height * 0.5f + autoScrollBuffer.y;
 				if (amountAbove > 0f) {
 					targetScrollPos.y -= amountAbove;
 				}
 
-				float amountBelow = targetLocalPosition.y + scrollRectRect.height*0.5f - autoScrollBuffer.y;
+				float amountBelow = targetLocalPosition.y + scrollRectRect.height * 0.5f - autoScrollBuffer.y;
 				if (amountBelow < 0f) {
 					targetScrollPos.y -= amountBelow;
 				}
@@ -102,10 +101,10 @@ namespace SinputSystems.Rebinding{
 
 			if (Input.GetKey(KeyCode.Mouse0)) autoscroll = false;
 
-			if (!autoscroll) { 
+			if (!autoscroll) {
 				targetScrollPos = rebindMenuContainer.anchoredPosition;
 			}
-			
+
 
 			rebindMenuContainer.anchoredPosition = Vector2.Lerp(rebindMenuContainer.anchoredPosition, targetScrollPos, Time.deltaTime * 5f);
 
@@ -113,11 +112,11 @@ namespace SinputSystems.Rebinding{
 		}
 
 		string[] recordedPads = new string[0];
-		void Update(){
+		void Update() {
 			//if (UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject != null) {
-				ScrollTheMenu();
+			ScrollTheMenu();
 			//}
-			
+
 			//if the menu was rebuilt and what ~was~ selected was destroyed, select the nearest thing there is now
 			if (reselectWait > 0) {
 				reselectWait--;
@@ -139,13 +138,13 @@ namespace SinputSystems.Rebinding{
 
 			bool gamepadsChanged = false;
 			string[] gamepads = Sinput.gamepads;
-			if (recordedPads.Length!=gamepads.Length) gamepadsChanged = true;
-			if (!gamepadsChanged){
-				for (int i=0; i<recordedPads.Length; i++){
+			if (recordedPads.Length != gamepads.Length) gamepadsChanged = true;
+			if (!gamepadsChanged) {
+				for (int i = 0; i < recordedPads.Length; i++) {
 					if (recordedPads[i].ToUpper() != gamepads[i].ToUpper()) gamepadsChanged = true;
 				}
 			}
-			if (gamepadsChanged){
+			if (gamepadsChanged) {
 				//connected gamepads have changed
 				rebinding = false;
 
@@ -159,33 +158,33 @@ namespace SinputSystems.Rebinding{
 
 			if (!rebinding) return;
 			rebindingFrames++;
-			if (rebindingFrames<5) return;
+			if (rebindingFrames < 5) return;
 
 			//we're ready to swap out an input now
-			if (inputMonitor.changeFound){
+			if (inputMonitor.changeFound) {
 				rebinding = false;
 				rebindInputText.text = "?";
 				//Debug.Log("CHANGE INPUT SETTING NOW!");
 
-				
+
 				InputDeviceType changedInputType = InputDeviceType.Keyboard;
 
-				if (inputMonitor.changedKey != KeyCode.None){
+				if (inputMonitor.changedKey != KeyCode.None) {
 					//change was keyboard input
 					//Debug.Log(inputMonitor.changedKey.ToString());
 					changedInputType = InputDeviceType.Keyboard;
 				}
-				if (inputMonitor.changedPadAxis.padIndex >=0){
+				if (inputMonitor.changedPadAxis.padIndex >= 0) {
 					//change was a gamepad axis
 					//Debug.Log("Found change in gamepad " + (inputMonitor.changedPadAxis.padIndex+1).ToString() + " axis " + (inputMonitor.changedPadAxis.inputIndex).ToString());
 					changedInputType = InputDeviceType.GamepadAxis;
 				}
-				if (inputMonitor.changedPadButton.padIndex >=0){
+				if (inputMonitor.changedPadButton.padIndex >= 0) {
 					//change was a gamepad button
 					//Debug.Log("Found change in gamepad " + (inputMonitor.changedPadButton.padIndex+1).ToString() + " button " + inputMonitor.changedPadButton.inputIndex.ToString());
 					changedInputType = InputDeviceType.GamepadButton;
 				}
-				if (inputMonitor.changedMouse != MouseInputType.None){
+				if (inputMonitor.changedMouse != MouseInputType.None) {
 					//change was mouse click
 					//Debug.Log(inputMonitor.changedMouse.ToString());
 					changedInputType = InputDeviceType.Mouse;
@@ -196,25 +195,25 @@ namespace SinputSystems.Rebinding{
 				newInput.deviceName = rebindingDevice;
 				newInput.commonMappingType = CommonGamepadInputs.NOBUTTON;//don't remove this input when gamepads are unplugged/replugged
 
-				if (changedInputType == InputDeviceType.Keyboard){
+				if (changedInputType == InputDeviceType.Keyboard) {
 					newInput.keyboardKeyCode = inputMonitor.changedKey;
 				}
 
 				int padIndex = -1;
-				if (changedInputType == InputDeviceType.GamepadButton){
+				if (changedInputType == InputDeviceType.GamepadButton) {
 					newInput.gamepadButtonNumber = inputMonitor.changedPadButton.inputIndex;
 					newInput.displayName = "B" + inputMonitor.changedPadButton.inputIndex.ToString();
 
 					padIndex = inputMonitor.changedPadButton.padIndex;
 					List<int> slots = new List<int>();
 					//string[] gamepads = Sinput.GetGamepads();
-					for (int g=0;g<gamepads.Length; g++){
+					for (int g = 0; g < gamepads.Length; g++) {
 						if (gamepads[g].ToUpper() == rebindingDevice.ToUpper()) slots.Add(g);
 					}
 					newInput.allowedSlots = slots.ToArray();
 				}
-					
-				if (changedInputType == InputDeviceType.GamepadAxis){
+
+				if (changedInputType == InputDeviceType.GamepadAxis) {
 					SinputMonitor.gamepadStateChange axisChange = inputMonitor.changedPadAxis;
 
 					newInput.gamepadAxisNumber = axisChange.inputIndex;
@@ -230,12 +229,13 @@ namespace SinputSystems.Rebinding{
 					newInput.defaultAxisValue = 0f;
 
 					newInput.rescaleAxis = false;
-					if (axisChange.restingValue != 0f){
+					if (axisChange.restingValue != 0f) {
 						newInput.rescaleAxis = true;
-						if (axisChange.restingValue<0f){
+						if (axisChange.restingValue < 0f) {
 							newInput.rescaleAxisMin = -1f;
 							newInput.rescaleAxisMax = 1f;
-						}else{
+						}
+						else {
 							newInput.rescaleAxisMin = 1f;
 							newInput.rescaleAxisMax = -1f;
 						}
@@ -244,24 +244,24 @@ namespace SinputSystems.Rebinding{
 					padIndex = axisChange.padIndex;
 					List<int> slots = new List<int>();
 					//string[] gamepads = Sinput.GetGamepads();
-					for (int g=0;g<gamepads.Length; g++){
+					for (int g = 0; g < gamepads.Length; g++) {
 						if (gamepads[g].ToUpper() == rebindingDevice.ToUpper()) slots.Add(g);
 					}
 					newInput.allowedSlots = slots.ToArray();
 
 				}
 
-				if (changedInputType == InputDeviceType.GamepadAxis || changedInputType == InputDeviceType.GamepadButton){
+				if (changedInputType == InputDeviceType.GamepadAxis || changedInputType == InputDeviceType.GamepadButton) {
 					//lets also set all other inputs on this control with matching allowed slots to be custom and remove common binding
 					//this should preserve stuff with the same common binding from being ignored when re reload common bindings
-					for (int i=0; i<controls[rebindingControlIndex].inputs.Count; i++){
+					for (int i = 0; i < controls[rebindingControlIndex].inputs.Count; i++) {
 						bool sameDevice = false;
-						if (controls[rebindingControlIndex].inputs[i].commonMappingType != CommonGamepadInputs.NOBUTTON){
-							for (int k=0; k<controls[rebindingControlIndex].inputs[i].allowedSlots.Length; k++){
+						if (controls[rebindingControlIndex].inputs[i].commonMappingType != CommonGamepadInputs.NOBUTTON) {
+							for (int k = 0; k < controls[rebindingControlIndex].inputs[i].allowedSlots.Length; k++) {
 								if (controls[rebindingControlIndex].inputs[i].allowedSlots[k] == padIndex) sameDevice = true;
 							}
 						}
-						if (sameDevice){
+						if (sameDevice) {
 							controls[rebindingControlIndex].inputs[i].isCustom = true;
 							controls[rebindingControlIndex].inputs[i].commonMappingType = CommonGamepadInputs.NOBUTTON;
 							controls[rebindingControlIndex].inputs[i].deviceName = rebindingDevice;
@@ -276,8 +276,8 @@ namespace SinputSystems.Rebinding{
 					}
 				}
 
-				if (changedInputType == InputDeviceType.Mouse){
-					
+				if (changedInputType == InputDeviceType.Mouse) {
+
 					newInput.mouseInputType = inputMonitor.changedMouse;
 				}
 
@@ -285,31 +285,31 @@ namespace SinputSystems.Rebinding{
 
 				rebindInputText.text = controls[rebindingControlIndex].inputs[rebindingInputIndex].GetDisplayName();
 
-				
+
 				//rebindInputText.transform.parent.GetC
 				//BuildRebindingPanels();
 			}
 		}
 
 		//functions called by UI
-		public void SetDefaults(){
+		public void SetDefaults() {
 			//PlayerPrefs.DeleteAll();
 			SinputFileIO.DeleteSavedControls(Sinput.controlSchemeName);
 			Init();
 			SettingsToDefault();
 		}
-		public void Apply(){
+		public void Apply() {
 			ApplySettings();
 			SinputFileIO.SaveControls(controls, Sinput.controlSchemeName);
 			Init();
 		}
 
-		public void CollapseControlPanel(GameObject panel){
+		public void CollapseControlPanel(GameObject panel) {
 			if (rebinding) return;
 			panel.SetActive(!panel.activeSelf);
 		}
 
-		public void BeginRebindInput(int controlIndex, int inputIndex, string deviceName, Text text){
+		public void BeginRebindInput(int controlIndex, int inputIndex, string deviceName, Text text) {
 			if (rebinding) return;
 			//Debug.Log("Begind rebind for : " + controls[controlIndex].name + " input " + controls[controlIndex].inputs[inputIndex].GetDisplayName() + " of " + deviceName);
 			rebinding = true;
@@ -322,14 +322,14 @@ namespace SinputSystems.Rebinding{
 
 			inputMonitor.SetListeningDevice(rebindingDevice);
 
-			
+
 
 		}
 
-		public void DeleteInput(int controlIndex, int inputIndex, string deviceName, Transform transformToDelete){
+		public void DeleteInput(int controlIndex, int inputIndex, string deviceName, Transform transformToDelete) {
 			if (rebinding) return;
 
-			
+
 			//Debug.Log("Delete input : " + controls[controlIndex].name + " input " + controls[controlIndex].inputs[inputIndex].GetDisplayName() + " of " + deviceName);
 			controls[controlIndex].inputs.RemoveAt(inputIndex);
 
@@ -338,9 +338,9 @@ namespace SinputSystems.Rebinding{
 
 
 			//remove input panel
-			for (int d=0; d<devicePanels.Count; d++) {
-				for (int c=0; c<devicePanels[d].controlPanels.Count; c++) {
-					for (int i=0; i<devicePanels[d].controlPanels[c].inputPanels.Count; i++) {
+			for (int d = 0; d < devicePanels.Count; d++) {
+				for (int c = 0; c < devicePanels[d].controlPanels.Count; c++) {
+					for (int i = 0; i < devicePanels[d].controlPanels[c].inputPanels.Count; i++) {
 						if (devicePanels[d].controlPanels[c].inputPanels[i].inputPanelObj == transformToDelete.gameObject) {
 							devicePanels[d].controlPanels[c].inputPanels.RemoveAt(i);
 							i--;
@@ -352,25 +352,25 @@ namespace SinputSystems.Rebinding{
 			//remove object that actually is showing the thing
 			Destroy(transformToDelete.gameObject);
 
-			
+
 
 			//BuildRebindingPanels();
 		}
-		public void ResetControlInputs(int controlIndex, string deviceName, InputDeviceType deviceType, int deviceSlotIndex){
+		public void ResetControlInputs(int controlIndex, string deviceName, InputDeviceType deviceType, int deviceSlotIndex) {
 			if (rebinding) return;
-			
+
 
 			//Debug.Log("reset inputs for : " + controls[controlIndex].name + " of " + deviceName);
 
 			int padIndex = -1;
 			string[] padNames = Input.GetJoystickNames();
-			for (int i=0;i<padNames.Length; i++){
-				if (padNames[i].ToUpper()==deviceName.ToUpper()) padIndex = i;
+			for (int i = 0; i < padNames.Length; i++) {
+				if (padNames[i].ToUpper() == deviceName.ToUpper()) padIndex = i;
 			}
-				
+
 
 			//remove current inputs for this control from this device
-			for (int i=0; i<controls[controlIndex].inputs.Count; i++){
+			for (int i = 0; i < controls[controlIndex].inputs.Count; i++) {
 				bool removeControl = false;
 				if (deviceName == "KeyboardMouse" && controls[controlIndex].inputs[i].inputType == InputDeviceType.Keyboard) removeControl = true;
 				if (deviceName == "KeyboardMouse" && controls[controlIndex].inputs[i].inputType == InputDeviceType.Mouse) removeControl = true;
@@ -379,15 +379,15 @@ namespace SinputSystems.Rebinding{
 				if (controls[controlIndex].inputs[i].inputType == InputDeviceType.Virtual) removeControl = false; //don't remove virtual inputs
 
 				//make sure we only remove inputs for this gamepad
-				if (removeControl && deviceName != "KeyboardMouse"){
+				if (removeControl && deviceName != "KeyboardMouse") {
 					bool matchingPad = false;
-					for (int k=0; k<controls[controlIndex].inputs[i].allowedSlots.Length; k++){
+					for (int k = 0; k < controls[controlIndex].inputs[i].allowedSlots.Length; k++) {
 						if (controls[controlIndex].inputs[i].allowedSlots[k] == padIndex) matchingPad = true;
 					}
 					if (!matchingPad) removeControl = false;
 				}
 
-				if (removeControl){
+				if (removeControl) {
 					Debug.Log("Removing control - " + deviceName + " - " + controls[controlIndex].inputs[i].GetDisplayName());
 					controls[controlIndex].inputs.RemoveAt(i);
 					i--;
@@ -395,7 +395,7 @@ namespace SinputSystems.Rebinding{
 			}
 
 			//add default inputs
-			for (int i=0; i<controlsDefaults[controlIndex].inputs.Count; i++){
+			for (int i = 0; i < controlsDefaults[controlIndex].inputs.Count; i++) {
 				bool addControl = false;
 				if (deviceName == "KeyboardMouse" && controlsDefaults[controlIndex].inputs[i].inputType == InputDeviceType.Keyboard) addControl = true;
 				if (deviceName == "KeyboardMouse" && controlsDefaults[controlIndex].inputs[i].inputType == InputDeviceType.Mouse) addControl = true;
@@ -404,15 +404,15 @@ namespace SinputSystems.Rebinding{
 				if (controlsDefaults[controlIndex].inputs[i].inputType == InputDeviceType.Virtual) addControl = false; //don't add virtual inputs
 
 				//make sure we only add inputs for this gamepad
-				if (addControl && deviceName != "KeyboardMouse"){
+				if (addControl && deviceName != "KeyboardMouse") {
 					bool matchingPad = false;
-					for (int k=0; k<controlsDefaults[controlIndex].inputs[i].allowedSlots.Length; k++){
+					for (int k = 0; k < controlsDefaults[controlIndex].inputs[i].allowedSlots.Length; k++) {
 						if (controlsDefaults[controlIndex].inputs[i].allowedSlots[k] == padIndex) matchingPad = true;
 					}
 					if (!matchingPad) addControl = false;
 				}
 
-				if (addControl){
+				if (addControl) {
 					Debug.Log("Adding control - " + deviceName + controlsDefaults[controlIndex].inputs[i].GetDisplayName());
 					controls[controlIndex].inputs.Add(controlsDefaults[controlIndex].inputs[i]);
 				}
@@ -421,17 +421,17 @@ namespace SinputSystems.Rebinding{
 			//now we rebuild this part of the menu
 			//first we remove any old input panels for this control
 			int devicePanelIndex = -1;
-			for (int d=0; d<devicePanels.Count; d++) {
+			for (int d = 0; d < devicePanels.Count; d++) {
 				if (devicePanels[d].deviceName == deviceName) devicePanelIndex = d;
 			}
 			int controlPanelIndex = -1;
-			for (int c =0; c< devicePanels[devicePanelIndex].controlPanels.Count; c++) {
+			for (int c = 0; c < devicePanels[devicePanelIndex].controlPanels.Count; c++) {
 				if (devicePanels[devicePanelIndex].controlPanels[c].controlIndex == controlIndex) controlPanelIndex = c;
 			}
 			//Debug.Log(devicePanelIndex);
 			//Debug.Log(controlPanelIndex);
 			Debug.Log("Device Panel - " + devicePanelIndex.ToString() + " - " + deviceName);
-			for (int i=0; i< devicePanels[devicePanelIndex].controlPanels[controlPanelIndex].inputPanels.Count; i++) {
+			for (int i = 0; i < devicePanels[devicePanelIndex].controlPanels[controlPanelIndex].inputPanels.Count; i++) {
 				Debug.Log("I happen: " + devicePanels[devicePanelIndex].controlPanels[controlPanelIndex].inputPanels[i].inputButtonText.text);
 				Destroy(devicePanels[devicePanelIndex].controlPanels[controlPanelIndex].inputPanels[i].inputPanelObj);
 				devicePanels[devicePanelIndex].controlPanels[controlPanelIndex].inputPanels.RemoveAt(i);
@@ -447,14 +447,14 @@ namespace SinputSystems.Rebinding{
 
 			//BuildRebindingPanels();
 
-			
+
 
 		}
-		public void AddControlInput(int controlIndex, string deviceName, controlPanel cp){
+		public void AddControlInput(int controlIndex, string deviceName, controlPanel cp) {
 			if (rebinding) return;
 			//Debug.Log("Add new input for : " + controls[controlIndex].name + " of " + deviceName);
 
-			
+
 
 			InputDeviceType t = InputDeviceType.Keyboard;
 			if (deviceName != "KeyboardMouse") t = InputDeviceType.GamepadButton;
@@ -464,22 +464,22 @@ namespace SinputSystems.Rebinding{
 			newInput.deviceName = deviceName;
 			newInput.commonMappingType = CommonGamepadInputs.NOBUTTON;//don't remove this input when gamepads are unplugged/replugged
 
-			if (t == InputDeviceType.Keyboard){
+			if (t == InputDeviceType.Keyboard) {
 				newInput.keyboardKeyCode = KeyCode.None;
 			}
 
-			if (t == InputDeviceType.GamepadButton){
+			if (t == InputDeviceType.GamepadButton) {
 				newInput.gamepadButtonNumber = 18;
 				newInput.displayName = "B?";
 
 				string[] padNames = Input.GetJoystickNames();
 				List<int> allowedSlots = new List<int>();
-				for (int i=0;i<padNames.Length; i++){
-					if (padNames[i].ToUpper()==deviceName.ToUpper()) allowedSlots.Add(i);
+				for (int i = 0; i < padNames.Length; i++) {
+					if (padNames[i].ToUpper() == deviceName.ToUpper()) allowedSlots.Add(i);
 				}
 				newInput.allowedSlots = allowedSlots.ToArray();
 			}
-				
+
 
 			controls[controlIndex].inputs.Add(newInput);
 
@@ -487,7 +487,7 @@ namespace SinputSystems.Rebinding{
 
 
 			///newer input adding code
-			GameObject newInputPanelObj = (GameObject)GameObject.Instantiate(inputPanelPrefab);
+			GameObject newInputPanelObj = (GameObject) GameObject.Instantiate(inputPanelPrefab);
 			newInputPanelObj.transform.SetParent(cp.controlPanelObj.transform);
 			newInputPanelObj.transform.localScale = Vector3.one;
 			inputPanel newInputPanel = new inputPanel();
@@ -503,7 +503,7 @@ namespace SinputSystems.Rebinding{
 			newInputPanel.inputButton.onClick.AddListener(delegate { BeginRebindInput(controlIndex, inputIndex, deviceName, newInputPanel.inputButtonText); });
 			newInputPanel.deleteButton.onClick.AddListener(delegate { DeleteInput(controlIndex, inputIndex, deviceName, newInputPanelObj.transform); });
 
-			newInputPanel.inputButtonText.text = controls[controlIndex].inputs[controls[controlIndex].inputs.Count-1].GetDisplayName();
+			newInputPanel.inputButtonText.text = controls[controlIndex].inputs[controls[controlIndex].inputs.Count - 1].GetDisplayName();
 
 			cp.inputPanels.Add(newInputPanel);
 
@@ -517,14 +517,14 @@ namespace SinputSystems.Rebinding{
 			//begin rebind immediately
 			BeginRebindInput(controlIndex, inputIndex, deviceName, newInputPanel.inputButtonText);
 
-			
+
 		}
 
 
 		//stuff for building UI
 		private int reselectWait = 0;
 		private Vector3 reselectPosition = Vector3.zero;
-		void BuildRebindingPanels(){
+		void BuildRebindingPanels() {
 
 			//find which thing is currently selected, se we know where it is, and if we need to select something new after the rebuild
 			GameObject currentlySelected = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject;
@@ -535,7 +535,7 @@ namespace SinputSystems.Rebinding{
 
 
 			//clear any existing panels
-			for (int i=0; i<devicePanels.Count; i++){
+			for (int i = 0; i < devicePanels.Count; i++) {
 				if (!currentlySelectedDestroyed && currentlySelected.transform.IsChildOf(devicePanels[i].devicePanelObj.transform)) currentlySelectedDestroyed = true;
 				GameObject.Destroy(devicePanels[i].devicePanelObj);
 			}
@@ -549,9 +549,9 @@ namespace SinputSystems.Rebinding{
 
 			//add gamepad device panels
 			string[] pads = Sinput.gamepads;
-			for (int p=0; p<pads.Length; p++){
+			for (int p = 0; p < pads.Length; p++) {
 				bool deviceAlreadyListed = false;
-				for (int d=0; d<devicePanels.Count; d++){
+				for (int d = 0; d < devicePanels.Count; d++) {
 					if (devicePanels[d].deviceName == pads[p]) deviceAlreadyListed = true;
 				}
 
@@ -563,14 +563,14 @@ namespace SinputSystems.Rebinding{
 				//Debug.Log("Reselect needed");
 				reselectWait = 3;
 				//the menu item that was selected has been destroyed, let's select something nearby a couple frames from now (selecting stuff the same frame seems a problem)
-				
-			}
-			
-		}
-	
 
-		void AddDevicePanel(InputDeviceType deviceType, string deviceName, int deviceSlotIndex){
-			GameObject newDevicePanelObj = (GameObject)GameObject.Instantiate(devicePanelPrefab);
+			}
+
+		}
+
+
+		void AddDevicePanel(InputDeviceType deviceType, string deviceName, int deviceSlotIndex) {
+			GameObject newDevicePanelObj = (GameObject) GameObject.Instantiate(devicePanelPrefab);
 			newDevicePanelObj.name = deviceName;
 			newDevicePanelObj.transform.SetParent(rebindMenuContainer);
 			newDevicePanelObj.transform.localScale = Vector3.one;
@@ -583,10 +583,10 @@ namespace SinputSystems.Rebinding{
 			newDevicePanel.foldoutButton.enabled = false;//lets not have foldouts for now, they get reset all the time anyway
 			newDevicePanel.deviceNameText = newDevicePanel.foldoutButton.transform.Find("DeviceNameText").GetComponent<Text>();
 
-			newDevicePanel.foldoutButton.onClick.AddListener(delegate {CollapseControlPanel(newDevicePanelObj.transform.Find("ControlsPanel").gameObject); });
+			newDevicePanel.foldoutButton.onClick.AddListener(delegate { CollapseControlPanel(newDevicePanelObj.transform.Find("ControlsPanel").gameObject); });
 
 			newDevicePanel.deviceNameText.text = "Keyboard/Mouse:";
-			if (deviceType == InputDeviceType.GamepadAxis || deviceType == InputDeviceType.GamepadButton){
+			if (deviceType == InputDeviceType.GamepadAxis || deviceType == InputDeviceType.GamepadButton) {
 				newDevicePanel.deviceNameText.text = "Gamepad: \"" + deviceName + "\"";
 			}
 
@@ -594,8 +594,8 @@ namespace SinputSystems.Rebinding{
 
 			//int controlPanelIndex = 0;
 
-			for (int c=0; c<controls.Length; c++){
-				GameObject newControlPanelObj = (GameObject)GameObject.Instantiate(ControlPanelPrefab);
+			for (int c = 0; c < controls.Length; c++) {
+				GameObject newControlPanelObj = (GameObject) GameObject.Instantiate(ControlPanelPrefab);
 				newControlPanelObj.name = controls[c].name;
 				newControlPanelObj.transform.SetParent(newDevicePanelObj.transform.Find("ControlsPanel").transform);
 				newControlPanelObj.transform.localScale = Vector3.one;
@@ -610,9 +610,9 @@ namespace SinputSystems.Rebinding{
 				//Debug.Log(c);
 				int controlIndex = c;
 				newControlPanel.controlIndex = controlIndex;
-				newControlPanel.addInputButton.onClick.AddListener(delegate {AddControlInput(controlIndex,deviceName, newControlPanel); });
+				newControlPanel.addInputButton.onClick.AddListener(delegate { AddControlInput(controlIndex, deviceName, newControlPanel); });
 				//Debug.Log(newDevicePanel.controlPanels.Count);
-				newControlPanel.resetInputsButton.onClick.AddListener(delegate {ResetControlInputs(controlIndex,deviceName, deviceType, deviceSlotIndex); });
+				newControlPanel.resetInputsButton.onClick.AddListener(delegate { ResetControlInputs(controlIndex, deviceName, deviceType, deviceSlotIndex); });
 
 
 				newControlPanel.inputPanels = new List<inputPanel>();
@@ -644,7 +644,7 @@ namespace SinputSystems.Rebinding{
 				}
 				if (applicableInput) {
 					//this input is referring to this device
-					GameObject newInputPanelObj = (GameObject)GameObject.Instantiate(inputPanelPrefab);
+					GameObject newInputPanelObj = (GameObject) GameObject.Instantiate(inputPanelPrefab);
 					newInputPanelObj.transform.SetParent(cpObj.transform);
 					newInputPanelObj.transform.localScale = Vector3.one;
 					inputPanel newInputPanel = new inputPanel();
@@ -673,7 +673,7 @@ namespace SinputSystems.Rebinding{
 			return newControlPanel;
 		}
 
-		public struct devicePanel{
+		public struct devicePanel {
 			public GameObject devicePanelObj;
 			public Button foldoutButton;
 			public Text deviceNameText;
@@ -681,7 +681,7 @@ namespace SinputSystems.Rebinding{
 
 			public List<controlPanel> controlPanels;
 		}
-		public struct controlPanel{
+		public struct controlPanel {
 			public GameObject controlPanelObj;
 
 			public int controlIndex;
@@ -690,7 +690,7 @@ namespace SinputSystems.Rebinding{
 			public Button resetInputsButton;
 			public List<inputPanel> inputPanels;
 		}
-		public struct inputPanel{
+		public struct inputPanel {
 			public GameObject inputPanelObj;
 			public Button inputButton;
 			public Text inputButtonText;
@@ -738,9 +738,9 @@ namespace SinputSystems.Rebinding{
 			initialisedSettings = true;
 
 			showSettings = false;
-			
+
 			settingPanels = new List<settingPanel>();
-			
+
 
 			if (rebindMenuSettings == null || !rebindMenuSettings.showSettings) {
 				settingsPanelContainer.SetActive(false);
@@ -757,7 +757,7 @@ namespace SinputSystems.Rebinding{
 				newSettingPanel.defaultVal = 1f;
 				newSettingPanel.val = Sinput.mouseSensitivity;
 
-				GameObject newPanelObj = (GameObject)GameObject.Instantiate(sensitivityPanelPrefab);
+				GameObject newPanelObj = (GameObject) GameObject.Instantiate(sensitivityPanelPrefab);
 				newPanelObj.transform.SetParent(settingsListPanel.transform);
 				newPanelObj.transform.localScale = Vector3.one;
 
@@ -776,7 +776,7 @@ namespace SinputSystems.Rebinding{
 				newSettingPanel.slider.onValueChanged.AddListener(delegate { SliderSettingChange(settingIndex); });
 				newSettingPanel.resetButton.onClick.AddListener(delegate { SettingReset(settingIndex); });
 
-				
+
 
 
 				settingPanels.Add(newSettingPanel);
@@ -792,7 +792,7 @@ namespace SinputSystems.Rebinding{
 				newSettingPanel.defaultSettingBool = false;
 				newSettingPanel.settingBool = Sinput.GetToggle(newSettingPanel.toggleControl); ;
 
-				GameObject newPanelObj = (GameObject)GameObject.Instantiate(togglePanelPrefab);
+				GameObject newPanelObj = (GameObject) GameObject.Instantiate(togglePanelPrefab);
 				newPanelObj.transform.SetParent(settingsListPanel.transform);
 				newPanelObj.transform.localScale = Vector3.one;
 
@@ -805,7 +805,8 @@ namespace SinputSystems.Rebinding{
 				newSettingPanel.toggle.isOn = newSettingPanel.settingBool;
 				if (newSettingPanel.settingBool) {
 					newSettingPanel.toggleText.text = "Toggle " + newSettingPanel.toggleControl;
-				} else {
+				}
+				else {
 					newSettingPanel.toggleText.text = "Hold " + newSettingPanel.toggleControl;
 				}
 
@@ -826,7 +827,7 @@ namespace SinputSystems.Rebinding{
 				newSettingPanel.defaultSettingBool = false;
 				newSettingPanel.settingBool = Sinput.GetInverted(newSettingPanel.invertSmartControl);
 
-				GameObject newPanelObj = (GameObject)GameObject.Instantiate(invertPanelPrefab);
+				GameObject newPanelObj = (GameObject) GameObject.Instantiate(invertPanelPrefab);
 				newPanelObj.transform.SetParent(settingsListPanel.transform);
 				newPanelObj.transform.localScale = Vector3.one;
 
@@ -852,7 +853,7 @@ namespace SinputSystems.Rebinding{
 				newSettingPanel.isScale = true;
 				newSettingPanel.scaleSettingName = rebindMenuSettings.scalables[i].scalableName;
 				newSettingPanel.scaleSmartControls = new List<string>();
-				for (int k=0; k<rebindMenuSettings.scalables[i].scalableSmartControls.Count; k++) {
+				for (int k = 0; k < rebindMenuSettings.scalables[i].scalableSmartControls.Count; k++) {
 					newSettingPanel.scaleSmartControls.Add(rebindMenuSettings.scalables[i].scalableSmartControls[k]);
 				}
 				newSettingPanel.minVal = rebindMenuSettings.scalables[i].minScale;
@@ -860,7 +861,7 @@ namespace SinputSystems.Rebinding{
 				newSettingPanel.defaultVal = 1f;
 				newSettingPanel.val = Sinput.GetScale(newSettingPanel.scaleSmartControls[0]);
 
-				GameObject newPanelObj = (GameObject)GameObject.Instantiate(sensitivityPanelPrefab);
+				GameObject newPanelObj = (GameObject) GameObject.Instantiate(sensitivityPanelPrefab);
 				newPanelObj.transform.SetParent(settingsListPanel.transform);
 				newPanelObj.transform.localScale = Vector3.one;
 
@@ -889,7 +890,7 @@ namespace SinputSystems.Rebinding{
 		}
 
 		void SettingsToDefault() {
-			for (int i=0; i<settingPanels.Count; i++) {
+			for (int i = 0; i < settingPanels.Count; i++) {
 				settingPanel thisPanel = settingPanels[i];
 				thisPanel.val = settingPanels[i].defaultVal;
 				thisPanel.settingBool = settingPanels[i].defaultSettingBool;
@@ -902,7 +903,8 @@ namespace SinputSystems.Rebinding{
 					if (thisPanel.isToggle) {
 						if (thisPanel.settingBool) {
 							thisPanel.toggleText.text = "Toggle " + thisPanel.toggleControl;
-						} else {
+						}
+						else {
 							thisPanel.toggleText.text = "Hold " + thisPanel.toggleControl;
 						}
 					}
@@ -919,7 +921,7 @@ namespace SinputSystems.Rebinding{
 					Sinput.mouseSensitivity = settingPanels[i].val;
 				}
 				if (settingPanels[i].isToggle) {
-					for (int k=0; k<controls.Length; k++) {
+					for (int k = 0; k < controls.Length; k++) {
 						if (controls[k].name == settingPanels[i].toggleControl) controls[k].isToggle = settingPanels[i].settingBool;
 					}
 
@@ -944,7 +946,7 @@ namespace SinputSystems.Rebinding{
 			//Debug.Log(i);
 			settingPanel s = settingPanels[i];
 			s.val = s.slider.value;
-			s.sliderText.text = ClipStr(s.val.ToString(),5);
+			s.sliderText.text = ClipStr(s.val.ToString(), 5);
 
 			//be able to navigate to right when slider is at max value
 			Navigation sliderNav = new Navigation();
@@ -959,7 +961,7 @@ namespace SinputSystems.Rebinding{
 			settingPanels[i] = s;
 
 
-			
+
 		}
 		public void ToggleSettingChange(int i) {
 			settingPanel s = settingPanels[i];
@@ -967,7 +969,8 @@ namespace SinputSystems.Rebinding{
 			if (s.isToggle) {
 				if (s.settingBool) {
 					s.toggleText.text = "Toggle " + s.toggleControl;
-				} else {
+				}
+				else {
 					s.toggleText.text = "Hold " + s.toggleControl;
 				}
 			}
@@ -988,7 +991,8 @@ namespace SinputSystems.Rebinding{
 			if (s.isToggle) {
 				if (s.settingBool) {
 					s.toggleText.text = "Toggle " + s.toggleControl;
-				} else {
+				}
+				else {
 					s.toggleText.text = "Hold " + s.toggleControl;
 				}
 			}

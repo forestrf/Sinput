@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SinputSystems{
+namespace SinputSystems {
 	[CreateAssetMenu(fileName = "New Control Scheme", menuName = "Sinput/Control Scheme", order = 0)]
 	public class ControlScheme : ScriptableObject {
-		
+
 		public List<ControlSetup> controls = new List<ControlSetup>();
 		public List<SmartControlSetup> smartControls = new List<SmartControlSetup>();
 
@@ -13,7 +13,7 @@ namespace SinputSystems{
 		//public bool exposeMouseSensitivityOption = true;
 		//public bool mouseAndKeyboardAreDistinct = false;
 		//public List<string> 
-		
+
 		public ControlScheme() {
 			//add all the default controls
 			ControlSetup newControl = NewControlSetup("Left");
@@ -114,13 +114,13 @@ namespace SinputSystems{
 
 			newSmartControl = NewSmartControlSetup("Look Vertical", "Look Down", "Look Up");
 			this.smartControls.Add(newSmartControl);
-			
+
 		}
-	
+
 
 
 		[System.Serializable]
-		public struct ControlSetup{
+		public struct ControlSetup {
 			public string name;// = "New Control";
 			public List<KeyboardInputType> keyboardInputs;// = new List<InputSetup>();
 			public List<CommonGamepadInputs> gamepadInputs;
@@ -129,7 +129,7 @@ namespace SinputSystems{
 			public List<string> virtualInputs;
 		}
 		[System.Serializable]
-		public struct SmartControlSetup{
+		public struct SmartControlSetup {
 			public string name;// = "New Mix Control";
 			public string positiveControl;
 			public string negativeControl;

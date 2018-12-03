@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace SinputSystems {
 	public abstract class BaseControl {
 		public abstract bool GetButtonState(ButtonAction bAction, InputDeviceSlot slot, bool getRaw);

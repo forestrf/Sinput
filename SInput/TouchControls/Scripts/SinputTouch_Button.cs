@@ -52,7 +52,7 @@ namespace SinputSystems.Touch {
 			}
 		}
 
-		
+
 
 		// Update is called once per frame
 		void Update() {
@@ -79,7 +79,7 @@ namespace SinputSystems.Touch {
 				if (!onlyPressingTouches) canUseThisTouch = true;
 				if (onlyPressingTouches) {
 					//if this touch is one we have already claimed, we can use it
-					for (int k=0; k<claimedTouches.Count; k++) {
+					for (int k = 0; k < claimedTouches.Count; k++) {
 						if (Input.touches[i].fingerId == claimedTouches[k]) canUseThisTouch = true;
 					}
 
@@ -105,7 +105,8 @@ namespace SinputSystems.Touch {
 								claimedTouches.Add(Input.touches[i].fingerId);
 							}
 						}
-					} else {
+					}
+					else {
 						//test against button plane within a radius
 						float hitDistance = 0f;
 						buttonPlane.SetNormalAndPosition(transform.forward, transform.position);
@@ -133,7 +134,8 @@ namespace SinputSystems.Touch {
 						if (touchCollider.Raycast(ray, out hit, 9999f)) {
 							isHeld = true;
 						}
-					} else {
+					}
+					else {
 						float hitDistance = 0f;
 						buttonPlane.SetNormalAndPosition(transform.forward, transform.position);
 						if (buttonPlane.Raycast(ray, out hitDistance)) {
@@ -156,7 +158,8 @@ namespace SinputSystems.Touch {
 					spriteRenderer.sprite = heldSprite;
 					spriteRenderer.color = pressColor;
 					labelContainer.localPosition = Vector3.zero;
-				} else {
+				}
+				else {
 					spriteRenderer.sprite = releasedSprite;
 					spriteRenderer.color = pressColor;
 					//spriteRenderer.color = color;

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR;
 
@@ -21,15 +20,16 @@ namespace SinputSystems.XR {
 			XRenabled = UnityEngine.XR.XRSettings.enabled;
 
 			InputTracking.GetNodeStates(xrNodeStates);
-			for (int i=0; i<xrNodeStates.Count; i++) {
+			for (int i = 0; i < xrNodeStates.Count; i++) {
 				int nodeIndex = -1;
-				for (int k=0; k<nodes.Count; k++) {
+				for (int k = 0; k < nodes.Count; k++) {
 					if (nodes[k].nodeType == xrNodeStates[i].nodeType) nodeIndex = k;
 				}
 				if (nodeIndex == -1) {
 					nodeIndex = xrNodeStates.Count;
 					nodes.Add(new SinputXRNode(xrNodeStates[i].nodeType));
-				} else {
+				}
+				else {
 
 					nodes[nodeIndex].Update(xrNodeStates[i]);
 				}
@@ -53,7 +53,7 @@ namespace SinputSystems.XR {
 
 			return new SinputXRNode(nodeType);
 		}
-		
+
 	}
 
 	public class SinputXRNode {
@@ -86,18 +86,18 @@ namespace SinputSystems.XR {
 			string vrEnvironmentType = UnityEngine.XR.XRSettings.loadedDeviceName.ToLower();
 			if (vrEnvironmentType.Contains("openvr")) {
 				if (nodeType == XRNode.LeftHand) {
-					AddBinding("Trigger", (int)OpenVRButtons.TRIGGER_TOUCH_L);
+					AddBinding("Trigger", (int) OpenVRButtons.TRIGGER_TOUCH_L);
 				}
 				if (nodeType == XRNode.RightHand) {
-					AddBinding("Trigger", (int)OpenVRButtons.TRIGGER_TOUCH_R);
+					AddBinding("Trigger", (int) OpenVRButtons.TRIGGER_TOUCH_R);
 				}
 			}
 			if (vrEnvironmentType.Contains("oculus")) {
 				if (nodeType == XRNode.LeftHand) {
-					AddBinding("Trigger", (int)OculusButtons.INDEXTRIGGER_PRIMARY_TOUCH);
+					AddBinding("Trigger", (int) OculusButtons.INDEXTRIGGER_PRIMARY_TOUCH);
 				}
 				if (nodeType == XRNode.RightHand) {
-					AddBinding("Trigger", (int)OculusButtons.INDEXTRIGGER_SECONDARY_TOUCH);
+					AddBinding("Trigger", (int) OculusButtons.INDEXTRIGGER_SECONDARY_TOUCH);
 				}
 			}
 		}
@@ -107,7 +107,7 @@ namespace SinputSystems.XR {
 			string[] joystickNames = Input.GetJoystickNames();
 
 			joystickIndeces = new List<int>();
-			
+
 			for (int i = 0; i < joystickNames.Length; i++) {
 				//Debug.Log(joystickNames[i]);
 				if (nodeType == XRNode.LeftHand) {
@@ -132,7 +132,7 @@ namespace SinputSystems.XR {
 
 			//joystick name numbers begin at 1
 			//because perish the idea that things in unity might be consistent
-			for (int i=0; i<joystickIndeces.Count; i++) {
+			for (int i = 0; i < joystickIndeces.Count; i++) {
 				joystickIndeces[i] += 1;
 			}
 		}
@@ -145,13 +145,13 @@ namespace SinputSystems.XR {
 			_angularAcceleration = Vector3.zero;
 			_velocity = Vector3.zero;
 			_angularVelocity = Vector3.zero;
-			
+
 			isTracked = nodeState.tracked;
 
 			if (nodeState.TryGetPosition(out _position)) {
 				position = _position;
 			}
-		
+
 			if (nodeState.TryGetRotation(out _rotation)) {
 				rotation = _rotation;
 			}
@@ -181,10 +181,10 @@ namespace SinputSystems.XR {
 
 		private bool ButtonCheck(string controlname, ButtonAction bAction) {
 			for (int i = 0; i < joystickIndeces.Count; i++) {
-				if (bAction == ButtonAction.DOWN && Sinput.GetButtonDown(controlname, (InputDeviceSlot)joystickIndeces[i])) return true;
-				if (bAction == ButtonAction.HELD && Sinput.GetButton(controlname, (InputDeviceSlot)joystickIndeces[i])) return true;
-				if (bAction == ButtonAction.UP && Sinput.GetButtonUp(controlname, (InputDeviceSlot)joystickIndeces[i])) return true;
-				if (bAction == ButtonAction.REPEATING && Sinput.GetButtonDownRepeating(controlname, (InputDeviceSlot)joystickIndeces[i])) return true;
+				if (bAction == ButtonAction.DOWN && Sinput.GetButtonDown(controlname, (InputDeviceSlot) joystickIndeces[i])) return true;
+				if (bAction == ButtonAction.HELD && Sinput.GetButton(controlname, (InputDeviceSlot) joystickIndeces[i])) return true;
+				if (bAction == ButtonAction.UP && Sinput.GetButtonUp(controlname, (InputDeviceSlot) joystickIndeces[i])) return true;
+				if (bAction == ButtonAction.REPEATING && Sinput.GetButtonDownRepeating(controlname, (InputDeviceSlot) joystickIndeces[i])) return true;
 			}
 
 
@@ -198,9 +198,10 @@ namespace SinputSystems.XR {
 			float v = 0f;
 			for (int i = 0; i < joystickIndeces.Count; i++) {
 				if (!getRawValue) {
-					v = Sinput.GetAxisRaw(controlname, (InputDeviceSlot)joystickIndeces[i]);
-				} else {
-					v = Sinput.GetAxisRaw(controlname, (InputDeviceSlot)joystickIndeces[i]);
+					v = Sinput.GetAxisRaw(controlname, (InputDeviceSlot) joystickIndeces[i]);
+				}
+				else {
+					v = Sinput.GetAxisRaw(controlname, (InputDeviceSlot) joystickIndeces[i]);
 				}
 				if (Mathf.Abs(v) > Mathf.Abs(returnV)) returnV = v;
 			}

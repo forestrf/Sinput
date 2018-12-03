@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace SinputSystems.Touch {
@@ -52,7 +51,7 @@ namespace SinputSystems.Touch {
 		public static void ReleaseTouch(int ID) {
 			TouchUpdate();
 
-			for (int i=0; i<claimedTouchIDs.Count; i++) {
+			for (int i = 0; i < claimedTouchIDs.Count; i++) {
 				if (claimedTouchIDs[i] == ID) {
 					claimedTouchIDs.RemoveAt(i);
 					i--;

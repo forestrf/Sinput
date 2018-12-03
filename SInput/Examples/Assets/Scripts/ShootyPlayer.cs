@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Profiling;
 
-namespace SinputSystems.Examples{
+namespace SinputSystems.Examples {
 	public class ShootyPlayer : MonoBehaviour {
 
 		//which input device controls this player
@@ -23,19 +23,19 @@ namespace SinputSystems.Examples{
 		public Transform gunTransform;
 
 		// Use this for initialization
-		void Start () {
+		void Start() {
 			characterController = transform.GetComponent<CharacterController>();
 			//set the player a random colour
 			Color playerColor = new Color(Random.Range(0.5f, 1f), Random.Range(0.5f, 1f), Random.Range(0.5f, 1f), 1f);
-			for (int i=0; i<playerRenderers.Length; i++) {
+			for (int i = 0; i < playerRenderers.Length; i++) {
 				playerRenderers[i].material.color = playerColor;
 			}
 			playerSlotDisplay.text = "Input:\n" + playerSlot.ToString();
 		}
-		
+
 		// Update is called once per frame
-		void Update () {
-			
+		void Update() {
+
 			//get player input for motion
 			Profiler.BeginSample("ShootyPlayer moving GetVector");
 			Vector3 motionInput = Sinput.GetVector("Horizontal", "", "Vertical", playerSlot);
@@ -55,7 +55,7 @@ namespace SinputSystems.Examples{
 
 			//landing/jumping
 			Profiler.BeginSample("ShootyPlayer jumping");
-			if (characterController.isGrounded){
+			if (characterController.isGrounded) {
 				yMotion = -0.05f;
 
 				if (Sinput.GetButtonDown("Jump", playerSlot)) {
@@ -107,6 +107,6 @@ namespace SinputSystems.Examples{
 		}
 	}
 
-	
+
 
 }

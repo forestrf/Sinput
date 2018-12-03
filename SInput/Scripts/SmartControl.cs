@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace SinputSystems{
+namespace SinputSystems {
 
 	public class SmartControl : BaseControl {
 		//InputControls combine various inputs, and can behave as buttons or 1-dimensional axis
@@ -12,7 +12,7 @@ namespace SinputSystems{
 		public string displayName;
 
 		//control constructor
-		public SmartControl(string controlName){
+		public SmartControl(string controlName) {
 			name = controlName;
 
 			values = new float[Sinput.totalPossibleDeviceSlots];
@@ -29,14 +29,14 @@ namespace SinputSystems{
 		public BaseControl negativeControlRef { get; private set; }
 
 
-		public float deadzone=0.001f; //clip values less than this
+		public float deadzone = 0.001f; //clip values less than this
 
 		//public float scale =1f;
 		public float[] scales;
 
 		public bool[] inversion;
 
-		public void Init(){
+		public void Init() {
 			//prepare to record values for all gamepads AND keyboard & mouse inputs
 			//int possibleInputDeviceCount = System.Enum.GetValues(typeof(InputDeviceSlot)).Length;
 			ResetAllValues(InputDeviceSlot.any);
@@ -52,20 +52,21 @@ namespace SinputSystems{
 					values[i] = 0f;
 					valuePrefersDeltaUse[i] = true;
 				}
-			} else {
-				values[(int)slot] = 0f;
-				valuePrefersDeltaUse[(int)slot] = true;
+			}
+			else {
+				values[(int) slot] = 0f;
+				valuePrefersDeltaUse[(int) slot] = true;
 			}
 		}
 
 		private int lastUpdateFrame = -10;
-		public void Update(){
+		public void Update() {
 			if (Time.frameCount == lastUpdateFrame) return;
 			lastUpdateFrame = Time.frameCount;
 
-			
-			for (int slot=0; slot<values.Length; slot++){
-				
+
+			for (int slot = 0; slot < values.Length; slot++) {
+
 				bool positivePrefersDelta, negativePrefersDelta;
 				values[slot] = Sinput.AxisCheck(positiveControlRef, out positivePrefersDelta, (InputDeviceSlot) slot) - Sinput.AxisCheck(negativeControlRef, out negativePrefersDelta, (InputDeviceSlot) slot);
 
@@ -89,7 +90,7 @@ namespace SinputSystems{
 
 			//deadzone clipping
 			if (Math.Abs(values[(int) slot]) < deadzone) return 0f;
-			
+
 			//return the raw value
 			return values[(int) slot] * scales[(int) slot];
 		}
