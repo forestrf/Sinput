@@ -3,8 +3,9 @@
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -21,40 +22,62 @@ MonoBehaviour:
   os: 2
   buttons:
   - buttonType: 1
+    vrButtonType: 0
     buttonNumber: 0
     displayName: A
+    displaySprite: {fileID: 21300000, guid: 589bbfec5cb17cd478aad5f2c9432941, type: 3}
   - buttonType: 2
+    vrButtonType: 0
     buttonNumber: 1
     displayName: B
+    displaySprite: {fileID: 21300000, guid: e8a5232360f81524f9b85bfb5082c144, type: 3}
   - buttonType: 3
+    vrButtonType: 0
     buttonNumber: 2
     displayName: X
+    displaySprite: {fileID: 21300000, guid: cd4d923d057b54c49bd381e35929acfa, type: 3}
   - buttonType: 4
+    vrButtonType: 0
     buttonNumber: 3
     displayName: Y
+    displaySprite: {fileID: 21300000, guid: bc6ec3a9f0acf8940a405f4ca63a947f, type: 3}
   - buttonType: 5
+    vrButtonType: 0
     buttonNumber: 4
     displayName: LB
+    displaySprite: {fileID: 21300000, guid: 8dffed68d2826a44eb0d00f79870884a, type: 3}
   - buttonType: 6
+    vrButtonType: 0
     buttonNumber: 5
     displayName: RB
+    displaySprite: {fileID: 21300000, guid: c0defe7733b7e6c4db048009c46ce76d, type: 3}
   - buttonType: 9
+    vrButtonType: 0
     buttonNumber: 8
     displayName: L3
+    displaySprite: {fileID: 21300000, guid: 89f6b4cac4f7e634f9af001815405d84, type: 3}
   - buttonType: 10
+    vrButtonType: 0
     buttonNumber: 9
     displayName: R3
+    displaySprite: {fileID: 21300000, guid: 70e170cc74c00b5438fbacd0272290da, type: 3}
   - buttonType: 23
+    vrButtonType: 0
     buttonNumber: 7
     displayName: Start
+    displaySprite: {fileID: 21300000, guid: d8799a51e72d7004688061a929db8347, type: 3}
   - buttonType: 24
+    vrButtonType: 0
     buttonNumber: 6
     displayName: Back
+    displaySprite: {fileID: 21300000, guid: f5b8e1db39be28849bb2058115645274, type: 3}
   axis:
   - buttonType: 15
+    vrButtonType: 0
     axisNumber: 1
     invert: 1
     clamp: 1
+    deadZone: 0
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -62,10 +85,13 @@ MonoBehaviour:
     rescaleAxisMax: 1
     defaultVal: 0
     displayName: Left
+    displaySprite: {fileID: 0}
   - buttonType: 16
+    vrButtonType: 0
     axisNumber: 1
     invert: 0
     clamp: 1
+    deadZone: 0
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -73,10 +99,13 @@ MonoBehaviour:
     rescaleAxisMax: 1
     defaultVal: 0
     displayName: Right
+    displaySprite: {fileID: 0}
   - buttonType: 26
+    vrButtonType: 0
     axisNumber: 1
     invert: 0
     clamp: 0
+    deadZone: 0
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -84,10 +113,13 @@ MonoBehaviour:
     rescaleAxisMax: 1
     defaultVal: 0
     displayName: Horizontal
+    displaySprite: {fileID: 0}
   - buttonType: 17
+    vrButtonType: 0
     axisNumber: 2
     invert: 1
     clamp: 1
+    deadZone: 0
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -95,10 +127,13 @@ MonoBehaviour:
     rescaleAxisMax: 1
     defaultVal: 0
     displayName: Up
+    displaySprite: {fileID: 0}
   - buttonType: 18
+    vrButtonType: 0
     axisNumber: 2
     invert: 0
     clamp: 1
+    deadZone: 0
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -106,10 +141,13 @@ MonoBehaviour:
     rescaleAxisMax: 1
     defaultVal: 0
     displayName: Down
+    displaySprite: {fileID: 0}
   - buttonType: 27
+    vrButtonType: 0
     axisNumber: 2
     invert: 1
     clamp: 0
+    deadZone: 0
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -117,10 +155,13 @@ MonoBehaviour:
     rescaleAxisMax: 1
     defaultVal: 0
     displayName: Vertical
+    displaySprite: {fileID: 0}
   - buttonType: 19
+    vrButtonType: 0
     axisNumber: 4
     invert: 1
     clamp: 1
+    deadZone: 0
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -128,10 +169,13 @@ MonoBehaviour:
     rescaleAxisMax: 1
     defaultVal: 0
     displayName: R_Left
+    displaySprite: {fileID: 0}
   - buttonType: 20
+    vrButtonType: 0
     axisNumber: 4
     invert: 0
     clamp: 1
+    deadZone: 0
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -139,10 +183,13 @@ MonoBehaviour:
     rescaleAxisMax: 1
     defaultVal: 0
     displayName: R_Right
+    displaySprite: {fileID: 0}
   - buttonType: 28
+    vrButtonType: 0
     axisNumber: 4
     invert: 0
     clamp: 0
+    deadZone: 0
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -150,10 +197,13 @@ MonoBehaviour:
     rescaleAxisMax: 1
     defaultVal: 0
     displayName: R_Horizontal
+    displaySprite: {fileID: 0}
   - buttonType: 21
+    vrButtonType: 0
     axisNumber: 5
     invert: 1
     clamp: 1
+    deadZone: 0
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -161,10 +211,13 @@ MonoBehaviour:
     rescaleAxisMax: 1
     defaultVal: 0
     displayName: R_Up
+    displaySprite: {fileID: 0}
   - buttonType: 22
+    vrButtonType: 0
     axisNumber: 5
     invert: 0
     clamp: 1
+    deadZone: 0
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -172,10 +225,13 @@ MonoBehaviour:
     rescaleAxisMax: 1
     defaultVal: 0
     displayName: R_Down
+    displaySprite: {fileID: 0}
   - buttonType: 29
+    vrButtonType: 0
     axisNumber: 5
     invert: 1
     clamp: 0
+    deadZone: 0
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -183,10 +239,13 @@ MonoBehaviour:
     rescaleAxisMax: 1
     defaultVal: 0
     displayName: R_Vertical
+    displaySprite: {fileID: 0}
   - buttonType: 7
+    vrButtonType: 0
     axisNumber: 9
     invert: 0
     clamp: 0
+    deadZone: 0
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -194,10 +253,13 @@ MonoBehaviour:
     rescaleAxisMax: 1
     defaultVal: 0
     displayName: LT
+    displaySprite: {fileID: 0}
   - buttonType: 8
+    vrButtonType: 0
     axisNumber: 10
     invert: 0
     clamp: 0
+    deadZone: 0
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -205,10 +267,13 @@ MonoBehaviour:
     rescaleAxisMax: 1
     defaultVal: 0
     displayName: RT
+    displaySprite: {fileID: 0}
   - buttonType: 11
+    vrButtonType: 0
     axisNumber: 6
     invert: 1
     clamp: 1
+    deadZone: 0
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -216,10 +281,13 @@ MonoBehaviour:
     rescaleAxisMax: 1
     defaultVal: 0
     displayName: DPAD Left
+    displaySprite: {fileID: 0}
   - buttonType: 12
+    vrButtonType: 0
     axisNumber: 6
     invert: 0
     clamp: 1
+    deadZone: 0
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -227,10 +295,13 @@ MonoBehaviour:
     rescaleAxisMax: 1
     defaultVal: 0
     displayName: DPAD Right
+    displaySprite: {fileID: 0}
   - buttonType: 30
+    vrButtonType: 0
     axisNumber: 6
     invert: 0
     clamp: 0
+    deadZone: 0
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -238,10 +309,13 @@ MonoBehaviour:
     rescaleAxisMax: 1
     defaultVal: 0
     displayName: DPAD X
+    displaySprite: {fileID: 0}
   - buttonType: 13
+    vrButtonType: 0
     axisNumber: 7
     invert: 0
     clamp: 1
+    deadZone: 0
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -249,10 +323,13 @@ MonoBehaviour:
     rescaleAxisMax: 1
     defaultVal: 0
     displayName: DPAD Up
+    displaySprite: {fileID: 0}
   - buttonType: 14
+    vrButtonType: 0
     axisNumber: 7
     invert: 1
     clamp: 1
+    deadZone: 0
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -260,10 +337,13 @@ MonoBehaviour:
     rescaleAxisMax: 1
     defaultVal: 0
     displayName: DPAD Down
+    displaySprite: {fileID: 0}
   - buttonType: 31
+    vrButtonType: 0
     axisNumber: 7
     invert: 0
     clamp: 0
+    deadZone: 0
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -271,3 +351,5 @@ MonoBehaviour:
     rescaleAxisMax: 1
     defaultVal: 0
     displayName: DPAD Y
+    displaySprite: {fileID: 0}
+  isXRdevice: 0

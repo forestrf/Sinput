@@ -359,7 +359,14 @@ namespace SinputSystems {
 			}
 		}
 
-
+		public override void FillSprites(List<Sprite> sprites, InputDeviceSlot slot) {
+			foreach (var input in inputs) {
+				var sprite = input.GetDisplaySprite();
+				if (!sprites.Contains(sprite)) {
+					sprites.Add(sprite);
+				}
+			}
+		}
 	}
 
 	//state of control, for a frame, for one slot

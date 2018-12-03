@@ -28,6 +28,7 @@ namespace SinputSystems {
 			public CommonXRInputs vrButtonType;
 			public int buttonNumber;
 			public string displayName;
+			public Sprite displaySprite;
 		}
 
 		[System.Serializable]
@@ -36,20 +37,22 @@ namespace SinputSystems {
 			public CommonXRInputs vrButtonType;
 			public int axisNumber;
 			public bool invert;
-			public bool clamp; //applied AFTER invert, to keep input result between 0 and 1
+			public bool clamp; // Applied AFTER invert, to keep input result between 0 and 1
+			public float deadZone; // Applied last
 
-			//for using the axis as a button
-			public bool compareGreater;//true is ([axisVal]>compareVal), false is ([axisVal]<compareVal)
-			public float compareVal;//how var does have to go to count as "pressed" as a button
+			// For using the axis as a button
+			public bool compareGreater; // True is ([axisVal]>compareVal), false is ([axisVal]<compareVal)
+			public float compareVal; // How var does have to go to count as "pressed" as a button
 
 			public bool rescaleAxis;
 			public float rescaleAxisMin;
 			public float rescaleAxisMax;
 
-			public float defaultVal; //all GetAxis() checks will return default value until a measured change occurs, since readings before then can be wrong
+			public float defaultVal; // All GetAxis() checks will return default value until a measured change occurs, since readings before then can be wrong
 
 
 			public string displayName;
+			public Sprite displaySprite;
 		}
 	}
 }

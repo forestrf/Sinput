@@ -1,9 +1,7 @@
-﻿using System.Collections;
+﻿using SinputSystems;
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEditor;
-using System;
-using SinputSystems;
+using UnityEngine;
 
 [CustomEditor(typeof(ControlScheme))]
 public class ControlSchemeEditor : Editor {
@@ -38,9 +36,9 @@ public class ControlSchemeEditor : Editor {
 		return result;
 	}
 
-	public override void OnInspectorGUI(){
+	public override void OnInspectorGUI() {
 
-		ControlScheme controlScheme = (ControlScheme)target;
+		ControlScheme controlScheme = (ControlScheme) target;
 		EditorGUI.BeginChangeCheck();
 
 		if (null == guiBGStyleeee) {
@@ -64,13 +62,13 @@ public class ControlSchemeEditor : Editor {
 				//toggled XR. lets check if this control scheme has xr lists
 				//older versions of sinput didn't have xr so this saves those older control schemes
 				for (int i = 0; i < controlScheme.controls.Count; i++) {
-					
+
 					if (controlScheme.controls[i].xrInputs == null) {
 						ControlScheme.ControlSetup controlSetup = controlScheme.controls[i];
 						controlSetup.xrInputs = new List<CommonXRInputs>();
 						controlScheme.controls[i] = controlSetup;
 					}
-				
+
 				}
 			}
 			GUILayout.EndHorizontal();
@@ -78,10 +76,10 @@ public class ControlSchemeEditor : Editor {
 
 		EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
 
-		if (currentPanel==0){
+		if (currentPanel == 0) {
 			//show controls list
 
-			
+
 
 			if (controlFoldoutAnims.Count != controlScheme.controls.Count) {
 				//controlFoldouts = new List<bool>();
@@ -93,20 +91,20 @@ public class ControlSchemeEditor : Editor {
 				}
 			}
 
-			for (int i=0; i<controlScheme.controls.Count; i++){
+			for (int i = 0; i < controlScheme.controls.Count; i++) {
 				bool deleteControl = false;
 				bool moveUp = false;
 				bool moveDown = false;
 
 				EditorGUILayout.BeginHorizontal();
-				controlFoldoutAnims[i].target = EditorGUILayout.Foldout(controlFoldoutAnims[i].target,controlScheme.controls[i].name, true);
+				controlFoldoutAnims[i].target = EditorGUILayout.Foldout(controlFoldoutAnims[i].target, controlScheme.controls[i].name, true);
 				//EditorGUILayout.BeginHorizontal(GUILayout.Width(90));
 				if (GUILayout.Button("↑", EditorStyles.miniButton, GUILayout.Width(20))) moveUp = true;
 				if (GUILayout.Button("↓", EditorStyles.miniButton, GUILayout.Width(20))) moveDown = true;
 				if (GUILayout.Button("X", EditorStyles.miniButton, GUILayout.Width(30))) deleteControl = true;
 				//EditorGUILayout.EndHorizontal();
 				EditorGUILayout.EndHorizontal();
-				
+
 
 				if (EditorGUILayout.BeginFadeGroup(controlFoldoutAnims[i].faded)) {
 					EditorGUILayout.BeginVertical(guiBGStyleeee);
@@ -121,11 +119,11 @@ public class ControlSchemeEditor : Editor {
 
 
 					activeControlName = activeControl.name;
-					activeControl.name = EditorGUILayout.TextField("Control Name",activeControl.name);
+					activeControl.name = EditorGUILayout.TextField("Control Name", activeControl.name);
 					activeControl.name = SinputSystems.SinputFileIO.SanitiseStringForSaving(activeControl.name);
 					if (activeControlName != activeControl.name) {
 						//control name changed, lets apply this change to any smart controls that reference this control
-						for (int k=0; k<controlScheme.smartControls.Count; k++) {
+						for (int k = 0; k < controlScheme.smartControls.Count; k++) {
 							if (controlScheme.smartControls[k].positiveControl == activeControlName) {
 								ControlScheme.SmartControlSetup activeSmartControl = controlScheme.smartControls[k];
 								activeSmartControl.positiveControl = activeControl.name;
@@ -154,18 +152,18 @@ public class ControlSchemeEditor : Editor {
 					EditorGUILayout.EndVertical();
 					EditorGUILayout.BeginVertical();
 					//column b
-					for (int k=0; k<activeControl.keyboardInputs.Count; k++){
+					for (int k = 0; k < activeControl.keyboardInputs.Count; k++) {
 						EditorGUILayout.BeginHorizontal();
 
-						activeControl.keyboardInputs[k] = (KeyboardInputType)EditorGUILayout.EnumPopup(activeControl.keyboardInputs[k]);
-						if (GUILayout.Button("x", EditorStyles.miniButton)){
+						activeControl.keyboardInputs[k] = (KeyboardInputType) EditorGUILayout.EnumPopup(activeControl.keyboardInputs[k]);
+						if (GUILayout.Button("x", EditorStyles.miniButton)) {
 							activeControl.keyboardInputs.RemoveAt(k);
 							k--;
 						}
 						EditorGUILayout.EndHorizontal();
 					}
 					EditorGUILayout.BeginHorizontal();
-					if (GUILayout.Button("+", GUILayout.Width(40))){
+					if (GUILayout.Button("+", GUILayout.Width(40))) {
 						KeyboardInputType newKeycode = KeyboardInputType.None;
 						activeControl.keyboardInputs.Add(newKeycode);
 					}
@@ -187,11 +185,11 @@ public class ControlSchemeEditor : Editor {
 					EditorGUILayout.EndVertical();
 					EditorGUILayout.BeginVertical();
 					//column b
-					for (int k=0; k<activeControl.gamepadInputs.Count; k++){
+					for (int k = 0; k < activeControl.gamepadInputs.Count; k++) {
 						EditorGUILayout.BeginHorizontal();
 
-						activeControl.gamepadInputs[k] = (CommonGamepadInputs)EditorGUILayout.EnumPopup(activeControl.gamepadInputs[k]);
-						if (GUILayout.Button("x", EditorStyles.miniButton)){
+						activeControl.gamepadInputs[k] = (CommonGamepadInputs) EditorGUILayout.EnumPopup(activeControl.gamepadInputs[k]);
+						if (GUILayout.Button("x", EditorStyles.miniButton)) {
 							activeControl.gamepadInputs.RemoveAt(k);
 							k--;
 						}
@@ -199,7 +197,7 @@ public class ControlSchemeEditor : Editor {
 
 					}
 					EditorGUILayout.BeginHorizontal();
-					if (GUILayout.Button("+", GUILayout.Width(40))){
+					if (GUILayout.Button("+", GUILayout.Width(40))) {
 						CommonGamepadInputs newGamepadInput = CommonGamepadInputs.NOBUTTON;
 						activeControl.gamepadInputs.Add(newGamepadInput);
 					}
@@ -221,11 +219,11 @@ public class ControlSchemeEditor : Editor {
 					EditorGUILayout.EndVertical();
 					EditorGUILayout.BeginVertical();
 					//column b
-					for (int k=0; k<activeControl.mouseInputs.Count; k++){
+					for (int k = 0; k < activeControl.mouseInputs.Count; k++) {
 						EditorGUILayout.BeginHorizontal();
 
-						activeControl.mouseInputs[k] = (MouseInputType)EditorGUILayout.EnumPopup(activeControl.mouseInputs[k]);
-						if (GUILayout.Button("x", EditorStyles.miniButton)){
+						activeControl.mouseInputs[k] = (MouseInputType) EditorGUILayout.EnumPopup(activeControl.mouseInputs[k]);
+						if (GUILayout.Button("x", EditorStyles.miniButton)) {
 							activeControl.mouseInputs.RemoveAt(k);
 							k--;
 						}
@@ -233,7 +231,7 @@ public class ControlSchemeEditor : Editor {
 
 					}
 					EditorGUILayout.BeginHorizontal();
-					if (GUILayout.Button("+", GUILayout.Width(40))){
+					if (GUILayout.Button("+", GUILayout.Width(40))) {
 						activeControl.mouseInputs.Add(MouseInputType.Mouse0);
 					}
 					GUILayout.FlexibleSpace();
@@ -291,7 +289,7 @@ public class ControlSchemeEditor : Editor {
 						//column b
 						for (int k = 0; k < activeControl.xrInputs.Count; k++) {
 							EditorGUILayout.BeginHorizontal();
-							activeControl.xrInputs[k] = (CommonXRInputs)EditorGUILayout.EnumPopup(activeControl.xrInputs[k]);
+							activeControl.xrInputs[k] = (CommonXRInputs) EditorGUILayout.EnumPopup(activeControl.xrInputs[k]);
 							if (GUILayout.Button("x", EditorStyles.miniButton)) {
 								activeControl.xrInputs.RemoveAt(k);
 								k--;
@@ -322,14 +320,14 @@ public class ControlSchemeEditor : Editor {
 				}
 				EditorGUILayout.EndFadeGroup();
 
-				if (moveUp && i>0) {
+				if (moveUp && i > 0) {
 					controlScheme.controls.Insert(i - 1, controlScheme.controls[i]);
 					controlScheme.controls.RemoveAt(i + 1);
 
 					controlFoldoutAnims.Insert(i - 1, controlFoldoutAnims[i]);
 					controlFoldoutAnims.RemoveAt(i + 1);
 				}
-				if (moveDown && i< controlScheme.controls.Count-1) {
+				if (moveDown && i < controlScheme.controls.Count - 1) {
 					controlScheme.controls.Insert(i + 2, controlScheme.controls[i]);
 					controlScheme.controls.RemoveAt(i);
 
@@ -337,7 +335,7 @@ public class ControlSchemeEditor : Editor {
 					controlFoldoutAnims.RemoveAt(i);
 				}
 
-				if (deleteControl){
+				if (deleteControl) {
 					controlScheme.controls.RemoveAt(i);
 					//controlFoldouts.RemoveAt(i);
 					controlFoldoutAnims.RemoveAt(i);
@@ -347,7 +345,7 @@ public class ControlSchemeEditor : Editor {
 
 
 			}
-			if (GUILayout.Button("+")){
+			if (GUILayout.Button("+")) {
 				ControlScheme.ControlSetup newControl = new ControlScheme.ControlSetup();
 				newControl.name = "New Control";
 				newControl.keyboardInputs = new List<KeyboardInputType>();
@@ -359,34 +357,34 @@ public class ControlSchemeEditor : Editor {
 				//controlFoldouts.Add(true);
 				controlFoldoutAnims.Add(new UnityEditor.AnimatedValues.AnimBool(false));
 				controlFoldoutAnims[controlFoldoutAnims.Count - 1].target = true;
-				controlFoldoutAnims[controlFoldoutAnims.Count-1].valueChanged.AddListener(Repaint);
+				controlFoldoutAnims[controlFoldoutAnims.Count - 1].valueChanged.AddListener(Repaint);
 				//controlKeyboardInputNames.Add("");
 				controlNamesChanged = true;
 			}
 			controlNamesChanged = true;
 		}
 
-		if (currentPanel==1){
+		if (currentPanel == 1) {
 			//show smart controls list
-			if (smartControlFoldouts.Count != controlScheme.smartControls.Count){
+			if (smartControlFoldouts.Count != controlScheme.smartControls.Count) {
 				smartControlFoldouts = new List<UnityEditor.AnimatedValues.AnimBool>();
 				for (int i = 0; i < controlScheme.smartControls.Count; i++) {
 					smartControlFoldouts.Add(new UnityEditor.AnimatedValues.AnimBool(false));
 					smartControlFoldouts[smartControlFoldouts.Count - 1].valueChanged.AddListener(Repaint);
 				}
 			}
-			
+
 
 			if (controlNames == null || controlNamesChanged) {
 				controlNamesChanged = true;
 
 				List<string> controlNamesList = new List<string>();
 				controlNamesList.Add("");
-				for (int i=0; i<controlScheme.controls.Count; i++) {
+				for (int i = 0; i < controlScheme.controls.Count; i++) {
 					controlNamesList.Add(controlScheme.controls[i].name);
 				}
 				controlNames = controlNamesList.ToArray();
-				
+
 			}
 
 			if (positiveControlIndices.Count != controlScheme.smartControls.Count || negativeControlIndices.Count != controlScheme.smartControls.Count || controlNamesChanged) {
@@ -403,9 +401,9 @@ public class ControlSchemeEditor : Editor {
 			int controlIndex = 0;
 
 			ControlScheme.SmartControlSetup activeSmartControl = new ControlScheme.SmartControlSetup();
-			for (int i=0; i<controlScheme.smartControls.Count; i++){
+			for (int i = 0; i < controlScheme.smartControls.Count; i++) {
 				EditorGUILayout.BeginHorizontal();
-				smartControlFoldouts[i].target = EditorGUILayout.Foldout(smartControlFoldouts[i].target,controlScheme.smartControls[i].name, true);
+				smartControlFoldouts[i].target = EditorGUILayout.Foldout(smartControlFoldouts[i].target, controlScheme.smartControls[i].name, true);
 
 				//EditorGUILayout.LabelField("");
 				bool deleteControl = false;
@@ -423,7 +421,7 @@ public class ControlSchemeEditor : Editor {
 				activeSmartControl = controlScheme.smartControls[i];
 
 				if (EditorGUILayout.BeginFadeGroup(smartControlFoldouts[i].faded)) {
-				//if (smartControlFoldouts[i]){
+					//if (smartControlFoldouts[i]){
 					activeSmartControl.name = EditorGUILayout.TextField("Name", activeSmartControl.name);
 					activeSmartControl.name = SinputSystems.SinputFileIO.SanitiseStringForSaving(activeSmartControl.name);
 
@@ -458,7 +456,7 @@ public class ControlSchemeEditor : Editor {
 				EditorGUILayout.EndFadeGroup();
 
 				controlScheme.smartControls[i] = activeSmartControl;
-				if (deleteControl){
+				if (deleteControl) {
 					controlScheme.smartControls.RemoveAt(i);
 					smartControlFoldouts.RemoveAt(i);
 					positiveControlIndices.RemoveAt(i);
@@ -486,17 +484,17 @@ public class ControlSchemeEditor : Editor {
 					smartControlFoldouts.Insert(i + 2, smartControlFoldouts[i]);
 					smartControlFoldouts.RemoveAt(i);
 
-					positiveControlIndices.Insert(i +2, positiveControlIndices[i]);
+					positiveControlIndices.Insert(i + 2, positiveControlIndices[i]);
 					positiveControlIndices.RemoveAt(i);
 
-					negativeControlIndices.Insert(i +2, negativeControlIndices[i]);
+					negativeControlIndices.Insert(i + 2, negativeControlIndices[i]);
 					negativeControlIndices.RemoveAt(i);
 				}
 
 			}
 
 
-			if (GUILayout.Button("+")){
+			if (GUILayout.Button("+")) {
 				ControlScheme.SmartControlSetup newSmartControl = new ControlScheme.SmartControlSetup();
 				newSmartControl.name = "New Control";
 				newSmartControl.positiveControl = "";
@@ -522,7 +520,7 @@ public class ControlSchemeEditor : Editor {
 			controlScheme.mouseAndKeyboardAreDistinct = EditorGUILayout.Toggle("Mouse & Keyboard are distinct", controlScheme.mouseAndKeyboardAreDistinct);
 		}*/
 
-		if (EditorGUI.EndChangeCheck()){
+		if (EditorGUI.EndChangeCheck()) {
 			//something was changed
 			EditorUtility.SetDirty(controlScheme);
 		}
@@ -540,7 +538,7 @@ public class ControlSchemeEditor : Editor {
 	}
 
 	int GetControlIndex(string s) {
-		for (int i=0; i<controlNames.Length; i++) {
+		for (int i = 0; i < controlNames.Length; i++) {
 			if (controlNames[i] == s) return i;
 		}
 		return 0;

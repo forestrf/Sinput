@@ -1,16 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using SinputSystems;
 using UnityEditor;
-using SinputSystems;
+using UnityEngine;
 
 public class SinputEditorMenus {
-	
+
 	[MenuItem("Sinput/Generate Unity Inputs")]
-	static void GenerateInputSettings(){
+	static void GenerateInputSettings() {
 		//Debug.Log("Doing Something...");
 		//Debug.Log("Writing new Input Manager asset to \"ProjectSettings/InputManager.asset\"...");
-	
+
 		int joystickNumber = Sinput.MAXCONNECTEDGAMEPADS;
 		int axisNumber = Sinput.MAXAXISPERGAMEPAD;
 
@@ -27,8 +25,8 @@ public class SinputEditorMenus {
 		sr.WriteLine("  m_Axes:");
 
 		//need input axis for all possible gamepad axis
-		for (int j=1; j<=joystickNumber; j++){
-			for (int a=1; a<=axisNumber; a++){
+		for (int j = 1; j <= joystickNumber; j++) {
+			for (int a = 1; a <= axisNumber; a++) {
 
 				sr.WriteLine("  - serializedVersion: 3");
 				sr.WriteLine("    m_Name: J_" + j.ToString() + "_" + a.ToString());
@@ -44,7 +42,7 @@ public class SinputEditorMenus {
 				sr.WriteLine("    snap: 0");
 				sr.WriteLine("    invert: 0");
 				sr.WriteLine("    type: 2");
-				sr.WriteLine("    axis: " + (a-1).ToString());
+				sr.WriteLine("    axis: " + (a - 1).ToString());
 				sr.WriteLine("    joyNum: " + j.ToString());
 			}
 		}
@@ -163,7 +161,7 @@ public class SinputEditorMenus {
 
 		//couldn't find control scheme, creating a new one
 		Debug.Log("Control scheme named \"MainControlScheme\" not found, so creating a new one with default controls.");
-		ControlScheme controlScheme = (ControlScheme)ScriptableObject.CreateInstance(typeof(ControlScheme));
+		ControlScheme controlScheme = (ControlScheme) ScriptableObject.CreateInstance(typeof(ControlScheme));
 
 
 
@@ -188,7 +186,7 @@ public class SinputEditorMenus {
 
 		//couldn't find control scheme, creating a new one
 		Debug.Log("Rebind menu settings named \"MainControlScheme\" not found, so creating a new one.");
-		SinputSystems.Rebinding.RebindMenuSettings newRebindMenuSettings = (SinputSystems.Rebinding.RebindMenuSettings)ScriptableObject.CreateInstance(typeof(SinputSystems.Rebinding.RebindMenuSettings));
+		SinputSystems.Rebinding.RebindMenuSettings newRebindMenuSettings = (SinputSystems.Rebinding.RebindMenuSettings) ScriptableObject.CreateInstance(typeof(SinputSystems.Rebinding.RebindMenuSettings));
 
 
 

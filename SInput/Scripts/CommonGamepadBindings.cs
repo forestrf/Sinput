@@ -142,6 +142,7 @@ namespace SinputSystems {
 						newInput.gamepadButtonNumber = commonMappings[i].buttons[k].buttonNumber;
 						newInput.commonMappingType = commonInputType;
 						newInput.displayName = commonMappings[i].buttons[k].displayName;
+						newInput.displaySprite = commonMappings[i].buttons[k].displaySprite;
 
 						newInput.allowedSlots = mappingSlots[i].slots.ToArray();
 
@@ -164,8 +165,10 @@ namespace SinputSystems {
 						newInput.gamepadAxisNumber = commonMappings[i].axis[k].axisNumber;
 						newInput.commonMappingType = commonInputType;
 						newInput.displayName = commonMappings[i].axis[k].displayName;
+						newInput.displaySprite = commonMappings[i].axis[k].displaySprite;
 						newInput.invertAxis = commonMappings[i].axis[k].invert;
 						newInput.clampAxis = commonMappings[i].axis[k].clamp;
+						newInput.deadZone = commonMappings[i].axis[k].deadZone;
 						newInput.axisButtoncompareVal = commonMappings[i].axis[k].compareVal;
 						newInput.defaultAxisValue = commonMappings[i].axis[k].defaultVal;
 

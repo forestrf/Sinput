@@ -1,9 +1,7 @@
-﻿using System.Collections;
+﻿using SinputSystems;
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEditor;
-using System;
-using SinputSystems;
+using UnityEngine;
 
 [CustomEditor(typeof(CommonMapping))]
 public class CommonMappingEditor : Editor {
@@ -12,20 +10,20 @@ public class CommonMappingEditor : Editor {
 
 	List<bool> axisEditFoldouts = new List<bool>();
 
-	public override void OnInspectorGUI(){
-		
-		CommonMapping padMapping = (CommonMapping)target;
+	public override void OnInspectorGUI() {
+
+		CommonMapping padMapping = (CommonMapping) target;
 		EditorGUI.BeginChangeCheck();
 
-		string[] strs = new string[]{"Gamepad","Buttons","Axis"};
+		string[] strs = new string[] { "Gamepad", "Buttons", "Axis" };
 		currentPanel = GUILayout.Toolbar(currentPanel, strs);
 		EditorGUILayout.Space();
 		EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
 
 
-		if (currentPanel==0){
+		if (currentPanel == 0) {
 			//Gamepad general menu
-			padMapping.os = (OSFamily)EditorGUILayout.EnumPopup("Operating System:", padMapping.os);
+			padMapping.os = (OSFamily) EditorGUILayout.EnumPopup("Operating System:", padMapping.os);
 			EditorGUILayout.Space();
 			EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
 
@@ -34,16 +32,16 @@ public class CommonMappingEditor : Editor {
 			EditorGUILayout.LabelField("(Case insensitive, but needs to match what unity detects)");
 
 
-			for (int i=0; i<padMapping.names.Count; i++){
+			for (int i = 0; i < padMapping.names.Count; i++) {
 				EditorGUILayout.BeginHorizontal();
 				padMapping.names[i] = EditorGUILayout.TextField(padMapping.names[i]);
-				if (GUILayout.Button("x")){
+				if (GUILayout.Button("x")) {
 					//remove gamepad name
 					padMapping.names.RemoveAt(i);
 				}
 				EditorGUILayout.EndHorizontal();
 			}
-			if (GUILayout.Button("+")){
+			if (GUILayout.Button("+")) {
 				//add gamepad name here
 				padMapping.names.Add("GAMEPAD_NAME_HERE");
 			}
@@ -88,45 +86,45 @@ public class CommonMappingEditor : Editor {
 				//we set this mapping to default, lets unset any other common mappings of the same OS from being default
 				System.Object[] commonMappingAssets = Resources.LoadAll("", typeof(CommonMapping));
 				for (int i = 0; i < commonMappingAssets.Length; i++) {
-					if (((CommonMapping)commonMappingAssets[i]).os == padMapping.os) {
-						((CommonMapping)commonMappingAssets[i]).isDefault = false;
-						EditorUtility.SetDirty((CommonMapping)commonMappingAssets[i]);
+					if (((CommonMapping) commonMappingAssets[i]).os == padMapping.os) {
+						((CommonMapping) commonMappingAssets[i]).isDefault = false;
+						EditorUtility.SetDirty((CommonMapping) commonMappingAssets[i]);
 					}
 				}
 				padMapping.isDefault = true;
 			}
 
-			
+
 		}
 
-		if (currentPanel==1){
+		if (currentPanel == 1) {
 			//button mapping menu
-			if (padMapping.buttons.Count>0){
+			if (padMapping.buttons.Count > 0) {
 				//EditorGUILayout.BeginHorizontal();
-				EditorGUILayout.LabelField("Button Type / Button ID / Display Name");
+				EditorGUILayout.LabelField("Button Type / Button ID / Display Name / Prompt Texture");
 				//EditorGUILayout.EndHorizontal();
 			}
 
-			CommonMapping.GamepadButtonInput activeButton = new CommonMapping.GamepadButtonInput();
-			for (int i=0; i<padMapping.buttons.Count; i++){
+			for (int i = 0; i < padMapping.buttons.Count; i++) {
 				EditorGUILayout.BeginHorizontal();
-				activeButton = padMapping.buttons[i];
+				var activeButton = padMapping.buttons[i];
 				if (!padMapping.isXRdevice) {
-					activeButton.buttonType = (CommonGamepadInputs)EditorGUILayout.EnumPopup(padMapping.buttons[i].buttonType);
-				} else {
-					activeButton.vrButtonType = (CommonXRInputs)EditorGUILayout.EnumPopup(padMapping.buttons[i].vrButtonType);
+					activeButton.buttonType = (CommonGamepadInputs) EditorGUILayout.EnumPopup(padMapping.buttons[i].buttonType);
 				}
-				activeButton.buttonNumber = EditorGUILayout.IntField( padMapping.buttons[i].buttonNumber);
-				activeButton.displayName = EditorGUILayout.TextField( activeButton.displayName);
-				activeButton.displayName = SinputFileIO.SanitiseStringForSaving(activeButton.displayName);
+				else {
+					activeButton.vrButtonType = (CommonXRInputs) EditorGUILayout.EnumPopup(padMapping.buttons[i].vrButtonType);
+				}
+				activeButton.buttonNumber = EditorGUILayout.IntField(padMapping.buttons[i].buttonNumber);
+				activeButton.displayName = SinputFileIO.SanitiseStringForSaving(EditorGUILayout.TextField(activeButton.displayName));
+				activeButton.displaySprite = (Sprite) EditorGUILayout.ObjectField(GUIContent.none, activeButton.displaySprite, typeof(Sprite));
 				padMapping.buttons[i] = activeButton;
-				if (GUILayout.Button("x")){
+				if (GUILayout.Button("x")) {
 					//remove button
 					padMapping.buttons.RemoveAt(i);
 				}
 				EditorGUILayout.EndHorizontal();
 			}
-			if (GUILayout.Button("+")){
+			if (GUILayout.Button("+")) {
 				//add button mapping name here
 				CommonMapping.GamepadButtonInput newButtonInput = new CommonMapping.GamepadButtonInput();
 				newButtonInput.buttonType = CommonGamepadInputs.NOBUTTON;
@@ -138,29 +136,31 @@ public class CommonMappingEditor : Editor {
 
 		}
 
-		if (currentPanel==2){
+		if (currentPanel == 2) {
 			//axis mapping menu
-			if (axisEditFoldouts.Count != padMapping.axis.Count){
+			if (axisEditFoldouts.Count != padMapping.axis.Count) {
 				axisEditFoldouts = new List<bool>();
-				for (int i=0; i<padMapping.axis.Count; i++) axisEditFoldouts.Add(false);
+				for (int i = 0; i < padMapping.axis.Count; i++) axisEditFoldouts.Add(false);
 			}
 
 			CommonMapping.GamepadAxisInput activeAxis = new CommonMapping.GamepadAxisInput();
 			bool delete = false;
-			for (int i=0; i<padMapping.axis.Count; i++){
+			for (int i = 0; i < padMapping.axis.Count; i++) {
 				if (!padMapping.isXRdevice) {
 					axisEditFoldouts[i] = EditorGUILayout.Foldout(axisEditFoldouts[i], padMapping.axis[i].buttonType.ToString(), true);
-				} else {
+				}
+				else {
 					axisEditFoldouts[i] = EditorGUILayout.Foldout(axisEditFoldouts[i], padMapping.axis[i].vrButtonType.ToString(), true);
 				}
-				if (axisEditFoldouts[i]){
+				if (axisEditFoldouts[i]) {
 					delete = false;
 					activeAxis = padMapping.axis[i];
 					EditorGUILayout.BeginHorizontal();
 					if (!padMapping.isXRdevice) {
-						activeAxis.buttonType = (CommonGamepadInputs)EditorGUILayout.EnumPopup(activeAxis.buttonType);
-					} else {
-						activeAxis.vrButtonType = (CommonXRInputs)EditorGUILayout.EnumPopup(activeAxis.vrButtonType);
+						activeAxis.buttonType = (CommonGamepadInputs) EditorGUILayout.EnumPopup(activeAxis.buttonType);
+					}
+					else {
+						activeAxis.vrButtonType = (CommonXRInputs) EditorGUILayout.EnumPopup(activeAxis.vrButtonType);
 					}
 					if (GUILayout.Button("x")) delete = true;
 					EditorGUILayout.EndHorizontal();
@@ -170,20 +170,24 @@ public class CommonMappingEditor : Editor {
 					activeAxis.displayName = EditorGUILayout.TextField("Display name", activeAxis.displayName);
 					activeAxis.displayName = SinputFileIO.SanitiseStringForSaving(activeAxis.displayName);
 					EditorGUILayout.Space();
-					activeAxis.defaultVal=EditorGUILayout.FloatField("Default Value", activeAxis.defaultVal);
+					activeAxis.defaultVal = EditorGUILayout.FloatField("Default Value", activeAxis.defaultVal);
 					activeAxis.invert = EditorGUILayout.Toggle("Invert", activeAxis.invert);
 					activeAxis.clamp = EditorGUILayout.Toggle("Clamp to [0-1]", activeAxis.clamp);
 
-					if (!activeAxis.rescaleAxis){
-						activeAxis.rescaleAxis=EditorGUILayout.Toggle("Rescale to [0-1]", activeAxis.rescaleAxis);
-					}else{
+					if (!activeAxis.rescaleAxis) {
+						activeAxis.rescaleAxis = EditorGUILayout.Toggle("Rescale to [0-1]", activeAxis.rescaleAxis);
+					}
+					else {
 						EditorGUILayout.BeginHorizontal();
-						activeAxis.rescaleAxis=EditorGUILayout.Toggle("Rescale to [0-1]", activeAxis.rescaleAxis);
-						activeAxis.rescaleAxisMin=EditorGUILayout.FloatField(activeAxis.rescaleAxisMin);
-						activeAxis.rescaleAxisMax=EditorGUILayout.FloatField(activeAxis.rescaleAxisMax);
+						activeAxis.rescaleAxis = EditorGUILayout.Toggle("Rescale to [0-1]", activeAxis.rescaleAxis);
+						activeAxis.rescaleAxisMin = EditorGUILayout.FloatField(activeAxis.rescaleAxisMin);
+						activeAxis.rescaleAxisMax = EditorGUILayout.FloatField(activeAxis.rescaleAxisMax);
 
 						EditorGUILayout.EndHorizontal();
 					}
+
+					activeAxis.deadZone = Mathf.Clamp01(EditorGUILayout.FloatField("Deadzone [0-1]", activeAxis.deadZone));
+
 					EditorGUILayout.Space();
 
 					//EditorGUILayout.LabelField("Counts as pressed button when:");
@@ -191,13 +195,13 @@ public class CommonMappingEditor : Editor {
 					string compareStr = "Pressed if >";
 					if (!activeAxis.compareGreater) compareStr = "Pressed if <";
 					if (GUILayout.Button(compareStr)) activeAxis.compareGreater = !activeAxis.compareGreater;
-					activeAxis.compareVal=EditorGUILayout.FloatField(activeAxis.compareVal);
+					activeAxis.compareVal = EditorGUILayout.FloatField(activeAxis.compareVal);
 
 					EditorGUILayout.EndHorizontal();
 
 					padMapping.axis[i] = activeAxis;
 
-					if (delete){
+					if (delete) {
 						//remove axis
 						padMapping.axis.RemoveAt(i);
 						axisEditFoldouts.RemoveAt(i);
@@ -209,7 +213,7 @@ public class CommonMappingEditor : Editor {
 				//EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
 			}
 			EditorGUILayout.Space();
-			if (GUILayout.Button("+")){
+			if (GUILayout.Button("+")) {
 				//add axis mapping name here
 				CommonMapping.GamepadAxisInput newAxisInput = new CommonMapping.GamepadAxisInput();
 				newAxisInput.buttonType = CommonGamepadInputs.NOBUTTON;
@@ -220,12 +224,12 @@ public class CommonMappingEditor : Editor {
 				newAxisInput.clamp = false; //applied AFTER invert, to keep input result between 0 and 1
 
 				//for using the axis as a button
-				newAxisInput.compareGreater=true;//true is ([axisVal]>compareVal), false is ([axisVal]<compareVal)
-				newAxisInput.compareVal=0.4f;//how var does have to go to count as "pressed" as a button
+				newAxisInput.compareGreater = true;//true is ([axisVal]>compareVal), false is ([axisVal]<compareVal)
+				newAxisInput.compareVal = 0.4f;//how var does have to go to count as "pressed" as a button
 
-				newAxisInput.rescaleAxis=false;
-				newAxisInput.rescaleAxisMin=0f;
-				newAxisInput.rescaleAxisMax=1f;
+				newAxisInput.rescaleAxis = false;
+				newAxisInput.rescaleAxisMin = 0f;
+				newAxisInput.rescaleAxisMax = 1f;
 
 				newAxisInput.defaultVal = 0f; //all GetAxis() checks will return default value until a measured change occurs, since readings before then can be wrong
 
@@ -239,7 +243,7 @@ public class CommonMappingEditor : Editor {
 		}
 
 
-		if (EditorGUI.EndChangeCheck()){
+		if (EditorGUI.EndChangeCheck()) {
 			//something was changed
 			EditorUtility.SetDirty(padMapping);
 		}

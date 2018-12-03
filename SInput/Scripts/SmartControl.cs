@@ -1,8 +1,8 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SinputSystems {
-
 	public class SmartControl : BaseControl {
 		//InputControls combine various inputs, and can behave as buttons or 1-dimensional axis
 		//SmartControls combine various InputControls or other SmartControls, and can have a bunch of extra behaviour like normal InputManager smoothing
@@ -98,6 +98,11 @@ namespace SinputSystems {
 		//button check
 		public override bool GetButtonState(ButtonAction bAction, InputDeviceSlot slot, bool getRawValue) {
 			return Sinput.ButtonCheck(positiveControlRef, slot, bAction, getRawValue) || Sinput.ButtonCheck(negativeControlRef, slot, bAction, getRawValue);
+		}
+
+		public override void FillSprites(List<Sprite> sprites, InputDeviceSlot slot) {
+			positiveControlRef.FillSprites(sprites, slot);
+			negativeControlRef.FillSprites(sprites, slot);
 		}
 	}
 }

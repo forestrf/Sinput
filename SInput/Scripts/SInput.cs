@@ -63,6 +63,11 @@ public static class Sinput {
 		}
 		//set { Init(); _controls = value; }
 	}
+
+	public static void FillSpritesForControl(List<Sprite> sprites, string controlName, SinputSystems.InputDeviceSlot playerSlot) {
+		GetControlByName(controlName).FillSprites(sprites, playerSlot);
+	}
+
 	public static SinputSystems.SmartControl[] smartControls { get; private set; }
 
 	//gamepads list is checked every GetButton/GetAxis call, when it updates all common mapped inputs are reapplied appropriately

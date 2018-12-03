@@ -1,14 +1,13 @@
-﻿using System.Collections;
+﻿using SinputSystems.Rebinding;
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEditor;
-using SinputSystems.Rebinding;
+using UnityEngine;
 
 [CustomEditor(typeof(RebindMenuSettings))]
 public class RebindMenuSettingsEditor : Editor {
 
 	public override void OnInspectorGUI() {
-		RebindMenuSettings menuSettings = (RebindMenuSettings)target;
+		RebindMenuSettings menuSettings = (RebindMenuSettings) target;
 		EditorGUI.BeginChangeCheck();
 
 		//show settings
@@ -32,7 +31,7 @@ public class RebindMenuSettingsEditor : Editor {
 
 		//toggleable controls
 		EditorGUILayout.LabelField("Toggleable Controls:");
-		for (int i=0; i<menuSettings.toggleableControls.Count; i++) {
+		for (int i = 0; i < menuSettings.toggleableControls.Count; i++) {
 			EditorGUILayout.BeginHorizontal();
 			menuSettings.toggleableControls[i] = EditorGUILayout.TextField(menuSettings.toggleableControls[i]);
 			menuSettings.toggleableControls[i] = SinputSystems.SinputFileIO.SanitiseStringForSaving(menuSettings.toggleableControls[i]);
@@ -98,7 +97,7 @@ public class RebindMenuSettingsEditor : Editor {
 			activeScalable.maxScale = EditorGUILayout.FloatField(activeScalable.maxScale);
 			EditorGUILayout.EndHorizontal();
 
-			for (int k=0; k<activeScalable.scalableSmartControls.Count; k++) {
+			for (int k = 0; k < activeScalable.scalableSmartControls.Count; k++) {
 				EditorGUILayout.BeginHorizontal();
 				activeScalable.scalableSmartControls[k] = EditorGUILayout.TextField(activeScalable.scalableSmartControls[k]);
 
@@ -109,7 +108,7 @@ public class RebindMenuSettingsEditor : Editor {
 				}
 				EditorGUILayout.EndHorizontal();
 			}
-			
+
 			EditorGUILayout.BeginHorizontal();
 			EditorGUILayout.Space();
 			if (GUILayout.Button("+", EditorStyles.miniButton, GUILayout.Width(20))) {
@@ -121,7 +120,7 @@ public class RebindMenuSettingsEditor : Editor {
 			EditorGUILayout.EndVertical();
 			EditorGUILayout.EndHorizontal();
 
-			
+
 
 			EditorGUILayout.Space();
 			EditorGUILayout.Space();

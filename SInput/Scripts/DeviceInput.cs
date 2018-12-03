@@ -6,6 +6,7 @@ namespace SinputSystems {
 
 		public InputDeviceType inputType;
 		public string displayName;
+		public Sprite displaySprite;
 
 		//custom bound stuff
 		public bool isCustom = false;
@@ -19,6 +20,10 @@ namespace SinputSystems {
 				return mouseInputType.ToString();
 			}
 			return displayName;
+		}
+
+		public Sprite GetDisplaySprite() {
+			return displaySprite;
 		}
 
 
@@ -192,76 +197,5 @@ namespace SinputSystems {
 			return 0f;
 
 		}
-
-		//called max once per frame
-		/*public void UpdateAxisButtonStates(){
-
-			if (inputType == InputDeviceType.GamepadAxis){
-				float axisValue;
-				bool held;
-				for (int i=1; i<=Sinput.gamepads.Length; i++){
-					axisValue = AxisCheck( (InputDeviceSlot)i );
-					held = false;
-					if (axisValue>axisButtoncompareVal) held = true;
-					axisButtonState[i]= AxisButtonChange(axisButtonState[i], held);
-				}
-				return;
-			}
-		
-			if (inputType == InputDeviceType.Mouse){
-				//ignore clicky inputs
-				if (mouseInputType == MouseInputType.Mouse0 || mouseInputType == MouseInputType.Mouse1 || mouseInputType == MouseInputType.Mouse2 || mouseInputType == MouseInputType.Mouse3 || mouseInputType == MouseInputType.Mouse4 || mouseInputType == MouseInputType.Mouse5 || mouseInputType == MouseInputType.Mouse6) return;
-				float axisValue = AxisCheck( InputDeviceSlot.mouse );
-				bool held = false;
-				if (Mathf.Abs(axisValue)>0.5f) held = true;
-				axisButtonState[0]= AxisButtonChange(axisButtonState[0], held);
-
-			}
-		}
-		public void ResetAxisButtonStates(){
-
-			if (inputType == InputDeviceType.GamepadAxis){
-				if (null==axisButtonState || axisButtonState.Length != Sinput.gamepads.Length+1){
-					axisButtonState = new ButtonAction[Sinput.gamepads.Length+1];
-				}
-
-				for (int i=1; i<=Sinput.gamepads.Length; i++){
-					axisButtonState[i]=ButtonAction.NOTHING;
-				}
-			}
-
-			
-
-			if (inputType == InputDeviceType.Mouse){
-				//ignore clicky inputs
-				if (mouseInputType == MouseInputType.Mouse0 || mouseInputType == MouseInputType.Mouse1 || mouseInputType == MouseInputType.Mouse2 || mouseInputType == MouseInputType.Mouse3 || mouseInputType == MouseInputType.Mouse4 || mouseInputType == MouseInputType.Mouse5 || mouseInputType == MouseInputType.Mouse6) return;
-
-				if (null==axisButtonState){
-					axisButtonState = new ButtonAction[1];
-				}
-				axisButtonState[0]=ButtonAction.NOTHING;
-			}
-		}
-		ButtonAction AxisButtonChange(ButtonAction fromState, bool buttonHeld){
-			if (buttonHeld){
-				switch (fromState){
-				case ButtonAction.NOTHING: return ButtonAction.DOWN;
-				case ButtonAction.UP: return ButtonAction.DOWN;
-				case ButtonAction.DOWN: return ButtonAction.HELD;
-				default: return ButtonAction.HELD;
-				}
-			}else{
-				switch (fromState){
-				case ButtonAction.NOTHING: return ButtonAction.NOTHING;
-				case ButtonAction.UP: return ButtonAction.NOTHING;
-				case ButtonAction.DOWN: return ButtonAction.UP;
-				case ButtonAction.HELD: return ButtonAction.UP;
-				default: return ButtonAction.NOTHING;
-				}
-			}
-		}
-		*/
-
-
 	}
 }

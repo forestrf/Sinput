@@ -1,6 +1,5 @@
 ﻿using UnityEditor;
 using UnityEngine;
-using System.Collections;
 
 [CustomEditor(typeof(SinputSystems.Touch.SinputTouch_Button))]
 [CanEditMultipleObjects]
@@ -16,7 +15,7 @@ public class SinputTouch_ButtonEditor : Editor {
 		}
 		Handles.DrawWireDisc(btn.transform.position, btn.transform.forward, btn.collisionRadius);
 
-		
+
 	}
 
 }
@@ -34,7 +33,7 @@ public class SinputTouch_StickEditor : Editor {
 			Handles.color = Color.red;
 		}
 		Handles.DrawWireDisc(stick.transform.position, stick.transform.forward, stick.collisionRadius);
-		
+
 	}
 
 }
