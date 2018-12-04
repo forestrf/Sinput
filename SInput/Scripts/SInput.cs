@@ -64,8 +64,14 @@ public static class Sinput {
 		//set { Init(); _controls = value; }
 	}
 
-	public static void FillSpritesForControl(List<Sprite> sprites, string controlName, SinputSystems.InputDeviceSlot playerSlot) {
-		GetControlByName(controlName).FillSprites(sprites, playerSlot);
+	/// <summary>
+	/// Fill <paramref name="inputs"/> with the inputs that represent the specified control.
+	/// The inputs are ordered by last input device used to first used (TO DO).
+	/// The first element in the array matches the current input in use.
+	/// Useful to get the input's name and prompt sprite.
+	/// </summary>
+	public static void FillInputsForControl(List<SinputSystems.DeviceInput> inputs, string controlName, SinputSystems.InputDeviceSlot playerSlot) {
+		GetControlByName(controlName).FillInputs(inputs, playerSlot);
 	}
 
 	public static SinputSystems.SmartControl[] smartControls { get; private set; }

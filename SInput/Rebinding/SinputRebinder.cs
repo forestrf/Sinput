@@ -248,7 +248,6 @@ namespace SinputSystems.Rebinding {
 						if (gamepads[g].ToUpper() == rebindingDevice.ToUpper()) slots.Add(g);
 					}
 					newInput.allowedSlots = slots.ToArray();
-
 				}
 
 				if (changedInputType == InputDeviceType.GamepadAxis || changedInputType == InputDeviceType.GamepadButton) {
@@ -277,7 +276,6 @@ namespace SinputSystems.Rebinding {
 				}
 
 				if (changedInputType == InputDeviceType.Mouse) {
-
 					newInput.mouseInputType = inputMonitor.changedMouse;
 				}
 

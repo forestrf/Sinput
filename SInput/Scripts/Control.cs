@@ -197,7 +197,6 @@ namespace SinputSystems {
 		}
 
 		public void AddGamepadInput(CommonGamepadInputs gamepadButtonOrAxis) { AddGamepadInput(gamepadButtonOrAxis, true); }
-		public void AddGamepadInput(CommonXRInputs gamepadButtonOrAxis) { AddGamepadInput(gamepadButtonOrAxis, true); }
 		private void AddGamepadInput(CommonGamepadInputs gamepadButtonOrAxis, bool isNewBinding) {
 			Sinput.CheckGamepads();
 
@@ -210,6 +209,7 @@ namespace SinputSystems {
 
 			AddGamepadInputs(applicableMapInputs);
 		}
+		public void AddGamepadInput(CommonXRInputs gamepadButtonOrAxis) { AddGamepadInput(gamepadButtonOrAxis, true); }
 		private void AddGamepadInput(CommonXRInputs gamepadButtonOrAxis, bool isNewBinding) {
 			Sinput.CheckGamepads();
 
@@ -259,8 +259,6 @@ namespace SinputSystems {
 
 			//add whichever common mappings still apply
 			for (int i = 0; i < applicableMapInputs.Count; i++) {
-
-
 				inputs.Add(applicableMapInputs[i]);
 			}
 		}
@@ -285,8 +283,6 @@ namespace SinputSystems {
 			input.commonXRMappingType = CommonXRInputs.NOBUTTON;
 			inputs.Add(input);
 		}
-
-
 
 		public void AddVirtualInput(string virtualInputID) {
 			DeviceInput input = new DeviceInput(InputDeviceType.Virtual);
@@ -359,11 +355,10 @@ namespace SinputSystems {
 			}
 		}
 
-		public override void FillSprites(List<Sprite> sprites, InputDeviceSlot slot) {
-			foreach (var input in inputs) {
-				var sprite = input.GetDisplaySprite();
-				if (!sprites.Contains(sprite)) {
-					sprites.Add(sprite);
+		public override void FillInputs(List<DeviceInput> inputs, InputDeviceSlot slot) {
+			foreach (var input in this.inputs) {
+				if (input.CheckSlot(slot) && !inputs.Contains(input)) {
+					inputs.Add(input);
 				}
 			}
 		}

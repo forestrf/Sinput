@@ -3,12 +3,12 @@ using UnityEngine;
 
 namespace SinputSystems {
 	public class DeviceInput {
+		public readonly InputDeviceType inputType;
 
-		public InputDeviceType inputType;
 		public string displayName;
 		public Sprite displaySprite;
 
-		//custom bound stuff
+		// Custom bound stuff
 		public bool isCustom = false;
 		public string deviceName = "";
 
@@ -22,18 +22,9 @@ namespace SinputSystems {
 			return displayName;
 		}
 
-		public Sprite GetDisplaySprite() {
-			return displaySprite;
-		}
-
 
 		public DeviceInput(InputDeviceType type) {
 			inputType = type;
-
-			//if (inputType==InputDeviceType.Virtual){
-			//	virtualAxisValue = 0f;
-			//virtualInputState = ButtonAction.NOTHING;
-			//}
 		}
 
 		//////////// ~ keyboard specific stuff ~ ////////////
@@ -43,24 +34,25 @@ namespace SinputSystems {
 		public MouseInputType mouseInputType;
 
 		//////////// ~ gamepad specific stuff ~ ////////////
-		public int[] allowedSlots; //list of gamepad slots that this input is allowed to check (they will be ones with a matching name to the known binding
+		public int[] allowedSlots; // List of gamepad slots that this input is allowed to check (they will be ones with a matching name to the known binding
 		public CommonGamepadInputs commonMappingType; //if this is set, this input is a preset/default
 		public CommonXRInputs commonXRMappingType;
-		public int gamepadButtonNumber; //button number for if this input is controlled by a gamepad button
+		public int gamepadButtonNumber; // Button number for if this input is controlled by a gamepad button
 
-		public int gamepadAxisNumber; //axis number for if this input is controlled by a gamepad axis
+		public int gamepadAxisNumber; // Axis number for if this input is controlled by a gamepad axis
 		public bool invertAxis;
 		public bool clampAxis;
-		public bool rescaleAxis;//for rescaling input axis from something else to 0-1
+		public bool rescaleAxis; // For rescaling input axis from something else to 0-1
 		public float rescaleAxisMin;
 		public float rescaleAxisMax;
-		public float deadZone;//TO DO. Setting to allow each gamepad to have its own deadzone.
+		public float deadZone; // Setting to allow each gamepad to have its own deadzone.
+		public float neutralValue; // TO DO. In the 0-1 range, what is the value that represent neutral/released
 
-		//stuff for treating axis like a button
-		//ButtonAction[] axisButtonState; //state of the axis for when used as a button, updated on the first button checks of a frame. list contains state of this axis for each gamepad slot
-		public float axisButtoncompareVal; //axis button is 'pressed' if (axisValue [compareType] compareVal)
+		// Stuff for treating axis like a button
+		//ButtonAction[] axisButtonState; // State of the axis for when used as a button, updated on the first button checks of a frame. list contains state of this axis for each gamepad slot
+		public float axisButtoncompareVal; // Axis button is 'pressed' if (axisValue [compareType] compareVal)
 
-		//all GetAxis() checks will return default value until a measured change occurs, since readings before then can be wrong
+		// All GetAxis() checks will return default value until a measured change occurs, since readings before then can be wrong
 		private bool useDefaultAxisValue = true;
 		public float defaultAxisValue;
 		private float measuredAxisValue = -54.321f;
@@ -68,23 +60,34 @@ namespace SinputSystems {
 		//////////// ~ virtual specific stuff ~ ////////////
 		public string virtualInputID;
 		//private ButtonAction virtualInputState;
-		//public float virtualAxisValue;
+
+		public bool CheckSlot(InputDeviceSlot slot) {
+			if (slot == InputDeviceSlot.any) return true;
+			switch (inputType) {
+				case InputDeviceType.GamepadAxis:
+				case InputDeviceType.GamepadButton:
+					return slot >= InputDeviceSlot.gamepad1 && slot <= InputDeviceSlot.gamepad16;
+				case InputDeviceType.Keyboard:
+					return slot == InputDeviceSlot.keyboardAndMouse || slot == InputDeviceSlot.keyboard;
+				case InputDeviceType.Mouse:
+					return slot == InputDeviceSlot.keyboardAndMouse || slot == InputDeviceSlot.mouse;
+				case InputDeviceType.Virtual:
+					return slot == InputDeviceSlot.virtual1;
+				//case InputDeviceType.XR:
+			}
+			return false;
+		}
 
 		public float AxisCheck(InputDeviceSlot slot) {
+			if (!CheckSlot(slot)) return 0;
 
 			//keyboard checks
 			if (inputType == InputDeviceType.Keyboard) {
-				if (slot == InputDeviceSlot.any || slot == InputDeviceSlot.keyboard || slot == InputDeviceSlot.keyboardAndMouse) {
-					if (Input.GetKey(keyboardKeyCode)) return 1f;
-				}
-
-				return 0f;
+				return Input.GetKey(keyboardKeyCode) ? 1 : 0;
 			}
 
 			//gamepad button and axis checks
 			if (inputType == InputDeviceType.GamepadButton || inputType == InputDeviceType.GamepadAxis) {
-				if (slot == InputDeviceSlot.keyboard || slot == InputDeviceSlot.mouse || slot == InputDeviceSlot.keyboardAndMouse) return 0f;
-
 				//if checking any slot, call this function for each possible slot
 				if (slot == InputDeviceSlot.any) {
 					float greatestV = 0f;
@@ -115,22 +118,22 @@ namespace SinputSystems {
 				//button as axis checks
 				if (inputType == InputDeviceType.GamepadButton) {
 					//button check now
-					if (Input.GetKey(SInputEnums.GetGamepadKeyCode(slotIndex, gamepadButtonNumber))) return 1f;
+					return Input.GetKey(SInputEnums.GetGamepadKeyCode(slotIndex, gamepadButtonNumber)) ? 1 : 0;
 				}
 
-				//gamepad axis check
+				// Gamepad axis check
 				if (inputType == InputDeviceType.GamepadAxis) {
 					float axisValue = Input.GetAxisRaw(SInputEnums.GetAxisString(slotIndex, gamepadAxisNumber - 1));
 					if (invertAxis) axisValue *= -1f;
 					if (rescaleAxis) {
-						//some gamepad axis are -1 to 1 or something when you want them as 0 to 1, EG; triggers on XBONE pad on OSX
+						// Some gamepad axis are -1 to 1 or something when you want them as 0 to 1, EG; triggers on XBONE pad on OSX
 						axisValue = Mathf.InverseLerp(rescaleAxisMin, rescaleAxisMax, axisValue);
 					}
 
 					if (clampAxis) axisValue = Mathf.Clamp01(axisValue);
 
-					// For this to work, axisValue must go from 0 to 1. Another option would be cuttoff instead of rescaling to the deadzone (or rescaleAxisMin and rescaleAxisMax could be used to set the deadzone)
-					axisValue = deadZone + axisValue * (1 - deadZone);
+					// For this to work, axisValue must range from 0 to 1. Another option would be cuttoff instead of rescaling to the deadzone (or rescaleAxisMin and rescaleAxisMax could be used to set the deadzone)
+					axisValue = Mathf.InverseLerp(deadZone, 1, axisValue);
 
 					//we return every axis' default value unless we measure a change first
 					//this prevents weird snapping and false button presses if the pad is reporting a weird value to start with
@@ -151,51 +154,43 @@ namespace SinputSystems {
 			}
 
 
-			//virtual device axis input checks
+			// Virtual device axis input checks
 			if (inputType == InputDeviceType.Virtual) {
-				if (slot == InputDeviceSlot.any || slot == InputDeviceSlot.virtual1) {
-					return VirtualInputs.GetVirtualAxis(virtualInputID);
-				}
-				//return virtualAxisValue;
+				return VirtualInputs.GetVirtualAxis(virtualInputID);
 			}
 
 			//mouseaxis button checks (these don't happen)
 			if (inputType == InputDeviceType.Mouse) {
-				if (slot != InputDeviceSlot.any && slot != InputDeviceSlot.mouse && slot != InputDeviceSlot.keyboardAndMouse) return 0f;
-
 				switch (mouseInputType) {
 					case MouseInputType.MouseHorizontal:
 						return Input.GetAxisRaw("Mouse Horizontal") * Sinput.mouseSensitivity;
-					case MouseInputType.MouseMoveLeft:
-						return Math.Min(Input.GetAxisRaw("Mouse Horizontal") * Sinput.mouseSensitivity, 0f) * -1f;
-					case MouseInputType.MouseMoveRight:
-						return Math.Max(Input.GetAxisRaw("Mouse Horizontal") * Sinput.mouseSensitivity, 0f);
-					case MouseInputType.MouseMoveUp:
-						return Math.Max(Input.GetAxisRaw("Mouse Vertical") * Sinput.mouseSensitivity, 0f);
-					case MouseInputType.MouseMoveDown:
-						return Math.Min(Input.GetAxisRaw("Mouse Vertical") * Sinput.mouseSensitivity, 0f) * -1f;
 					case MouseInputType.MouseVertical:
 						return Input.GetAxisRaw("Mouse Vertical") * Sinput.mouseSensitivity;
+					case MouseInputType.MouseMoveRight:
+						return Math.Max(Input.GetAxisRaw("Mouse Horizontal") * Sinput.mouseSensitivity, 0);
+					case MouseInputType.MouseMoveLeft:
+						return -Math.Min(Input.GetAxisRaw("Mouse Horizontal") * Sinput.mouseSensitivity, 0);
+					case MouseInputType.MouseMoveUp:
+						return Math.Max(Input.GetAxisRaw("Mouse Vertical") * Sinput.mouseSensitivity, 0);
+					case MouseInputType.MouseMoveDown:
+						return -Math.Min(Input.GetAxisRaw("Mouse Vertical") * Sinput.mouseSensitivity, 0);
 					case MouseInputType.MouseScroll:
 						return Input.GetAxisRaw("Mouse Scroll");
 					case MouseInputType.MouseScrollUp:
-						return Math.Max(Input.GetAxisRaw("Mouse Scroll"), 0f);
+						return Math.Max(Input.GetAxisRaw("Mouse Scroll"), 0);
 					case MouseInputType.MouseScrollDown:
-						return Math.Min(Input.GetAxisRaw("Mouse Scroll"), 0f) * -1f;
+						return -Math.Min(Input.GetAxisRaw("Mouse Scroll"), 0);
 					case MouseInputType.MousePositionX:
 						return Input.mousePosition.x;
 					case MouseInputType.MousePositionY:
 						return Input.mousePosition.y;
 					default:
-						//it's a click type mouse input
-						if (Input.GetKey(SInputEnums.GetMouseButton(mouseInputType))) return 1f;
-						break;
+						//it's a click type mouse input, or None. SInputEnums.GetMouseButton can handle any MouseInputType
+						return Input.GetKey(SInputEnums.GetMouseButton(mouseInputType)) ? 1 : 0;
 				}
-				//return Input.GetAxisRaw(mouseAxis);
 			}
 
-			return 0f;
-
+			return 0;
 		}
 	}
 }
