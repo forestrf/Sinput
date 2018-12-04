@@ -1,8 +1,10 @@
 ﻿//using UnityEngine.EventSystems;
 
+using SinputSystems;
+
 namespace UnityEngine.EventSystems {
 	public class StandaloneSinputModule : StandaloneInputModule {
-
+		public InputDevice inputDevice;
 
 
 		//[SerializeField]
@@ -32,7 +34,7 @@ namespace UnityEngine.EventSystems {
 
 				if (!usedEvent) {
 					//SendSubmitEventToSelectedObject();
-					if (SendSubmitEventToSelectedObject()) Sinput.ResetInputs();
+					if (SendSubmitEventToSelectedObject()) Sinput.ResetInputs(null != inputDevice ? inputDevice.playerSlot : SinputSystems.InputDeviceSlot.any);
 				}
 			}
 
@@ -44,12 +46,12 @@ namespace UnityEngine.EventSystems {
 			if (!base.ShouldActivateModule())
 				return false;
 
-			var shouldActivate = Sinput.GetButtonDown(m_SinputSubmitButton);
-			shouldActivate |= Sinput.GetButtonDown(m_SinputCancelButton);
-			shouldActivate |= Sinput.GetButtonDownRepeating(m_SinputUpButton);
-			shouldActivate |= Sinput.GetButtonDownRepeating(m_SinputDownButton);
-			shouldActivate |= Sinput.GetButtonDownRepeating(m_SinputLeftButton);
-			shouldActivate |= Sinput.GetButtonDownRepeating(m_SinputRightButton);
+			var shouldActivate = Sinput.GetButtonDown(m_SinputSubmitButton, null != inputDevice ? inputDevice.playerSlot : SinputSystems.InputDeviceSlot.any);
+			shouldActivate |= Sinput.GetButtonDown(m_SinputCancelButton, null != inputDevice ? inputDevice.playerSlot : SinputSystems.InputDeviceSlot.any);
+			shouldActivate |= Sinput.GetButtonDownRepeating(m_SinputUpButton, null != inputDevice ? inputDevice.playerSlot : SinputSystems.InputDeviceSlot.any);
+			shouldActivate |= Sinput.GetButtonDownRepeating(m_SinputDownButton, null != inputDevice ? inputDevice.playerSlot : SinputSystems.InputDeviceSlot.any);
+			shouldActivate |= Sinput.GetButtonDownRepeating(m_SinputLeftButton, null != inputDevice ? inputDevice.playerSlot : SinputSystems.InputDeviceSlot.any);
+			shouldActivate |= Sinput.GetButtonDownRepeating(m_SinputRightButton, null != inputDevice ? inputDevice.playerSlot : SinputSystems.InputDeviceSlot.any);
 
 			shouldActivate |= (m_MousePos - m_LastMousePos).sqrMagnitude > 0.0f;
 			shouldActivate |= Input.GetMouseButtonDown(0);
@@ -62,10 +64,10 @@ namespace UnityEngine.EventSystems {
 				return false;
 
 			var data = GetBaseEventData();
-			if (Sinput.GetButtonDown(m_SinputSubmitButton))
+			if (Sinput.GetButtonDown(m_SinputSubmitButton, null != inputDevice ? inputDevice.playerSlot : SinputSystems.InputDeviceSlot.any))
 				ExecuteEvents.Execute(eventSystem.currentSelectedGameObject, data, ExecuteEvents.submitHandler);
 
-			if (Sinput.GetButtonDown(m_SinputCancelButton))
+			if (Sinput.GetButtonDown(m_SinputCancelButton, null != inputDevice ? inputDevice.playerSlot : SinputSystems.InputDeviceSlot.any))
 				ExecuteEvents.Execute(eventSystem.currentSelectedGameObject, data, ExecuteEvents.cancelHandler);
 			return data.used;
 		}
@@ -89,10 +91,10 @@ namespace UnityEngine.EventSystems {
 
 		private Vector2 GetRawMoveVector() {
 			Vector2 move = Vector2.zero;
-			if (Sinput.GetButtonDownRepeating(m_SinputUpButton)) move.y += 1f;
-			if (Sinput.GetButtonDownRepeating(m_SinputDownButton)) move.y -= 1f;
-			if (Sinput.GetButtonDownRepeating(m_SinputLeftButton)) move.x -= 1f;
-			if (Sinput.GetButtonDownRepeating(m_SinputRightButton)) move.x += 1f;
+			if (Sinput.GetButtonDownRepeating(m_SinputUpButton, null != inputDevice ? inputDevice.playerSlot : SinputSystems.InputDeviceSlot.any)) move.y += 1f;
+			if (Sinput.GetButtonDownRepeating(m_SinputDownButton, null != inputDevice ? inputDevice.playerSlot : SinputSystems.InputDeviceSlot.any)) move.y -= 1f;
+			if (Sinput.GetButtonDownRepeating(m_SinputLeftButton, null != inputDevice ? inputDevice.playerSlot : SinputSystems.InputDeviceSlot.any)) move.x -= 1f;
+			if (Sinput.GetButtonDownRepeating(m_SinputRightButton, null != inputDevice ? inputDevice.playerSlot : SinputSystems.InputDeviceSlot.any)) move.x += 1f;
 
 			return move;
 		}

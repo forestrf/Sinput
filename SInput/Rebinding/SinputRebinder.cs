@@ -823,7 +823,7 @@ namespace SinputSystems.Rebinding {
 				newSettingPanel.isInvert = true;
 				newSettingPanel.invertSmartControl = rebindMenuSettings.invertableSmartControls[i];
 				newSettingPanel.defaultSettingBool = false;
-				newSettingPanel.settingBool = Sinput.GetInverted(newSettingPanel.invertSmartControl);
+				newSettingPanel.settingBool = Sinput.GetInverted(newSettingPanel.invertSmartControl, InputDeviceSlot.any);
 
 				GameObject newPanelObj = (GameObject) GameObject.Instantiate(invertPanelPrefab);
 				newPanelObj.transform.SetParent(settingsListPanel.transform);
@@ -857,7 +857,7 @@ namespace SinputSystems.Rebinding {
 				newSettingPanel.minVal = rebindMenuSettings.scalables[i].minScale;
 				newSettingPanel.maxVal = rebindMenuSettings.scalables[i].maxScale;
 				newSettingPanel.defaultVal = 1f;
-				newSettingPanel.val = Sinput.GetScale(newSettingPanel.scaleSmartControls[0]);
+				newSettingPanel.val = Sinput.GetScale(newSettingPanel.scaleSmartControls[0], InputDeviceSlot.any);
 
 				GameObject newPanelObj = (GameObject) GameObject.Instantiate(sensitivityPanelPrefab);
 				newPanelObj.transform.SetParent(settingsListPanel.transform);
@@ -928,11 +928,11 @@ namespace SinputSystems.Rebinding {
 					Debug.Log("Setting " + settingPanels[i].toggleControl + " is toggle is " + Sinput.GetToggle(settingPanels[i].toggleControl).ToString());*/
 				}
 				if (settingPanels[i].isInvert) {
-					Sinput.SetInverted(settingPanels[i].invertSmartControl, settingPanels[i].settingBool);
+					Sinput.SetInverted(settingPanels[i].invertSmartControl, settingPanels[i].settingBool, InputDeviceSlot.any);
 				}
 				if (settingPanels[i].isScale) {
 					for (int k = 0; k < settingPanels[i].scaleSmartControls.Count; k++) {
-						Sinput.SetScale(settingPanels[i].scaleSmartControls[k], settingPanels[i].val);
+						Sinput.SetScale(settingPanels[i].scaleSmartControls[k], settingPanels[i].val, InputDeviceSlot.any);
 					}
 				}
 
