@@ -53,9 +53,9 @@ namespace SinputSystems {
 		public float axisButtoncompareVal; // Axis button is 'pressed' if (axisValue [compareType] compareVal)
 
 		// All GetAxis() checks will return default value until a measured change occurs, since readings before then can be wrong
-		private bool useDefaultAxisValue = true;
+		private int useDefaultAxisValueCountdown = 2;
+		private float measuredAxisValue = float.NaN;
 		public float defaultAxisValue;
-		private float measuredAxisValue = -54.321f;
 
 		//////////// ~ virtual specific stuff ~ ////////////
 		public string virtualInputID;
@@ -101,10 +101,10 @@ namespace SinputSystems {
 
 
 
-				//don't check slots without a connected gamepad
+				// Don't check slots without a connected gamepad
 				if (Sinput.connectedGamepads <= slotIndex) return 0f;
 
-				//make sure the gamepad in this slot is one this input is allowed to check (eg don't check PS4 pad bindings for an XBOX pad)
+				// Make sure the gamepad in this slot is one this input is allowed to check (eg don't check PS4 pad bindings for an XBOX pad)
 				bool allowInputFromThisPad = false;
 				for (int i = 0; i < allowedSlots.Length; i++) {
 					if (slotIndex == allowedSlots[i]) {
@@ -113,7 +113,7 @@ namespace SinputSystems {
 					}
 				}
 
-				if (!allowInputFromThisPad) return 0f;
+				if (!allowInputFromThisPad) return 0;
 
 				//button as axis checks
 				if (inputType == InputDeviceType.GamepadButton) {
@@ -124,7 +124,7 @@ namespace SinputSystems {
 				// Gamepad axis check
 				if (inputType == InputDeviceType.GamepadAxis) {
 					float axisValue = Input.GetAxisRaw(SInputEnums.GetAxisString(slotIndex, gamepadAxisNumber - 1));
-					if (invertAxis) axisValue *= -1f;
+					if (invertAxis) axisValue *= -1;
 					if (rescaleAxis) {
 						// Some gamepad axis are -1 to 1 or something when you want them as 0 to 1, EG; triggers on XBONE pad on OSX
 						axisValue = Mathf.InverseLerp(rescaleAxisMin, rescaleAxisMax, axisValue);
@@ -135,22 +135,20 @@ namespace SinputSystems {
 					// For this to work, axisValue must range from 0 to 1. Another option would be cuttoff instead of rescaling to the deadzone (or rescaleAxisMin and rescaleAxisMax could be used to set the deadzone)
 					axisValue = Mathf.InverseLerp(deadZone, 1, axisValue);
 
-					//we return every axis' default value unless we measure a change first
-					//this prevents weird snapping and false button presses if the pad is reporting a weird value to start with
-					if (useDefaultAxisValue) {
-						if (measuredAxisValue != -54.321f) {
-							if (axisValue != measuredAxisValue) useDefaultAxisValue = false;
-						}
-						else {
+					// We return every axis' default value unless we measure a change first
+					// This prevents weird snapping and false button presses if the pad is reporting a weird value to start with
+					if (useDefaultAxisValueCountdown > 0) {
+						if (axisValue != measuredAxisValue) {
 							measuredAxisValue = axisValue;
+							useDefaultAxisValueCountdown--;
 						}
-						if (useDefaultAxisValue) axisValue = defaultAxisValue;
+						if (useDefaultAxisValueCountdown > 0) axisValue = defaultAxisValue;
 					}
 
 					return axisValue;
 				}
 
-				return 0f;
+				return 0;
 			}
 
 
@@ -159,7 +157,7 @@ namespace SinputSystems {
 				return VirtualInputs.GetVirtualAxis(virtualInputID);
 			}
 
-			//mouseaxis button checks (these don't happen)
+			// Mouseaxis button checks (these don't happen)
 			if (inputType == InputDeviceType.Mouse) {
 				switch (mouseInputType) {
 					case MouseInputType.MouseHorizontal:
