@@ -199,6 +199,8 @@ public class CommonMappingEditor : Editor {
 
 					EditorGUILayout.EndHorizontal();
 
+					activeAxis.displaySprite = (Sprite) EditorGUILayout.ObjectField(GUIContent.none, activeAxis.displaySprite, typeof(Sprite));
+
 					padMapping.axis[i] = activeAxis;
 
 					if (delete) {

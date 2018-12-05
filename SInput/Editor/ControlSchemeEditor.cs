@@ -445,9 +445,6 @@ public class ControlSchemeEditor : Editor {
 					EditorGUILayout.EndHorizontal();
 					//activeSmartControl.negativeControl = EditorGUILayout.TextField("Negative Control", activeSmartControl.negativeControl);
 
-					activeSmartControl.deadzone = EditorGUILayout.FloatField("Deadzone", activeSmartControl.deadzone);
-					activeSmartControl.deadzone = Mathf.Clamp(activeSmartControl.deadzone, 0f, 1f);
-
 					activeSmartControl.scale = EditorGUILayout.FloatField("Scale", activeSmartControl.scale);
 					activeSmartControl.invert = EditorGUILayout.Toggle("Invert", activeSmartControl.invert);
 					EditorGUILayout.Space();
@@ -500,7 +497,6 @@ public class ControlSchemeEditor : Editor {
 				newSmartControl.positiveControl = "";
 				newSmartControl.negativeControl = "";
 
-				newSmartControl.deadzone = 0.001f;
 				newSmartControl.scale = 1f;
 
 				controlScheme.smartControls.Add(newSmartControl);

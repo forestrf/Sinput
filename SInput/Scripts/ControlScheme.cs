@@ -134,8 +134,6 @@ namespace SinputSystems {
 			public string positiveControl;
 			public string negativeControl;
 
-			public float deadzone;//=0.001f;
-
 			public float scale;// =1f;
 			public bool invert;//default inversion setting
 		}
@@ -156,7 +154,6 @@ namespace SinputSystems {
 				name = name,
 				positiveControl = positiveControl,
 				negativeControl = negativeControl,
-				deadzone = 0.001f,
 				scale = 1f,
 				invert = false
 			};

@@ -4,9 +4,8 @@ using UnityEngine;
 namespace SinputSystems {
 	public static class CommonGamepadMappings {
 
-
-		static List<CommonMapping> commonMappings;
-		static MappingSlots[] mappingSlots;
+		private static List<CommonMapping> commonMappings;
+		private static MappingSlots[] mappingSlots;
 
 		public static void ReloadCommonMaps() {
 			//called when gamepads are plugged in or removed, also when Sinput is first called

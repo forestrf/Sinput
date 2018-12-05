@@ -497,13 +497,6 @@ namespace SinputSystems {
 		START = 23,
 		BACK = 24,//AKA select/menu/whatever
 		HOME = 25,//AKA system
-
-		LSTICK_X = 26,
-		LSTICK_Y = 27,
-		RSTICK_X = 28,
-		RSTICK_Y = 29,
-		DPAD_X = 30,
-		DPAD_Y = 31,
 	}
 
 	public enum CommonXRInputs {

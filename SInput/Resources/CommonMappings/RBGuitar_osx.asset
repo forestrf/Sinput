@@ -3,8 +3,9 @@
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -20,34 +21,52 @@ MonoBehaviour:
   os: 1
   buttons:
   - buttonType: 1
+    vrButtonType: 0
     buttonNumber: 1
     displayName: Green
+    displaySprite: {fileID: 0}
   - buttonType: 2
+    vrButtonType: 0
     buttonNumber: 2
     displayName: Red
+    displaySprite: {fileID: 0}
   - buttonType: 3
+    vrButtonType: 0
     buttonNumber: 3
     displayName: Yellow
+    displaySprite: {fileID: 0}
   - buttonType: 4
+    vrButtonType: 0
     buttonNumber: 0
     displayName: Blue
+    displaySprite: {fileID: 0}
   - buttonType: 6
+    vrButtonType: 0
     buttonNumber: 4
     displayName: Orange
+    displaySprite: {fileID: 0}
   - buttonType: 23
+    vrButtonType: 0
     buttonNumber: 9
     displayName: Start
+    displaySprite: {fileID: 0}
   - buttonType: 24
+    vrButtonType: 0
     buttonNumber: 8
     displayName: Select
+    displaySprite: {fileID: 0}
   - buttonType: 25
+    vrButtonType: 0
     buttonNumber: 12
     displayName: Home
+    displaySprite: {fileID: 0}
   axis:
   - buttonType: 11
+    vrButtonType: 0
     axisNumber: 5
     invert: 1
     clamp: 1
+    deadZone: 0
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -55,10 +74,13 @@ MonoBehaviour:
     rescaleAxisMax: 1
     defaultVal: 0
     displayName: Left
+    displaySprite: {fileID: 0}
   - buttonType: 12
+    vrButtonType: 0
     axisNumber: 5
     invert: 0
     clamp: 1
+    deadZone: 0
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -66,21 +88,13 @@ MonoBehaviour:
     rescaleAxisMax: 1
     defaultVal: 0
     displayName: Right
-  - buttonType: 30
-    axisNumber: 5
-    invert: 0
-    clamp: 0
-    compareGreater: 1
-    compareVal: 0.4
-    rescaleAxis: 0
-    rescaleAxisMin: 0
-    rescaleAxisMax: 1
-    defaultVal: 0
-    displayName: Horizontal
+    displaySprite: {fileID: 0}
   - buttonType: 13
+    vrButtonType: 0
     axisNumber: 6
     invert: 1
     clamp: 1
+    deadZone: 0
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -88,10 +102,13 @@ MonoBehaviour:
     rescaleAxisMax: 1
     defaultVal: 0
     displayName: Up
+    displaySprite: {fileID: 0}
   - buttonType: 14
+    vrButtonType: 0
     axisNumber: 6
     invert: 0
     clamp: 1
+    deadZone: 0
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -99,14 +116,5 @@ MonoBehaviour:
     rescaleAxisMax: 1
     defaultVal: 0
     displayName: Dowm
-  - buttonType: 31
-    axisNumber: 6
-    invert: 1
-    clamp: 0
-    compareGreater: 1
-    compareVal: 0.4
-    rescaleAxis: 0
-    rescaleAxisMin: 0
-    rescaleAxisMax: 1
-    defaultVal: 0
-    displayName: Vertical
+    displaySprite: {fileID: 0}
+  isXRdevice: 0

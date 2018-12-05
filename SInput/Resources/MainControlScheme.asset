@@ -102,34 +102,24 @@ MonoBehaviour:
     xrInputs: 0100000002000000
     mouseInputs: 
     virtualInputs: []
-  - name: Grab
-    keyboardInputs: 
-    gamepadInputs: 
-    xrInputs: 1200000011000000
-    mouseInputs: 
-    virtualInputs: []
   smartControls:
   - name: Horizontal
     positiveControl: Right
     negativeControl: Left
-    deadzone: 0.001
     scale: 1
     invert: 0
   - name: Vertical
     positiveControl: Up
     negativeControl: Down
-    deadzone: 0.001
     scale: 1
     invert: 0
   - name: Look Horizontal
     positiveControl: Look Right
     negativeControl: Look Left
-    deadzone: 0.001
     scale: 1
     invert: 0
   - name: Look Vertical
     positiveControl: Look Up
     negativeControl: Look Down
-    deadzone: 0.001
     scale: 1
     invert: 0

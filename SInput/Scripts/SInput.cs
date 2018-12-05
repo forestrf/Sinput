@@ -27,6 +27,11 @@ public static class Sinput {
 	/// Overall mouse sensitivity (effects all Controls bound to mouse movements)
 	/// </summary>
 	public static float mouseSensitivity = 1f;
+	
+	/// <summary>
+	/// Device slots in the order they were last used, without repetitions, ordered from first used (0) to last used (length - 1)
+	/// </summary>
+	private static List<SinputSystems.InputDeviceSlot> lastUsedDeviceSlots = new List<SinputSystems.InputDeviceSlot>();
 
 	/// <summary>
 	/// Name of control scheme used when saving/loading custom control schemes
@@ -67,11 +72,17 @@ public static class Sinput {
 	/// <summary>
 	/// Fill <paramref name="inputs"/> with the inputs that represent the specified control.
 	/// The inputs are ordered by last input device used to first used (TO DO).
-	/// The first element in the array matches the current input in use.
+	/// TO DO: The first element in the array matches the current input in use.
 	/// Useful to get the input's name and prompt sprite.
 	/// </summary>
-	public static void FillInputsForControl(List<SinputSystems.DeviceInput> inputs, string controlName, SinputSystems.InputDeviceSlot playerSlot) {
+	public static void FillInputsForControl(List<KeyValuePair<SinputSystems.InputDeviceSlot, SinputSystems.DeviceInput>> inputs, string controlName, SinputSystems.InputDeviceSlot playerSlot) {
 		GetControlByName(controlName).FillInputs(inputs, playerSlot);
+		inputs.Sort((a, b) => {
+			// TO DO: Test
+			if (!lastUsedDeviceSlots.Contains(a.Key)) return 1;
+			if (!lastUsedDeviceSlots.Contains(b.Key)) return -1;
+			return lastUsedDeviceSlots.IndexOf(a.Key).CompareTo(lastUsedDeviceSlots.IndexOf(b.Key));
+		});
 	}
 
 	public static SinputSystems.SmartControl[] smartControls { get; private set; }
@@ -164,7 +175,6 @@ public static class Sinput {
 
 			newControl.positiveControl = scheme.smartControls[i].positiveControl;
 			newControl.negativeControl = scheme.smartControls[i].negativeControl;
-			newControl.deadzone = scheme.smartControls[i].deadzone;
 			//newControl.scale = scheme.smartControls[i].scale;
 
 			newControl.inversion = new bool[totalPossibleDeviceSlots];
@@ -371,6 +381,18 @@ public static class Sinput {
 		return SinputSystems.InputDeviceSlot.any;
 	}
 
+	/// <summary>
+	/// Get the last used player slot. Use it when using any to know what slot is being used, for example to know what visual prompts and input names to use.
+	/// Will return <see cref="SinputSystems.InputDeviceSlot.any"/> if no input has been pressed since the start of the game.
+	/// </summary>
+	public static SinputSystems.InputDeviceSlot GetLastUsedDeviceSlot() {
+		return lastUsedDeviceSlots.Count > 0 ? lastUsedDeviceSlots[lastUsedDeviceSlots.Count - 1] : SinputSystems.InputDeviceSlot.any;
+	}
+
+	public static void SetLastUsedDeviceSlot(SinputSystems.InputDeviceSlot deviceSlot) {
+		lastUsedDeviceSlots.Remove(deviceSlot);
+		lastUsedDeviceSlots.Add(deviceSlot);
+	}
 
 	//Button control checks
 	/// <summary>

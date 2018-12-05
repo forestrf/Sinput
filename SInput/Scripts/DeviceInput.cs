@@ -90,8 +90,8 @@ namespace SinputSystems {
 			if (inputType == InputDeviceType.GamepadButton || inputType == InputDeviceType.GamepadAxis) {
 				//if checking any slot, call this function for each possible slot
 				if (slot == InputDeviceSlot.any) {
-					float greatestV = 0f;
-					for (int i = 1; i <= Sinput.connectedGamepads; i++) {
+					float greatestV = 0;
+					for (int i = (int) InputDeviceSlot.gamepad1; i < (int) InputDeviceSlot.gamepad1 + Sinput.connectedGamepads; i++) {
 						greatestV = Math.Max(greatestV, Math.Abs(AxisCheck((InputDeviceSlot) i)));
 					}
 					return greatestV;
@@ -102,7 +102,7 @@ namespace SinputSystems {
 
 
 				// Don't check slots without a connected gamepad
-				if (Sinput.connectedGamepads <= slotIndex) return 0f;
+				if (Sinput.connectedGamepads <= slotIndex) return 0;
 
 				// Make sure the gamepad in this slot is one this input is allowed to check (eg don't check PS4 pad bindings for an XBOX pad)
 				bool allowInputFromThisPad = false;

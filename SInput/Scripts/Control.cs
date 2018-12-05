@@ -118,6 +118,10 @@ namespace SinputSystems {
 
 				//check if this control is held
 				controlState.held |= controlStates[i].held;
+
+				if (controlStates[i].held) {
+					Sinput.SetLastUsedDeviceSlot((InputDeviceSlot) i);
+				}
 			}
 
 			UpdateButtonStates(controlState, wasHeld);
@@ -355,11 +359,27 @@ namespace SinputSystems {
 			}
 		}
 
-		public override void FillInputs(List<DeviceInput> inputs, InputDeviceSlot slot) {
+		public override void FillInputs(List<KeyValuePair<InputDeviceSlot, DeviceInput>> inputs, InputDeviceSlot slot) {
 			foreach (var input in this.inputs) {
-				if (input.CheckSlot(slot) && !inputs.Contains(input)) {
-					inputs.Add(input);
+				if (input.CheckSlot(slot)) {
+					if (slot == InputDeviceSlot.any && input.allowedSlots != null) {
+						for (int i = 0; i < input.allowedSlots.Length; i++) {
+							if (input.allowedSlots[i] == (int) slot - 1) {
+								TryAddToFillInputs(inputs, input, (InputDeviceSlot) (i + 1));
+							}
+						}
+					}
+					else {
+						TryAddToFillInputs(inputs, input, slot);
+					}
 				}
+			}
+		}
+
+		private void TryAddToFillInputs(List<KeyValuePair<InputDeviceSlot, DeviceInput>> inputs, DeviceInput input, InputDeviceSlot slot) {
+			var elem = new KeyValuePair<InputDeviceSlot, DeviceInput>(slot, input);
+			if (!inputs.Contains(elem)) {
+				inputs.Add(elem);
 			}
 		}
 	}
