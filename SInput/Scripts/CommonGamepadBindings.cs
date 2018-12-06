@@ -35,28 +35,28 @@ namespace SinputSystems {
 			int defaultMappingIndex = -1;
 			for (int i = 0; i < commonMappingAssets.Length; i++) {
 				//Debug.Log("HELLOOOOO");
-				//if ((commonMappingAssets[i]).isXRdevice) Debug.Log("XR deviiiiiice");
+				//if (commonMappingAssets[i].isXRdevice) Debug.Log("XR deviiiiiice");
 
-				if ((commonMappingAssets[i]).os == thisOS) {
+				if (commonMappingAssets[i].os == thisOS) {
 					bool gamepadConnected = false;
 					bool partialMatch = false;
-					for (int k = 0; k < (commonMappingAssets[i]).names.Count; k++) {
+					for (int k = 0; k < commonMappingAssets[i].names.Count; k++) {
 						for (int g = 0; g < gamepads.Length; g++) {
-							if ((commonMappingAssets[i]).names[k].ToUpper() == gamepads[g]) gamepadConnected = true;
+							if (commonMappingAssets[i].names[k].ToUpper() == gamepads[g]) gamepadConnected = true;
 						}
 					}
 
-					for (int k = 0; k < (commonMappingAssets[i]).partialNames.Count; k++) {
+					for (int k = 0; k < commonMappingAssets[i].partialNames.Count; k++) {
 						for (int g = 0; g < gamepads.Length; g++) {
-							if (gamepads[g].Contains((commonMappingAssets[i]).partialNames[k].ToUpper())) partialMatch = true;
+							if (gamepads[g].Contains(commonMappingAssets[i].partialNames[k].ToUpper())) partialMatch = true;
 						}
 					}
 
 					if (gamepadConnected) commonMappings.Add(commonMappingAssets[i]);
 					if (partialMatch && !gamepadConnected) commonMappings.Add(commonMappingAssets[i]);
-					if (!partialMatch && !gamepadConnected && (commonMappingAssets[i]).isDefault) commonMappings.Add((CommonMapping) commonMappingAssets[i]);
+					if (!partialMatch && !gamepadConnected && commonMappingAssets[i].isDefault) commonMappings.Add((CommonMapping) commonMappingAssets[i]);
 
-					if ((commonMappingAssets[i]).isDefault) defaultMappingIndex = commonMappings.Count - 1;
+					if (commonMappingAssets[i].isDefault) defaultMappingIndex = commonMappings.Count - 1;
 				}
 			}
 
@@ -104,7 +104,6 @@ namespace SinputSystems {
 					}
 				}
 			}
-
 		}
 		struct MappingSlots {
 			public List<int> slots;
@@ -184,8 +183,6 @@ namespace SinputSystems {
 				}
 
 			}
-
-
 
 			return applicableInputs;
 		}

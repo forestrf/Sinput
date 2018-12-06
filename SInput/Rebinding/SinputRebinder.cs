@@ -319,9 +319,6 @@ namespace SinputSystems.Rebinding {
 			rebindingDevice = deviceName;
 
 			inputMonitor.SetListeningDevice(rebindingDevice);
-
-
-
 		}
 
 		public void DeleteInput(int controlIndex, int inputIndex, string deviceName, Transform transformToDelete) {

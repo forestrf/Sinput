@@ -84,11 +84,11 @@ namespace SinputSystems.Examples {//not actually an example of sinput stuff (thi
 				}
 
 				for (int k = 0; k < outputDisplays[i].axisDisplay.Count; k++) {
-					outputDisplays[i].axisDisplay[k].text = "Axis" + (k + 1).ToString() + ": " + Input.GetAxisRaw(string.Format("J_{0}_{1}", i + 1, k + 1));
+					outputDisplays[i].axisDisplay[k].text = "Axis" + (k + 1).ToString() + ": " + Input.GetAxisRaw(string.Format("J_{0}_{1}", i + 1, k + 1)).ToString("0.000");
 				}
 				List<int> buttonsPressed = new List<int>();
 				for (int k = 0; k < Sinput.MAXBUTTONSPERGAMEPAD; k++) {
-					if (Input.GetKey((KeyCode) (int) (SinputSystems.UnityGamepadKeyCode) Enum.Parse(typeof(SinputSystems.UnityGamepadKeyCode), string.Format("Joystick{0}Button{1}", i + 1, k)))) {
+					if (Input.GetKey((KeyCode) (int) (UnityGamepadKeyCode) Enum.Parse(typeof(UnityGamepadKeyCode), string.Format("Joystick{0}Button{1}", i + 1, k)))) {
 						buttonsPressed.Add(k);
 					}
 				}
