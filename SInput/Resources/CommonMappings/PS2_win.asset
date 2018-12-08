@@ -14,9 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   names:
   - Twin USB Joystick
-  partialNames:
-  - Twin USB Joystick
-  isDefault: 0
+  partialNames: []
   os: 2
   buttons:
   - buttonType: 1

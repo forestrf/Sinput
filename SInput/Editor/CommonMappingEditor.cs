@@ -94,7 +94,7 @@ public class CommonMappingEditor : Editor {
 				}
 				activeButton.buttonNumber = EditorGUILayout.IntField(padMapping.buttons[i].buttonNumber);
 				activeButton.displayName = SinputFileIO.SanitiseStringForSaving(EditorGUILayout.TextField(activeButton.displayName));
-				activeButton.displaySprite = (Sprite) EditorGUILayout.ObjectField(GUIContent.none, activeButton.displaySprite, typeof(Sprite));
+				activeButton.displaySprite = (Sprite) EditorGUILayout.ObjectField(GUIContent.none, activeButton.displaySprite, typeof(Sprite), false);
 				padMapping.buttons[i] = activeButton;
 				if (GUILayout.Button("x")) {
 					//remove button
@@ -177,7 +177,7 @@ public class CommonMappingEditor : Editor {
 
 					EditorGUILayout.EndHorizontal();
 
-					activeAxis.displaySprite = (Sprite) EditorGUILayout.ObjectField(GUIContent.none, activeAxis.displaySprite, typeof(Sprite));
+					activeAxis.displaySprite = (Sprite) EditorGUILayout.ObjectField(GUIContent.none, activeAxis.displaySprite, typeof(Sprite), false);
 
 					padMapping.axis[i] = activeAxis;
 
