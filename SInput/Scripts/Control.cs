@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace SinputSystems {
@@ -205,7 +206,7 @@ namespace SinputSystems {
 			Sinput.CheckGamepads();
 
 			if (isNewBinding) commonMappings.Add(gamepadButtonOrAxis);
-			List<DeviceInput> applicableMapInputs = CommonGamepadMappings.GetApplicableMaps(gamepadButtonOrAxis, CommonXRInputs.NOBUTTON, Sinput.gamepads);
+			List<DeviceInput> applicableMapInputs = CommonGamepadMappings.GetApplicableMaps(gamepadButtonOrAxis, CommonXRInputs.NOBUTTON);
 
 			for (int i = 0; i < applicableMapInputs.Count; i++) {
 				applicableMapInputs[i].commonXRMappingType = CommonXRInputs.NOBUTTON;
@@ -218,7 +219,7 @@ namespace SinputSystems {
 			Sinput.CheckGamepads();
 
 			if (isNewBinding) commonXRMappings.Add(gamepadButtonOrAxis);
-			List<DeviceInput> applicableMapInputs = CommonGamepadMappings.GetApplicableMaps(CommonGamepadInputs.NOBUTTON, gamepadButtonOrAxis, Sinput.gamepads);
+			List<DeviceInput> applicableMapInputs = CommonGamepadMappings.GetApplicableMaps(CommonGamepadInputs.NOBUTTON, gamepadButtonOrAxis);
 
 			for (int i = 0; i < applicableMapInputs.Count; i++) {
 				applicableMapInputs[i].commonMappingType = CommonGamepadInputs.NOBUTTON;
@@ -227,43 +228,29 @@ namespace SinputSystems {
 			AddGamepadInputs(applicableMapInputs);
 		}
 		private void AddGamepadInputs(List<DeviceInput> applicableMapInputs) {
-
-			string[] gamepads = Sinput.gamepads;
-
 			//find which common mapped inputs apply here, but already have custom binding loaded, and disregard those common mappings
 			for (int ai = 0; ai < applicableMapInputs.Count; ai++) {
 				bool samePad = false;
 				foreach (var input in inputs) {
 					if (input.inputType == InputDeviceType.GamepadAxis || input.inputType == InputDeviceType.GamepadButton) {
 						if (input.isCustom) {
-							for (int ais = 0; ais < applicableMapInputs[ai].allowedSlots.Length; ais++) {
-								for (int toomanyints = 0; toomanyints < input.allowedSlots.Length; toomanyints++) {
-									if (applicableMapInputs[ai].allowedSlots[ais] == input.allowedSlots[toomanyints]) samePad = true;
-								}
-								if (gamepads[applicableMapInputs[ai].allowedSlots[ais]] == input.deviceName.ToUpper()) samePad = true;
-							}
-							if (samePad) {
+							if (applicableMapInputs[ai].allowedSlots.Any(i => input.allowedSlots.Contains(i))) {
+								// We already have a custom bound control for this input, we don't need more
 								//if I wanna be copying input display names, here's the place to do it
 								//TODO: decide if I wanna do this
 								//pro: it's good if the common mapping is accurate but the user wants to rebind
 								//con: it's bad if the common mapping is bad or has a generic gamepad name and so it mislables different inputs
 								//maybe I should do this, but with an additional check so it's not gonna happen with say, a device labelled "wireless controller"?
+								samePad = true;
+								break;
 							}
 						}
 					}
 				}
-				if (samePad) {
-					//we already have a custom bound control for this input, we don't need more
-					applicableMapInputs.RemoveAt(ai);
-					ai--;
+				// Add if common mapping still apply
+				if (!samePad) {
+					inputs.Add(applicableMapInputs[ai]);
 				}
-			}
-
-
-
-			//add whichever common mappings still apply
-			for (int i = 0; i < applicableMapInputs.Count; i++) {
-				inputs.Add(applicableMapInputs[i]);
 			}
 		}
 
@@ -321,16 +308,17 @@ namespace SinputSystems {
 				AddGamepadInput(commonXRMappings[i], false);
 			}
 
-			//also recheck allowed slots for custom bound pads (their inputs have a device name, common bound stuff don't)
-			//need to do this anyway so we can check if common & custom bindings are about to match on the same slot
+			// Also recheck allowed slots for custom bound pads (their inputs have a device name, common bound stuff don't)
+			// Need to do this anyway so we can check if common & custom bindings are about to match on the same slot
 			string[] gamepads = Sinput.gamepads;
 			for (int i = 0; i < inputs.Count; i++) {
 				if (inputs[i].deviceName != "") {
-					List<int> allowedSlots = new List<int>();
 					for (int g = 0; g < gamepads.Length; g++) {
-						if (gamepads[g] == inputs[i].deviceName.ToUpper()) allowedSlots.Add(i);
+						if (gamepads[g] == inputs[i].deviceName.ToUpper()) {
+							inputs[i].allowedSlots.Add((InputDeviceSlot) (g + 1));
+							break;
+						}
 					}
-					inputs[i].allowedSlots = allowedSlots.ToArray();
 				}
 			}
 
@@ -347,39 +335,26 @@ namespace SinputSystems {
 					if (inputs[i].inputType == InputDeviceType.GamepadAxis || inputs[i].inputType == InputDeviceType.GamepadButton) {
 						//Debug.Log("Finding slot for gamepad: " + controls[c].inputs[i].displayName + " of " + controls[c].inputs[i].deviceName);
 						//find applicable gamepad slots for this device
-						List<int> allowedSlots = new List<int>();
 						for (int g = 0; g < Sinput.connectedGamepads; g++) {
 							if (Sinput.gamepads[g] == inputs[i].deviceName.ToUpper()) {
-								allowedSlots.Add(g);
+								inputs[i].allowedSlots.Add((InputDeviceSlot) (g + 1));
+								break;
 							}
 						}
-						inputs[i].allowedSlots = allowedSlots.ToArray();
 					}
 				}
 			}
 		}
 
-		public override void FillInputs(List<KeyValuePair<InputDeviceSlot, DeviceInput>> inputs, InputDeviceSlot slot) {
+		public override void FillInputs(List<DeviceInput> inputs, InputDeviceSlot slot) {
 			foreach (var input in this.inputs) {
 				if (input.CheckSlot(slot)) {
-					if (slot == InputDeviceSlot.any && input.allowedSlots != null) {
-						for (int i = 0; i < input.allowedSlots.Length; i++) {
-							if (input.allowedSlots[i] == (int) slot - 1) {
-								TryAddToFillInputs(inputs, input, (InputDeviceSlot) (i + 1));
-							}
+					if (slot == InputDeviceSlot.any || input.allowedSlots.Count == 0 || input.allowedSlots.Contains(slot)) {
+						if (!inputs.Contains(input)) {
+							inputs.Add(input);
 						}
 					}
-					else {
-						TryAddToFillInputs(inputs, input, slot);
-					}
 				}
-			}
-		}
-
-		private void TryAddToFillInputs(List<KeyValuePair<InputDeviceSlot, DeviceInput>> inputs, DeviceInput input, InputDeviceSlot slot) {
-			var elem = new KeyValuePair<InputDeviceSlot, DeviceInput>(slot, input);
-			if (!inputs.Contains(elem)) {
-				inputs.Add(elem);
 			}
 		}
 	}

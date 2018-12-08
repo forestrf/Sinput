@@ -168,13 +168,13 @@ namespace SinputSystems {
 								currentInput.commonMappingType = CommonGamepadInputs.NOBUTTON;
 								currentInput.defaultAxisValue = 0f;
 								if (currentInput.inputType == InputDeviceType.GamepadAxis || currentInput.inputType == InputDeviceType.GamepadButton) {
-									List<int> allowedSlots = new List<int>();
-									for (int j = 0; j < joysticks.Length; j++) {
-										if (joysticks[j].ToUpper() == currentInput.deviceName.ToUpper()) allowedSlots.Add(j);
+									for (int g = 0; g < joysticks.Length; g++) {
+										if (joysticks[g].ToUpper() == currentInput.deviceName.ToUpper()) {
+											currentInput.allowedSlots.Add((InputDeviceSlot) (g + 1));
+											break;
+										}
 									}
-									currentInput.allowedSlots = allowedSlots.ToArray();
 								}
-
 
 								//add the input to the control's input list
 								controls[currentControlIndex].inputs.Add(currentInput);

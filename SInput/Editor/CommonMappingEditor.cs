@@ -73,28 +73,6 @@ public class CommonMappingEditor : Editor {
 			if (padMapping.isXRdevice != wasVR) {
 				//Debug.LogError("NEED TO CHANGE ANY EXISTING STUFF! TO MATCH!");
 			}
-
-			EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
-
-			EditorGUILayout.Space();
-			EditorGUILayout.PrefixLabel("Default pad:");
-			EditorGUILayout.LabelField("If a common or saved binding isn't found,");
-			EditorGUILayout.LabelField("is this the default mapping that will be loaded?");
-			bool wasDefault = padMapping.isDefault;
-			padMapping.isDefault = EditorGUILayout.Toggle("Is Default", padMapping.isDefault);
-			if (padMapping.isDefault && !wasDefault) {
-				//we set this mapping to default, lets unset any other common mappings of the same OS from being default
-				System.Object[] commonMappingAssets = Resources.LoadAll("", typeof(CommonMapping));
-				for (int i = 0; i < commonMappingAssets.Length; i++) {
-					if (((CommonMapping) commonMappingAssets[i]).os == padMapping.os) {
-						((CommonMapping) commonMappingAssets[i]).isDefault = false;
-						EditorUtility.SetDirty((CommonMapping) commonMappingAssets[i]);
-					}
-				}
-				padMapping.isDefault = true;
-			}
-
-
 		}
 
 		if (currentPanel == 1) {

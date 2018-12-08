@@ -6,12 +6,8 @@ namespace SinputSystems {
 	[CreateAssetMenu(fileName = "New Common Mapping", menuName = "Sinput/Common Mapping", order = 1)]
 	public class CommonMapping : ScriptableObject {
 
-
-
 		public List<string> names = new List<string>();//names of gamepads that this mapping can apply to
 		public List<string> partialNames = new List<string>();//if an exact name match isn't found for a pad, use this mapping if it has a partial match with this
-
-		public bool isDefault = false; //if no common mapping or saved custom binding is found, are we going to use this mapping
 
 		public OSFamily os = OSFamily.Windows;
 

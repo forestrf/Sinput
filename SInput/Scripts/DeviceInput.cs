@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SinputSystems {
@@ -25,6 +26,10 @@ namespace SinputSystems {
 
 		public DeviceInput(InputDeviceType type) {
 			inputType = type;
+
+			if (type == InputDeviceType.Keyboard) allowedSlots.Add(InputDeviceSlot.keyboard);
+			if (type == InputDeviceType.Mouse) allowedSlots.Add(InputDeviceSlot.mouse);
+			if (type == InputDeviceType.Virtual) allowedSlots.Add(InputDeviceSlot.virtual1);
 		}
 
 		//////////// ~ keyboard specific stuff ~ ////////////
@@ -34,7 +39,7 @@ namespace SinputSystems {
 		public MouseInputType mouseInputType;
 
 		//////////// ~ gamepad specific stuff ~ ////////////
-		public int[] allowedSlots; // List of gamepad slots that this input is allowed to check (they will be ones with a matching name to the known binding
+		public readonly List<InputDeviceSlot> allowedSlots = new List<InputDeviceSlot>(); // Slots that this input is allowed to check
 		public CommonGamepadInputs commonMappingType; //if this is set, this input is a preset/default
 		public CommonXRInputs commonXRMappingType;
 		public int gamepadButtonNumber; // Button number for if this input is controlled by a gamepad button
@@ -105,15 +110,7 @@ namespace SinputSystems {
 				if (Sinput.connectedGamepads <= slotIndex) return 0;
 
 				// Make sure the gamepad in this slot is one this input is allowed to check (eg don't check PS4 pad bindings for an XBOX pad)
-				bool allowInputFromThisPad = false;
-				for (int i = 0; i < allowedSlots.Length; i++) {
-					if (slotIndex == allowedSlots[i]) {
-						allowInputFromThisPad = true;
-						break;
-					}
-				}
-
-				if (!allowInputFromThisPad) return 0;
+				if (allowedSlots.Count == 0 || slot != allowedSlots[0]) return 0;
 
 				//button as axis checks
 				if (inputType == InputDeviceType.GamepadButton) {

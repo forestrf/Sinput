@@ -27,7 +27,7 @@ public static class Sinput {
 	/// Overall mouse sensitivity (effects all Controls bound to mouse movements)
 	/// </summary>
 	public static float mouseSensitivity = 1f;
-	
+
 	/// <summary>
 	/// Device slots in the order they were last used, without repetitions, ordered from first used (0) to last used (length - 1)
 	/// </summary>
@@ -75,14 +75,32 @@ public static class Sinput {
 	/// TO DO: The first element in the array matches the current input in use.
 	/// Useful to get the input's name and prompt sprite.
 	/// </summary>
-	public static void FillInputsForControl(List<KeyValuePair<SinputSystems.InputDeviceSlot, SinputSystems.DeviceInput>> inputs, string controlName, SinputSystems.InputDeviceSlot playerSlot) {
+	public static void FillInputsForControl(List<SinputSystems.DeviceInput> inputs, string controlName, SinputSystems.InputDeviceSlot playerSlot) {
 		GetControlByName(controlName).FillInputs(inputs, playerSlot);
 		inputs.Sort((a, b) => {
-			// TO DO: Test
-			if (!lastUsedDeviceSlots.Contains(a.Key)) return 1;
-			if (!lastUsedDeviceSlots.Contains(b.Key)) return -1;
-			return lastUsedDeviceSlots.IndexOf(a.Key).CompareTo(lastUsedDeviceSlots.IndexOf(b.Key));
+			int aIndex = GetIndexLastUsedDeviceSlot(a.allowedSlots);
+			int bIndex = GetIndexLastUsedDeviceSlot(b.allowedSlots);
+			return -aIndex.CompareTo(bIndex);
 		});
+	}
+
+	private static int GetIndexLastUsedDeviceSlot(List<SinputSystems.InputDeviceSlot> inputSlots) {
+		if (inputSlots == null) return -1; // Should never happen
+		// Search for the latest index (the latest is also the greater index inside lastUsedDeviceSlots)
+		for (int i = lastUsedDeviceSlots.Count - 1; i >= 0; i--) {
+			foreach (var inputSlot in inputSlots) {
+				if (inputSlot == lastUsedDeviceSlots[i]) return i;
+				if (inputSlot == SinputSystems.InputDeviceSlot.keyboardAndMouse) {
+					if (lastUsedDeviceSlots[i] == SinputSystems.InputDeviceSlot.keyboard) return i;
+					if (lastUsedDeviceSlots[i] == SinputSystems.InputDeviceSlot.mouse) return i;
+				}
+				if (lastUsedDeviceSlots[i] == SinputSystems.InputDeviceSlot.keyboardAndMouse) {
+					if (inputSlot == SinputSystems.InputDeviceSlot.keyboard) return i;
+					if (inputSlot == SinputSystems.InputDeviceSlot.mouse) return i;
+				}
+			}
+		}
+		return -1;
 	}
 
 	public static SinputSystems.SmartControl[] smartControls { get; private set; }

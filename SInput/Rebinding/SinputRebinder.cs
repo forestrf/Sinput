@@ -205,12 +205,13 @@ namespace SinputSystems.Rebinding {
 					newInput.displayName = "B" + inputMonitor.changedPadButton.inputIndex.ToString();
 
 					padIndex = inputMonitor.changedPadButton.padIndex;
-					List<int> slots = new List<int>();
-					//string[] gamepads = Sinput.GetGamepads();
+					var rebindingDeviceUpper = rebindingDevice.ToUpper();
 					for (int g = 0; g < gamepads.Length; g++) {
-						if (gamepads[g].ToUpper() == rebindingDevice.ToUpper()) slots.Add(g);
+						if (gamepads[g].ToUpper() == rebindingDeviceUpper) {
+							newInput.allowedSlots.Add((InputDeviceSlot) (g + 1));
+							break;
+						}
 					}
-					newInput.allowedSlots = slots.ToArray();
 				}
 
 				if (changedInputType == InputDeviceType.GamepadAxis) {
@@ -242,35 +243,32 @@ namespace SinputSystems.Rebinding {
 					}
 
 					padIndex = axisChange.padIndex;
-					List<int> slots = new List<int>();
-					//string[] gamepads = Sinput.GetGamepads();
 					for (int g = 0; g < gamepads.Length; g++) {
-						if (gamepads[g].ToUpper() == rebindingDevice.ToUpper()) slots.Add(g);
+						if (gamepads[g].ToUpper() == rebindingDevice.ToUpper()) {
+							newInput.allowedSlots.Add((InputDeviceSlot) (g + 1));
+							break;
+						}
 					}
-					newInput.allowedSlots = slots.ToArray();
 				}
 
 				if (changedInputType == InputDeviceType.GamepadAxis || changedInputType == InputDeviceType.GamepadButton) {
 					//lets also set all other inputs on this control with matching allowed slots to be custom and remove common binding
 					//this should preserve stuff with the same common binding from being ignored when re reload common bindings
 					for (int i = 0; i < controls[rebindingControlIndex].inputs.Count; i++) {
-						bool sameDevice = false;
 						if (controls[rebindingControlIndex].inputs[i].commonMappingType != CommonGamepadInputs.NOBUTTON) {
-							for (int k = 0; k < controls[rebindingControlIndex].inputs[i].allowedSlots.Length; k++) {
-								if (controls[rebindingControlIndex].inputs[i].allowedSlots[k] == padIndex) sameDevice = true;
-							}
-						}
-						if (sameDevice) {
-							controls[rebindingControlIndex].inputs[i].isCustom = true;
-							controls[rebindingControlIndex].inputs[i].commonMappingType = CommonGamepadInputs.NOBUTTON;
-							controls[rebindingControlIndex].inputs[i].deviceName = rebindingDevice;
+							if (controls[rebindingControlIndex].inputs[i].allowedSlots[0] == (InputDeviceSlot) (padIndex + 1)) {
+								// Same device;
+								controls[rebindingControlIndex].inputs[i].isCustom = true;
+								controls[rebindingControlIndex].inputs[i].commonMappingType = CommonGamepadInputs.NOBUTTON;
+								controls[rebindingControlIndex].inputs[i].deviceName = rebindingDevice;
 
-							/*List<int> slots = new List<int>();
-							string[] gamepads = Sinput.GetGamepads();
-							for (int g=0;g<gamepads.Length; g++){
-								if (gamepads[g].ToUpper() == rebindingDevice.ToUpper()) slots.Add(g);
+								/*List<int> slots = new List<int>();
+								string[] gamepads = Sinput.GetGamepads();
+								for (int g=0;g<gamepads.Length; g++){
+									if (gamepads[g].ToUpper() == rebindingDevice.ToUpper()) slots.Add(g);
+								}
+								newInput.allowedSlots = slots.ToArray();*/
 							}
-							newInput.allowedSlots = slots.ToArray();*/
 						}
 					}
 				}
@@ -375,11 +373,10 @@ namespace SinputSystems.Rebinding {
 
 				//make sure we only remove inputs for this gamepad
 				if (removeControl && deviceName != "KeyboardMouse") {
-					bool matchingPad = false;
-					for (int k = 0; k < controls[controlIndex].inputs[i].allowedSlots.Length; k++) {
-						if (controls[controlIndex].inputs[i].allowedSlots[k] == padIndex) matchingPad = true;
+					if (controls[controlIndex].inputs[i].allowedSlots[0] != (InputDeviceSlot) (padIndex + 1)) {
+						// No matching pad
+						removeControl = false;
 					}
-					if (!matchingPad) removeControl = false;
 				}
 
 				if (removeControl) {
@@ -400,11 +397,10 @@ namespace SinputSystems.Rebinding {
 
 				//make sure we only add inputs for this gamepad
 				if (addControl && deviceName != "KeyboardMouse") {
-					bool matchingPad = false;
-					for (int k = 0; k < controlsDefaults[controlIndex].inputs[i].allowedSlots.Length; k++) {
-						if (controlsDefaults[controlIndex].inputs[i].allowedSlots[k] == padIndex) matchingPad = true;
+					if (controlsDefaults[controlIndex].inputs[i].allowedSlots[0] != (InputDeviceSlot) (padIndex + 1)) {
+						// No matching pad
+						addControl = false;
 					}
-					if (!matchingPad) addControl = false;
 				}
 
 				if (addControl) {
@@ -468,11 +464,13 @@ namespace SinputSystems.Rebinding {
 				newInput.displayName = "B?";
 
 				string[] padNames = Input.GetJoystickNames();
-				List<int> allowedSlots = new List<int>();
-				for (int i = 0; i < padNames.Length; i++) {
-					if (padNames[i].ToUpper() == deviceName.ToUpper()) allowedSlots.Add(i);
+				var deviceNameUpper = deviceName.ToUpper();
+				for (int g = 0; g < padNames.Length; g++) {
+					if (padNames[g].ToUpper() == deviceNameUpper) {
+						newInput.allowedSlots.Add((InputDeviceSlot) (g + 1));
+						break;
+					}
 				}
-				newInput.allowedSlots = allowedSlots.ToArray();
 			}
 
 
@@ -626,9 +624,12 @@ namespace SinputSystems.Rebinding {
 			for (int i = 0; i < controls[c].inputs.Count; i++) {
 				bool applicableInput = false;
 				if (deviceType == InputDeviceType.GamepadAxis || deviceType == InputDeviceType.GamepadButton) {
-					if (null != controls[c].inputs[i].allowedSlots) {
-						for (int s = 0; s < controls[c].inputs[i].allowedSlots.Length; s++) {
-							if (controls[c].inputs[i].allowedSlots[s] == deviceSlotIndex) applicableInput = true;
+					if (controls[c].inputs[i].allowedSlots.Count > 0) {
+						foreach (var elem in controls[c].inputs[i].allowedSlots) {
+							if (elem == (InputDeviceSlot) (deviceSlotIndex + 1)) {
+								applicableInput = true;
+								break;
+							}
 						}
 					}
 					if (controls[c].inputs[i].deviceName == deviceName) applicableInput = true;

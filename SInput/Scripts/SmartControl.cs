@@ -89,7 +89,7 @@ namespace SinputSystems {
 			return Sinput.ButtonCheck(positiveControlRef, slot, bAction, getRawValue) || Sinput.ButtonCheck(negativeControlRef, slot, bAction, getRawValue);
 		}
 
-		public override void FillInputs(List<KeyValuePair<InputDeviceSlot, DeviceInput>> inputs, InputDeviceSlot slot) {
+		public override void FillInputs(List<DeviceInput> inputs, InputDeviceSlot slot) {
 			positiveControlRef.FillInputs(inputs, slot);
 			negativeControlRef.FillInputs(inputs, slot);
 		}

@@ -5,7 +5,7 @@ namespace SinputSystems {
 	public static class CommonGamepadMappings {
 
 		private static List<CommonMapping> commonMappings;
-		private static MappingSlots[] mappingSlots;
+		private static List<InputDeviceSlot>[] mappingSlots;
 
 		public static void ReloadCommonMaps() {
 			//called when gamepads are plugged in or removed, also when Sinput is first called
@@ -32,7 +32,6 @@ namespace SinputSystems {
 			CommonMapping[] commonMappingAssets = Resources.LoadAll<CommonMapping>("");
 			commonMappings = new List<CommonMapping>();
 			string[] gamepads = Sinput.gamepads;
-			int defaultMappingIndex = -1;
 			for (int i = 0; i < commonMappingAssets.Length; i++) {
 				//Debug.Log("HELLOOOOO");
 				//if (commonMappingAssets[i].isXRdevice) Debug.Log("XR deviiiiiice");
@@ -54,9 +53,6 @@ namespace SinputSystems {
 
 					if (gamepadConnected) commonMappings.Add(commonMappingAssets[i]);
 					if (partialMatch && !gamepadConnected) commonMappings.Add(commonMappingAssets[i]);
-					if (!partialMatch && !gamepadConnected && commonMappingAssets[i].isDefault) commonMappings.Add((CommonMapping) commonMappingAssets[i]);
-
-					if (commonMappingAssets[i].isDefault) defaultMappingIndex = commonMappings.Count - 1;
 				}
 			}
 
@@ -64,69 +60,49 @@ namespace SinputSystems {
 
 			//for each common mapping, find which gamepad slots it applies to
 			//inputs built from common mappings will only check slots which match
-			mappingSlots = new MappingSlots[commonMappings.Count];
+			mappingSlots = new List<InputDeviceSlot>[commonMappings.Count];
 			for (int i = 0; i < mappingSlots.Length; i++) {
-				mappingSlots[i].slots = new List<int>();
+				mappingSlots[i] = new List<InputDeviceSlot>();
 			}
 			//string[] gamepads = Sinput.GetGamepads();
-			for (int i = 0; i < commonMappings.Count; i++) {
+			for (int i = 0; i < commonMappings.Count;) {
 				for (int k = 0; k < commonMappings[i].names.Count; k++) {
 					for (int g = 0; g < gamepads.Length; g++) {
 						if (gamepads[g] == commonMappings[i].names[k].ToUpper()) {
-							mappingSlots[i].slots.Add(g);
+							mappingSlots[i].Add((InputDeviceSlot) (g + 1));
+							goto NextCommonMapping;
 						}
 					}
 				}
-			}
-
-			//find out if there are any connected gamepads that dont match anything in mappingSlots
-			//then find 
-			for (int g = 0; g < gamepads.Length; g++) {
-				bool mappingMatch = false;
-				for (int b = 0; b < mappingSlots.Length; b++) {
-					for (int s = 0; s < mappingSlots[b].slots.Count; s++) {
-						if (mappingSlots[b].slots[s] == g) mappingMatch = true;
-					}
-				}
-				if (!mappingMatch) {
-					//check for partial name matches with this gamepad slot
-					for (int i = 0; i < commonMappings.Count; i++) {
-						for (int k = 0; k < commonMappings[i].partialNames.Count; k++) {
-							if (!mappingMatch && gamepads[g].Contains(commonMappings[i].partialNames[k])) {
-								mappingMatch = true;
-								mappingSlots[i].slots.Add(g);
-							}
+				// If we reach this, this mapping still needs a slot
+				for (int g = 0; g < gamepads.Length; g++) {
+					// Check for partial name matches with this gamepad slot
+					for (int k = 0; k < commonMappings[i].partialNames.Count; k++) {
+						if (gamepads[g].Contains(commonMappings[i].partialNames[k].ToUpper())) {
+							mappingSlots[i].Add((InputDeviceSlot) (g + 1));
+							goto NextCommonMapping;
 						}
 					}
-					if (!mappingMatch && defaultMappingIndex != -1) {
-						//apply default common mapping to this slot
-						mappingSlots[defaultMappingIndex].slots.Add(g);
-					}
 				}
+
+				NextCommonMapping:
+				i++;
 			}
 		}
-		struct MappingSlots {
-			public List<int> slots;
-		}
 
-		/*public static List<DeviceInput> GetApplicableMaps(CommonXRInputs t, string[] connectedGamepads) {
-			Debug.LogError("DO THISSSSS");
-			return new List<DeviceInput>();
-		}*/
-		public static List<DeviceInput> GetApplicableMaps(CommonGamepadInputs commonInputType, CommonXRInputs commonXRInputType, string[] connectedGamepads) {
+		public static List<DeviceInput> GetApplicableMaps(CommonGamepadInputs commonInputType, CommonXRInputs commonXRInputType) {
 			//builds input mapping of type t for all known connected gamepads
 
 
 			List<DeviceInput> applicableInputs = new List<DeviceInput>();
 
-			bool addthis = false;
 			for (int i = 0; i < commonMappings.Count; i++) {
 
 				//if (commonMappings[i].isXRdevice) Debug.Log("Found XR device");
 
 				//add any applicable button mappings
 				for (int k = 0; k < commonMappings[i].buttons.Count; k++) {
-					addthis = false;
+					bool addthis = false;
 					if (!commonMappings[i].isXRdevice && commonMappings[i].buttons[k].buttonType != CommonGamepadInputs.NOBUTTON) {
 						if (commonMappings[i].buttons[k].buttonType == commonInputType) addthis = true;
 					}
@@ -142,14 +118,14 @@ namespace SinputSystems {
 						newInput.displayName = commonMappings[i].buttons[k].displayName;
 						newInput.displaySprite = commonMappings[i].buttons[k].displaySprite;
 
-						newInput.allowedSlots = mappingSlots[i].slots.ToArray();
+						newInput.allowedSlots.AddRange(mappingSlots[i]);
 
 						applicableInputs.Add(newInput);
 					}
 				}
 				//add any applicable axis bingings
 				for (int k = 0; k < commonMappings[i].axis.Count; k++) {
-					addthis = false;
+					bool addthis = false;
 					if (!commonMappings[i].isXRdevice && commonMappings[i].axis[k].buttonType != CommonGamepadInputs.NOBUTTON) {
 						if (commonMappings[i].axis[k].buttonType == commonInputType) addthis = true;
 					}
@@ -170,7 +146,7 @@ namespace SinputSystems {
 						newInput.axisButtoncompareVal = commonMappings[i].axis[k].compareVal;
 						newInput.defaultAxisValue = commonMappings[i].axis[k].defaultVal;
 
-						newInput.allowedSlots = mappingSlots[i].slots.ToArray();
+						newInput.allowedSlots.AddRange(mappingSlots[i]);
 
 						if (commonMappings[i].axis[k].rescaleAxis) {
 							newInput.rescaleAxis = true;
@@ -186,6 +162,5 @@ namespace SinputSystems {
 
 			return applicableInputs;
 		}
-
 	}
 }
