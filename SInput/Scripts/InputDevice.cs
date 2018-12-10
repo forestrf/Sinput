@@ -3,7 +3,6 @@
 namespace SinputSystems {
 	public class InputDevice : MonoBehaviour {
 		public InputDeviceSlot playerSlot = InputDeviceSlot.any;
-		public bool mouseKeyboardUnified = true;
 
 		private InputDeviceSlot detectedWhenAny = InputDeviceSlot.any;
 
@@ -31,15 +30,10 @@ namespace SinputSystems {
 				case InputDeviceSlot.gamepad16:
 				case InputDeviceSlot.virtual1:
 					return true;
-				case InputDeviceSlot.keyboard:
 				case InputDeviceSlot.keyboardAndMouse:
-				case InputDeviceSlot.mouse:
 					return false;
 				case InputDeviceSlot.any:
 					detectedWhenAny = Sinput.GetLastUsedDeviceSlot();
-					if (mouseKeyboardUnified && (detectedWhenAny == InputDeviceSlot.mouse || detectedWhenAny == InputDeviceSlot.keyboard)) {
-						detectedWhenAny = InputDeviceSlot.keyboardAndMouse;
-					}
 					return detectedWhenAny != InputDeviceSlot.any ? IsUsingGamepad(detectedWhenAny) : false;
 			}
 			return false;

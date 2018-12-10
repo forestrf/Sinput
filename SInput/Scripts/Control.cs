@@ -234,7 +234,7 @@ namespace SinputSystems {
 				foreach (var input in inputs) {
 					if (input.inputType == InputDeviceType.GamepadAxis || input.inputType == InputDeviceType.GamepadButton) {
 						if (input.isCustom) {
-							if (applicableMapInputs[ai].allowedSlots.Any(i => input.allowedSlots.Contains(i))) {
+							if (applicableMapInputs[ai].allowedSlot == input.allowedSlot) {
 								// We already have a custom bound control for this input, we don't need more
 								//if I wanna be copying input display names, here's the place to do it
 								//TODO: decide if I wanna do this
@@ -315,7 +315,7 @@ namespace SinputSystems {
 				if (inputs[i].deviceName != "") {
 					for (int g = 0; g < gamepads.Length; g++) {
 						if (gamepads[g] == inputs[i].deviceName.ToUpper()) {
-							inputs[i].allowedSlots.Add((InputDeviceSlot) (g + 1));
+							inputs[i].allowedSlot = (InputDeviceSlot) (g + 1);
 							break;
 						}
 					}
@@ -337,7 +337,7 @@ namespace SinputSystems {
 						//find applicable gamepad slots for this device
 						for (int g = 0; g < Sinput.connectedGamepads; g++) {
 							if (Sinput.gamepads[g] == inputs[i].deviceName.ToUpper()) {
-								inputs[i].allowedSlots.Add((InputDeviceSlot) (g + 1));
+								inputs[i].allowedSlot = (InputDeviceSlot) (g + 1);
 								break;
 							}
 						}
@@ -349,7 +349,7 @@ namespace SinputSystems {
 		public override void FillInputs(List<DeviceInput> inputs, InputDeviceSlot slot) {
 			foreach (var input in this.inputs) {
 				if (input.CheckSlot(slot)) {
-					if (slot == InputDeviceSlot.any || input.allowedSlots.Count == 0 || input.allowedSlots.Contains(slot)) {
+					if (slot == InputDeviceSlot.any || input.allowedSlot == (InputDeviceSlot) (-1) || input.allowedSlot == slot) {
 						if (!inputs.Contains(input)) {
 							inputs.Add(input);
 						}

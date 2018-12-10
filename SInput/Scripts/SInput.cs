@@ -15,8 +15,6 @@ public static class Sinput {
 	public static int MAXBUTTONSPERGAMEPAD { get { return 20; } }
 
 
-	//are keyboard & mouse used by two seperate players (distinct=true) or by a single player (distinct=false)
-	private static bool keyboardAndMouseAreDistinct = false;
 	/// <summary>
 	/// Total possible device slots that Sinput may detect. (Including keyboard, mouse, virtual, and any slots)
 	/// </summary>
@@ -78,27 +76,17 @@ public static class Sinput {
 	public static void FillInputsForControl(List<SinputSystems.DeviceInput> inputs, string controlName, SinputSystems.InputDeviceSlot playerSlot) {
 		GetControlByName(controlName).FillInputs(inputs, playerSlot);
 		inputs.Sort((a, b) => {
-			int aIndex = GetIndexLastUsedDeviceSlot(a.allowedSlots);
-			int bIndex = GetIndexLastUsedDeviceSlot(b.allowedSlots);
+			int aIndex = GetIndexLastUsedDeviceSlot(a.allowedSlot);
+			int bIndex = GetIndexLastUsedDeviceSlot(b.allowedSlot);
 			return -aIndex.CompareTo(bIndex);
 		});
 	}
 
-	private static int GetIndexLastUsedDeviceSlot(List<SinputSystems.InputDeviceSlot> inputSlots) {
-		if (inputSlots == null) return -1; // Should never happen
+	private static int GetIndexLastUsedDeviceSlot(SinputSystems.InputDeviceSlot inputSlot) {
+		if (inputSlot == (SinputSystems.InputDeviceSlot) (-1)) return -1; // Should never happen
 		// Search for the latest index (the latest is also the greater index inside lastUsedDeviceSlots)
 		for (int i = lastUsedDeviceSlots.Count - 1; i >= 0; i--) {
-			foreach (var inputSlot in inputSlots) {
-				if (inputSlot == lastUsedDeviceSlots[i]) return i;
-				if (inputSlot == SinputSystems.InputDeviceSlot.keyboardAndMouse) {
-					if (lastUsedDeviceSlots[i] == SinputSystems.InputDeviceSlot.keyboard) return i;
-					if (lastUsedDeviceSlots[i] == SinputSystems.InputDeviceSlot.mouse) return i;
-				}
-				if (lastUsedDeviceSlots[i] == SinputSystems.InputDeviceSlot.keyboardAndMouse) {
-					if (inputSlot == SinputSystems.InputDeviceSlot.keyboard) return i;
-					if (inputSlot == SinputSystems.InputDeviceSlot.mouse) return i;
-				}
-			}
+			if (inputSlot == lastUsedDeviceSlots[i]) return i;
 		}
 		return -1;
 	}
@@ -380,15 +368,7 @@ public static class Sinput {
 		//like GetButtonDown() but returns ~which~ keyboard/gamepad input slot pressed the control
 		//use it for 'Pres A to join!' type multiplayer, and instantiate a player for the returned slot (if it isn't DeviceSlot.any)
 
-		if (keyboardAndMouseAreDistinct) {
-			if (ButtonCheck(controlWithName, SinputSystems.InputDeviceSlot.keyboard, SinputSystems.ButtonAction.DOWN)) return SinputSystems.InputDeviceSlot.keyboard;
-			if (ButtonCheck(controlWithName, SinputSystems.InputDeviceSlot.mouse, SinputSystems.ButtonAction.DOWN)) return SinputSystems.InputDeviceSlot.mouse;
-		}
-		else {
-			if (ButtonCheck(controlWithName, SinputSystems.InputDeviceSlot.keyboardAndMouse, SinputSystems.ButtonAction.DOWN)) return SinputSystems.InputDeviceSlot.keyboardAndMouse;
-			if (ButtonCheck(controlWithName, SinputSystems.InputDeviceSlot.keyboard, SinputSystems.ButtonAction.DOWN)) return SinputSystems.InputDeviceSlot.keyboardAndMouse;
-			if (ButtonCheck(controlWithName, SinputSystems.InputDeviceSlot.mouse, SinputSystems.ButtonAction.DOWN)) return SinputSystems.InputDeviceSlot.keyboardAndMouse;
-		}
+		if (ButtonCheck(controlWithName, SinputSystems.InputDeviceSlot.keyboardAndMouse, SinputSystems.ButtonAction.DOWN)) return SinputSystems.InputDeviceSlot.keyboardAndMouse;
 
 		for (int i = (int) SinputSystems.InputDeviceSlot.gamepad1; i <= (int) SinputSystems.InputDeviceSlot.gamepad11; i++) {
 			if (ButtonCheck(controlWithName, (SinputSystems.InputDeviceSlot) i, SinputSystems.ButtonAction.DOWN)) return (SinputSystems.InputDeviceSlot) i;

@@ -27,9 +27,9 @@ namespace SinputSystems {
 		public DeviceInput(InputDeviceType type) {
 			inputType = type;
 
-			if (type == InputDeviceType.Keyboard) allowedSlots.Add(InputDeviceSlot.keyboard);
-			if (type == InputDeviceType.Mouse) allowedSlots.Add(InputDeviceSlot.mouse);
-			if (type == InputDeviceType.Virtual) allowedSlots.Add(InputDeviceSlot.virtual1);
+			if (type == InputDeviceType.Keyboard) allowedSlot = InputDeviceSlot.keyboardAndMouse;
+			if (type == InputDeviceType.Mouse) allowedSlot = InputDeviceSlot.keyboardAndMouse;
+			if (type == InputDeviceType.Virtual) allowedSlot = InputDeviceSlot.virtual1;
 		}
 
 		//////////// ~ keyboard specific stuff ~ ////////////
@@ -39,7 +39,7 @@ namespace SinputSystems {
 		public MouseInputType mouseInputType;
 
 		//////////// ~ gamepad specific stuff ~ ////////////
-		public readonly List<InputDeviceSlot> allowedSlots = new List<InputDeviceSlot>(); // Slots that this input is allowed to check
+		public InputDeviceSlot allowedSlot = (InputDeviceSlot) (-1); // Slots that this input is allowed to check
 		public CommonGamepadInputs commonMappingType; //if this is set, this input is a preset/default
 		public CommonXRInputs commonXRMappingType;
 		public int gamepadButtonNumber; // Button number for if this input is controlled by a gamepad button
@@ -73,9 +73,8 @@ namespace SinputSystems {
 				case InputDeviceType.GamepadButton:
 					return slot >= InputDeviceSlot.gamepad1 && slot <= InputDeviceSlot.gamepad16;
 				case InputDeviceType.Keyboard:
-					return slot == InputDeviceSlot.keyboardAndMouse || slot == InputDeviceSlot.keyboard;
 				case InputDeviceType.Mouse:
-					return slot == InputDeviceSlot.keyboardAndMouse || slot == InputDeviceSlot.mouse;
+					return slot == InputDeviceSlot.keyboardAndMouse;
 				case InputDeviceType.Virtual:
 					return slot == InputDeviceSlot.virtual1;
 				//case InputDeviceType.XR:
@@ -110,7 +109,7 @@ namespace SinputSystems {
 				if (Sinput.connectedGamepads <= slotIndex) return 0;
 
 				// Make sure the gamepad in this slot is one this input is allowed to check (eg don't check PS4 pad bindings for an XBOX pad)
-				if (allowedSlots.Count == 0 || slot != allowedSlots[0]) return 0;
+				if (slot != allowedSlot) return 0;
 
 				//button as axis checks
 				if (inputType == InputDeviceType.GamepadButton) {

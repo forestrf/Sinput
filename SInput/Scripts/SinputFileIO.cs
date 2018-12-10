@@ -170,7 +170,7 @@ namespace SinputSystems {
 								if (currentInput.inputType == InputDeviceType.GamepadAxis || currentInput.inputType == InputDeviceType.GamepadButton) {
 									for (int g = 0; g < joysticks.Length; g++) {
 										if (joysticks[g].ToUpper() == currentInput.deviceName.ToUpper()) {
-											currentInput.allowedSlots.Add((InputDeviceSlot) (g + 1));
+											currentInput.allowedSlot = (InputDeviceSlot) (g + 1);
 											break;
 										}
 									}

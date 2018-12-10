@@ -464,9 +464,7 @@ namespace SinputSystems {
 		gamepad15 = 15,
 		gamepad16 = 16,
 		keyboardAndMouse = 17,
-		keyboard = 18,
-		mouse = 19,
-		virtual1 = 20,
+		virtual1 = 18,
 		any = 0,
 	}
 

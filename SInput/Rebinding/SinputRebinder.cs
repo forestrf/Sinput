@@ -208,7 +208,7 @@ namespace SinputSystems.Rebinding {
 					var rebindingDeviceUpper = rebindingDevice.ToUpper();
 					for (int g = 0; g < gamepads.Length; g++) {
 						if (gamepads[g].ToUpper() == rebindingDeviceUpper) {
-							newInput.allowedSlots.Add((InputDeviceSlot) (g + 1));
+							newInput.allowedSlot = (InputDeviceSlot) (g + 1);
 							break;
 						}
 					}
@@ -245,7 +245,7 @@ namespace SinputSystems.Rebinding {
 					padIndex = axisChange.padIndex;
 					for (int g = 0; g < gamepads.Length; g++) {
 						if (gamepads[g].ToUpper() == rebindingDevice.ToUpper()) {
-							newInput.allowedSlots.Add((InputDeviceSlot) (g + 1));
+							newInput.allowedSlot = (InputDeviceSlot) (g + 1);
 							break;
 						}
 					}
@@ -256,7 +256,7 @@ namespace SinputSystems.Rebinding {
 					//this should preserve stuff with the same common binding from being ignored when re reload common bindings
 					for (int i = 0; i < controls[rebindingControlIndex].inputs.Count; i++) {
 						if (controls[rebindingControlIndex].inputs[i].commonMappingType != CommonGamepadInputs.NOBUTTON) {
-							if (controls[rebindingControlIndex].inputs[i].allowedSlots[0] == (InputDeviceSlot) (padIndex + 1)) {
+							if (controls[rebindingControlIndex].inputs[i].allowedSlot == (InputDeviceSlot) (padIndex + 1)) {
 								// Same device;
 								controls[rebindingControlIndex].inputs[i].isCustom = true;
 								controls[rebindingControlIndex].inputs[i].commonMappingType = CommonGamepadInputs.NOBUTTON;
@@ -373,7 +373,7 @@ namespace SinputSystems.Rebinding {
 
 				//make sure we only remove inputs for this gamepad
 				if (removeControl && deviceName != "KeyboardMouse") {
-					if (controls[controlIndex].inputs[i].allowedSlots[0] != (InputDeviceSlot) (padIndex + 1)) {
+					if (controls[controlIndex].inputs[i].allowedSlot != (InputDeviceSlot) (padIndex + 1)) {
 						// No matching pad
 						removeControl = false;
 					}
@@ -397,7 +397,7 @@ namespace SinputSystems.Rebinding {
 
 				//make sure we only add inputs for this gamepad
 				if (addControl && deviceName != "KeyboardMouse") {
-					if (controlsDefaults[controlIndex].inputs[i].allowedSlots[0] != (InputDeviceSlot) (padIndex + 1)) {
+					if (controlsDefaults[controlIndex].inputs[i].allowedSlot != (InputDeviceSlot) (padIndex + 1)) {
 						// No matching pad
 						addControl = false;
 					}
@@ -467,7 +467,7 @@ namespace SinputSystems.Rebinding {
 				var deviceNameUpper = deviceName.ToUpper();
 				for (int g = 0; g < padNames.Length; g++) {
 					if (padNames[g].ToUpper() == deviceNameUpper) {
-						newInput.allowedSlots.Add((InputDeviceSlot) (g + 1));
+						newInput.allowedSlot = (InputDeviceSlot) (g + 1);
 						break;
 					}
 				}
@@ -624,13 +624,9 @@ namespace SinputSystems.Rebinding {
 			for (int i = 0; i < controls[c].inputs.Count; i++) {
 				bool applicableInput = false;
 				if (deviceType == InputDeviceType.GamepadAxis || deviceType == InputDeviceType.GamepadButton) {
-					if (controls[c].inputs[i].allowedSlots.Count > 0) {
-						foreach (var elem in controls[c].inputs[i].allowedSlots) {
-							if (elem == (InputDeviceSlot) (deviceSlotIndex + 1)) {
-								applicableInput = true;
-								break;
-							}
-						}
+					if (controls[c].inputs[i].allowedSlot == (InputDeviceSlot) (deviceSlotIndex + 1)) {
+						applicableInput = true;
+						break;
 					}
 					if (controls[c].inputs[i].deviceName == deviceName) applicableInput = true;
 				}
@@ -640,7 +636,7 @@ namespace SinputSystems.Rebinding {
 				}
 				if (applicableInput) {
 					//this input is referring to this device
-					GameObject newInputPanelObj = (GameObject) GameObject.Instantiate(inputPanelPrefab);
+					GameObject newInputPanelObj = Instantiate(inputPanelPrefab);
 					newInputPanelObj.transform.SetParent(cpObj.transform);
 					newInputPanelObj.transform.localScale = Vector3.one;
 					inputPanel newInputPanel = new inputPanel();
