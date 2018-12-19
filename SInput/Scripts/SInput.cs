@@ -137,6 +137,8 @@ public static class Sinput {
 	/// <param name="scheme"></param>
 	/// <param name="loadCustomControls"></param>
 	public static void LoadControlScheme(SinputSystems.ControlScheme scheme, bool loadCustomControls) {
+		ControlsDict.Clear();
+
 		//Debug.Log("load scheme asset!");
 
 		schemeLoaded = false;
@@ -168,7 +170,7 @@ public static class Sinput {
 
 			loadedControls.Add(newControl);
 			if (ControlsDict.ContainsKey(newControl.name)) {
-				Debug.LogError("A duplicated name was found in the control. A Control scheme must not repeat control names");
+				Debug.LogError("A duplicated name was found in the control [" + newControl.name + "]. A Control scheme must not repeat control names");
 			}
 			ControlsDict.Add(newControl.name, newControl);
 		}
@@ -192,7 +194,7 @@ public static class Sinput {
 
 			loadedSmartControls.Add(newControl);
 			if (ControlsDict.ContainsKey(newControl.name)) {
-				Debug.LogError("A duplicated name was found in the control. A Control scheme must not repeat control names");
+				Debug.LogError("A duplicated name was found in the control [" + newControl.name + "]. A Control scheme must not repeat control names");
 			}
 			ControlsDict.Add(newControl.name, newControl);
 		}
