@@ -230,6 +230,7 @@ public static class Sinput {
 	/// <para>This is called by all other Sinput functions so it is not necessary for you to call it in most circumstances.</para>
 	/// </summary>
 	public static void SinputUpdate() {
+		UnityEngine.Profiling.Profiler.BeginSample("Sinput.Update");
 		if (lastUpdateFrame == Time.frameCount) return;
 
 		lastUpdateFrame = Time.frameCount;
@@ -255,6 +256,7 @@ public static class Sinput {
 				smartControls[i].Update();
 			}
 		}
+		UnityEngine.Profiling.Profiler.EndSample();
 	}
 
 	/// <summary>
