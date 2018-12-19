@@ -230,33 +230,36 @@ public static class Sinput {
 	/// <para>This is called by all other Sinput functions so it is not necessary for you to call it in most circumstances.</para>
 	/// </summary>
 	public static void SinputUpdate() {
-		UnityEngine.Profiling.Profiler.BeginSample("Sinput.Update");
 		if (lastUpdateFrame == Time.frameCount) return;
-
 		lastUpdateFrame = Time.frameCount;
 
-		if (!schemeLoaded) LoadControlScheme("MainControlScheme", true);
+		UnityEngine.Profiling.Profiler.BeginSample("Sinput.Update");
+		try {
+			if (!schemeLoaded) LoadControlScheme("MainControlScheme", true);
 
-		//check if connected gamepads have changed
-		CheckGamepads();
+			//check if connected gamepads have changed
+			CheckGamepads();
 
-		//update XR stuff
-		xr.Update();
+			//update XR stuff
+			xr.Update();
 
-		//update controls
-		if (null != _controls) {
-			for (int i = 0; i < _controls.Length; i++) {
-				_controls[i].Update();//resetAxisButtonStates);
+			//update controls
+			if (null != _controls) {
+				for (int i = 0; i < _controls.Length; i++) {
+					_controls[i].Update();//resetAxisButtonStates);
+				}
+			}
+
+			//update our smart controls
+			if (null != smartControls) {
+				for (int i = 0; i < smartControls.Length; i++) {
+					smartControls[i].Update();
+				}
 			}
 		}
-
-		//update our smart controls
-		if (null != smartControls) {
-			for (int i = 0; i < smartControls.Length; i++) {
-				smartControls[i].Update();
-			}
+		finally {
+			UnityEngine.Profiling.Profiler.EndSample();
 		}
-		UnityEngine.Profiling.Profiler.EndSample();
 	}
 
 	/// <summary>
