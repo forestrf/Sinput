@@ -1,0 +1,245 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39d42286b245743bfbb10bfa223892e5, type: 3}
+  m_Name: Xb360
+  m_EditorClassIdentifier: 
+  names:
+  - Controller (XBOX 360 For Windows)
+  partialNames:
+  - 360
+  - xbox
+  - Microsoft
+  operatingSystem: 2
+  buttons:
+  - buttonType: 1
+    buttonNumber: 0
+    displayName: A
+    displaySprite: {fileID: 21300000, guid: 589bbfec5cb17cd478aad5f2c9432941, type: 3}
+  - buttonType: 2
+    buttonNumber: 1
+    displayName: B
+    displaySprite: {fileID: 21300000, guid: e8a5232360f81524f9b85bfb5082c144, type: 3}
+  - buttonType: 3
+    buttonNumber: 2
+    displayName: X
+    displaySprite: {fileID: 21300000, guid: cd4d923d057b54c49bd381e35929acfa, type: 3}
+  - buttonType: 4
+    buttonNumber: 3
+    displayName: Y
+    displaySprite: {fileID: 21300000, guid: bc6ec3a9f0acf8940a405f4ca63a947f, type: 3}
+  - buttonType: 5
+    buttonNumber: 4
+    displayName: LB
+    displaySprite: {fileID: 21300000, guid: 8dffed68d2826a44eb0d00f79870884a, type: 3}
+  - buttonType: 6
+    buttonNumber: 5
+    displayName: RB
+    displaySprite: {fileID: 21300000, guid: c0defe7733b7e6c4db048009c46ce76d, type: 3}
+  - buttonType: 9
+    buttonNumber: 8
+    displayName: L3
+    displaySprite: {fileID: 21300000, guid: 89f6b4cac4f7e634f9af001815405d84, type: 3}
+  - buttonType: 10
+    buttonNumber: 9
+    displayName: R3
+    displaySprite: {fileID: 21300000, guid: 70e170cc74c00b5438fbacd0272290da, type: 3}
+  - buttonType: 23
+    buttonNumber: 7
+    displayName: Start
+    displaySprite: {fileID: 21300000, guid: d8799a51e72d7004688061a929db8347, type: 3}
+  - buttonType: 24
+    buttonNumber: 6
+    displayName: Back
+    displaySprite: {fileID: 21300000, guid: f5b8e1db39be28849bb2058115645274, type: 3}
+  axis:
+  - buttonType: 15
+    axisNumber: 0
+    invert: 1
+    clamp: 1
+    deadZone: 0.1
+    compareGreater: 1
+    compareVal: 0.4
+    rescaleAxis: 0
+    rescaleAxisMin: 0
+    rescaleAxisMax: 1
+    defaultVal: 0
+    displayName: Left
+    displaySprite: {fileID: 0}
+  - buttonType: 16
+    axisNumber: 0
+    invert: 0
+    clamp: 1
+    deadZone: 0.1
+    compareGreater: 1
+    compareVal: 0.4
+    rescaleAxis: 0
+    rescaleAxisMin: 0
+    rescaleAxisMax: 1
+    defaultVal: 0
+    displayName: Right
+    displaySprite: {fileID: 0}
+  - buttonType: 17
+    axisNumber: 1
+    invert: 1
+    clamp: 1
+    deadZone: 0.1
+    compareGreater: 1
+    compareVal: 0.4
+    rescaleAxis: 0
+    rescaleAxisMin: 0
+    rescaleAxisMax: 1
+    defaultVal: 0
+    displayName: Up
+    displaySprite: {fileID: 0}
+  - buttonType: 18
+    axisNumber: 1
+    invert: 0
+    clamp: 1
+    deadZone: 0.1
+    compareGreater: 1
+    compareVal: 0.4
+    rescaleAxis: 0
+    rescaleAxisMin: 0
+    rescaleAxisMax: 1
+    defaultVal: 0
+    displayName: Down
+    displaySprite: {fileID: 0}
+  - buttonType: 19
+    axisNumber: 3
+    invert: 1
+    clamp: 1
+    deadZone: 0.1
+    compareGreater: 1
+    compareVal: 0.4
+    rescaleAxis: 0
+    rescaleAxisMin: 0
+    rescaleAxisMax: 1
+    defaultVal: 0
+    displayName: R_Left
+    displaySprite: {fileID: 0}
+  - buttonType: 20
+    axisNumber: 3
+    invert: 0
+    clamp: 1
+    deadZone: 0.1
+    compareGreater: 1
+    compareVal: 0.4
+    rescaleAxis: 0
+    rescaleAxisMin: 0
+    rescaleAxisMax: 1
+    defaultVal: 0
+    displayName: R_Right
+    displaySprite: {fileID: 0}
+  - buttonType: 21
+    axisNumber: 4
+    invert: 1
+    clamp: 1
+    deadZone: 0.1
+    compareGreater: 1
+    compareVal: 0.4
+    rescaleAxis: 0
+    rescaleAxisMin: 0
+    rescaleAxisMax: 1
+    defaultVal: 0
+    displayName: R_Up
+    displaySprite: {fileID: 0}
+  - buttonType: 22
+    axisNumber: 4
+    invert: 0
+    clamp: 1
+    deadZone: 0
+    compareGreater: 1
+    compareVal: 0.4
+    rescaleAxis: 0
+    rescaleAxisMin: 0
+    rescaleAxisMax: 1
+    defaultVal: 0.1
+    displayName: R_Down
+    displaySprite: {fileID: 0}
+  - buttonType: 7
+    axisNumber: 8
+    invert: 0
+    clamp: 0
+    deadZone: 0
+    compareGreater: 1
+    compareVal: 0.4
+    rescaleAxis: 0
+    rescaleAxisMin: 0
+    rescaleAxisMax: 1
+    defaultVal: 0
+    displayName: LT
+    displaySprite: {fileID: 21300000, guid: 23c521ab2653aba4f8e17a9fc931830c, type: 3}
+  - buttonType: 8
+    axisNumber: 9
+    invert: 0
+    clamp: 0
+    deadZone: 0
+    compareGreater: 1
+    compareVal: 0.4
+    rescaleAxis: 0
+    rescaleAxisMin: 0
+    rescaleAxisMax: 1
+    defaultVal: 0
+    displayName: RT
+    displaySprite: {fileID: 21300000, guid: 2b26ddb7223c65643b569430738e8b64, type: 3}
+  - buttonType: 11
+    axisNumber: 5
+    invert: 1
+    clamp: 1
+    deadZone: 0
+    compareGreater: 1
+    compareVal: 0.4
+    rescaleAxis: 0
+    rescaleAxisMin: 0
+    rescaleAxisMax: 1
+    defaultVal: 0
+    displayName: DPAD Left
+    displaySprite: {fileID: 21300000, guid: 301fb21f2c0e90c42b5b4607b18d15c1, type: 3}
+  - buttonType: 12
+    axisNumber: 5
+    invert: 0
+    clamp: 1
+    deadZone: 0
+    compareGreater: 1
+    compareVal: 0.4
+    rescaleAxis: 0
+    rescaleAxisMin: 0
+    rescaleAxisMax: 1
+    defaultVal: 0
+    displayName: DPAD Right
+    displaySprite: {fileID: 21300000, guid: bd55b0a3bad9438449f13938ec2bd6ea, type: 3}
+  - buttonType: 13
+    axisNumber: 6
+    invert: 0
+    clamp: 1
+    deadZone: 0
+    compareGreater: 1
+    compareVal: 0.4
+    rescaleAxis: 0
+    rescaleAxisMin: 0
+    rescaleAxisMax: 1
+    defaultVal: 0
+    displayName: DPAD Up
+    displaySprite: {fileID: 21300000, guid: 0b04888012c3d534b85be571f5a554b3, type: 3}
+  - buttonType: 14
+    axisNumber: 6
+    invert: 1
+    clamp: 1
+    deadZone: 0
+    compareGreater: 1
+    compareVal: 0.4
+    rescaleAxis: 0
+    rescaleAxisMin: 0
+    rescaleAxisMax: 1
+    defaultVal: 0
+    displayName: DPAD Down
+    displaySprite: {fileID: 21300000, guid: d85664f143be1d94e953a272b9d9527d, type: 3}

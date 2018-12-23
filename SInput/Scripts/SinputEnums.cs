@@ -500,29 +500,15 @@ namespace SinputSystems {
 	public static class SInputEnums {
 		public static readonly KeyboardInputType[] KeyboardInputTypes = (KeyboardInputType[]) Enum.GetValues(typeof(KeyboardInputType));
 		public static readonly MouseInputType[] MouseInputTypes = (MouseInputType[]) Enum.GetValues(typeof(MouseInputType));
-
-		private static readonly string[] AxisStrings = ((Func<string[]>) (() => {
-			var strs = new string[Sinput.MAXCONNECTEDGAMEPADS * Sinput.MAXAXISPERGAMEPAD];
-			for (int j = 0; j < Sinput.MAXCONNECTEDGAMEPADS; j++) {
-				for (int a = 0; a < Sinput.MAXAXISPERGAMEPAD; a++) {
-					strs[j * Sinput.MAXAXISPERGAMEPAD + a] = string.Format("J_{0}_{1}", j + 1, a + 1);
+		private static readonly string[] GamepadAxisStrings = ((Func<string[]>) (() => {
+			var strs = new string[Sinput.MAX_CONNECTED_GAMEPADS * Sinput.MAX_AXIS_PER_GAMEPAD];
+			for (int j = 0; j < Sinput.MAX_CONNECTED_GAMEPADS; j++) {
+				for (int a = 0; a < Sinput.MAX_AXIS_PER_GAMEPAD; a++) {
+					strs[j * Sinput.MAX_AXIS_PER_GAMEPAD + a] = string.Format("J_{0}_{1}", j + 1, a + 1);
 				}
 			}
 			return strs;
 		}))();
-
-		/// <summary>
-		/// Get the KeyCode that corresponds to a specific gamepad number and button
-		/// </summary>
-		/// <param name="slotIndex">0-index based (starts from 0)</param>
-		/// <param name="gamepadButtonNumber">0-index based (starts from 0)</param>
-		public static KeyCode GetGamepadKeyCode(int slotIndex, int gamepadButtonNumber) {
-			const UnityGamepadKeyCode FirstButton = UnityGamepadKeyCode.Joystick1Button0;
-			const int ButtonsPerGamepad = UnityGamepadKeyCode.Joystick2Button0 - UnityGamepadKeyCode.Joystick1Button0;
-
-			if (slotIndex < 0 || slotIndex >= 16 || gamepadButtonNumber < 0 || gamepadButtonNumber >= 20) return KeyCode.None;
-			return (KeyCode) FirstButton + slotIndex * ButtonsPerGamepad + gamepadButtonNumber;
-		}
 
 		/// <summary>
 		/// Get the KeyCode that corresponds to mouse buttons
@@ -534,12 +520,28 @@ namespace SinputSystems {
 		}
 
 		/// <summary>
+		/// Get the KeyCode that corresponds to a specific gamepad number and button
+		/// </summary>
+		/// <param name="gamepad">0-index based (starts from 0)</param>
+		/// <param name="gamepadButtonNumber">0-index based (starts from 0)</param>
+		public static KeyCode GetGamepadKeyCode(int gamepad, int gamepadButtonNumber) {
+			const UnityGamepadKeyCode FirstButton = UnityGamepadKeyCode.Joystick1Button0;
+
+			if (gamepad < 0 || gamepad >= 16) { Debug.LogError("Invalid gamepad: " + gamepad); return KeyCode.None; }
+			if (gamepadButtonNumber < 0 || gamepadButtonNumber >= Sinput.MAX_BUTTONS_PER_GAMEPAD) { Debug.LogError("Invalid button: " + gamepadButtonNumber); return KeyCode.None; }
+
+			return (KeyCode) FirstButton + gamepad * Sinput.MAX_BUTTONS_PER_GAMEPAD + gamepadButtonNumber;
+		}
+
+		/// <summary>
 		/// Get a string that can be used with <see cref="Input.GetAxisRaw(string)"/>
 		/// </summary>
-		/// <param name="joystick">0-index based (starts from 0)</param>
+		/// <param name="gamepad">0-index based (starts from 0)</param>
 		/// <param name="axis">0-index based (starts from 0)</param>
-		public static string GetAxisString(int joystick, int axis) {
-			return AxisStrings[joystick * Sinput.MAXAXISPERGAMEPAD + axis];
+		public static string GetGamepadAxisString(int gamepad, int axis) {
+			if (gamepad < 0 || gamepad >= Sinput.MAX_CONNECTED_GAMEPADS) { Debug.LogError("Invalid gamepad: " + gamepad); return ""; }
+			if (axis < 0 || axis >= Sinput.MAX_AXIS_PER_GAMEPAD) {Debug.LogError("Invalid axis: " + axis); return ""; }
+			return GamepadAxisStrings[gamepad * Sinput.MAX_AXIS_PER_GAMEPAD + axis];
 		}
 	}
 }

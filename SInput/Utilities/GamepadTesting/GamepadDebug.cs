@@ -21,7 +21,7 @@ namespace SinputSystems.Examples {//not actually an example of sinput stuff (thi
 
 			outputDisplays = new List<GamepadOutput>();
 
-			for (int i = 0; i < Sinput.MAXCONNECTEDGAMEPADS; i++) {
+			for (int i = 0; i < Sinput.MAX_CONNECTED_GAMEPADS; i++) {
 				displayY = 0;
 
 
@@ -39,7 +39,7 @@ namespace SinputSystems.Examples {//not actually an example of sinput stuff (thi
 				newGamepadOutput.gamepadName.characterSize *= 0.8f;
 				//}
 
-				for (int k = 0; k < Sinput.MAXAXISPERGAMEPAD; k++) {
+				for (int k = 0; k < Sinput.MAX_AXIS_PER_GAMEPAD; k++) {
 					displayY -= 1f;
 					newGamepadOutput.axisDisplay.Add(NewTextMesh("Axis" + (k + 1).ToString(), displayX, displayY));
 				}
@@ -87,7 +87,7 @@ namespace SinputSystems.Examples {//not actually an example of sinput stuff (thi
 					outputDisplays[i].axisDisplay[k].text = "Axis" + (k + 1).ToString() + ": " + Input.GetAxisRaw(string.Format("J_{0}_{1}", i + 1, k + 1)).ToString("0.000");
 				}
 				List<int> buttonsPressed = new List<int>();
-				for (int k = 0; k < Sinput.MAXBUTTONSPERGAMEPAD; k++) {
+				for (int k = 0; k < Sinput.MAX_BUTTONS_PER_GAMEPAD; k++) {
 					if (Input.GetKey((KeyCode) (int) (UnityGamepadKeyCode) Enum.Parse(typeof(UnityGamepadKeyCode), string.Format("Joystick{0}Button{1}", i + 1, k)))) {
 						buttonsPressed.Add(k);
 					}

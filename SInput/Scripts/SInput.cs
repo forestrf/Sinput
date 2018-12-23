@@ -9,9 +9,9 @@ public static class Sinput {
 	//Sinput can handle as many of these as you want to throw at it buuuuut, unty can only handle so many and Sinput is wrapping unity input for now
 	//You can try bumping up the range of these but you might have trouble
 	//(EG, you can probably get axis of gamepads in slots over 8, but maybe not buttons?)
-	public static readonly int MAXCONNECTEDGAMEPADS = 11;
-	public static readonly int MAXAXISPERGAMEPAD = 28;
-	public static readonly int MAXBUTTONSPERGAMEPAD = 20;
+	public static readonly int MAX_CONNECTED_GAMEPADS = 11;
+	public static readonly int MAX_AXIS_PER_GAMEPAD = 28;
+	public const int MAX_BUTTONS_PER_GAMEPAD = SinputSystems.UnityGamepadKeyCode.Joystick2Button0 - SinputSystems.UnityGamepadKeyCode.Joystick1Button0;
 
 
 	/// <summary>
@@ -35,12 +35,23 @@ public static class Sinput {
 	/// <para>unless you're doing fancy stuff like switching between various control schemes, this is probably best left alone.</para>
 	/// </summary>
 	public static string controlSchemeName = "ControlScheme";
+	public static SinputSystems.ControlScheme currentControlScheme { get; private set; }
 
 	private static Dictionary<string, SinputSystems.BaseControl> ControlsDict = new Dictionary<string, SinputSystems.BaseControl>();
 
 	//the control scheme, set it with SetControlScheme()
 	public static SinputSystems.Control[] controls { get; private set; }
 	public static SinputSystems.SmartControl[] smartControls { get; private set; }
+
+	[RuntimeInitializeOnLoadMethod]
+	private static void Initialize() {
+		Debug.Log("Sinput Initialize");
+		// Create a gameobject that will call SinputUpdate every frame before any other script (-32000 script execution order)
+		var goUpdater = new GameObject("Sinput updater");
+		goUpdater.AddComponent<SinputSystems.SInputUpdater>();
+
+		SinputUpdate();
+	}
 
 	/// <summary>
 	/// Returns a copy of the current Sinput control list
@@ -77,7 +88,6 @@ public static class Sinput {
 	}
 
 	//gamepads list is checked every GetButton/GetAxis call, when it updates all common mapped inputs are reapplied appropriately
-	static int nextGamepadCheck = -99;
 	private static string[] _gamepads = new string[0];
 	/// <summary>
 	/// List of connected gamepads that Sinput is aware of.
@@ -89,27 +99,24 @@ public static class Sinput {
 	public static int connectedGamepads { get { return _gamepads.Length; } }
 
 	//public static ControlScheme controlScheme;
-	private static bool schemeLoaded = false;
 	/// <summary>
 	/// Load a Control Scheme asset.
 	/// </summary>
 	/// <param name="schemeName"></param>
 	/// <param name="loadCustomControls"></param>
 	public static void LoadControlScheme(string schemeName, bool loadCustomControls) {
-		schemeLoaded = false;
-		//Debug.Log("load scheme name!");
+		currentControlScheme = null;
+		Debug.Log("Load Control Scheme: " + schemeName);
 		var projectControlSchemes = Resources.LoadAll<SinputSystems.ControlScheme>("");
 
-		int schemeIndex = -1;
 		for (int i = 0; i < projectControlSchemes.Length; i++) {
-			if (projectControlSchemes[i].name == schemeName) schemeIndex = i;
+			if (projectControlSchemes[i].name == schemeName) {
+				LoadControlScheme(projectControlSchemes[i], loadCustomControls);
+				return;
+			}
 		}
-		if (schemeIndex == -1) {
-			Debug.LogError("Couldn't find control scheme \"" + schemeName + "\" in project resources.");
-			return;
-		}
-		//controlScheme = (ControlScheme)projectControlSchemes[schemeIndex];
-		LoadControlScheme(projectControlSchemes[schemeIndex], loadCustomControls);
+
+		Debug.LogError("Couldn't find control scheme \"" + schemeName + "\" in project resources.");
 	}
 	/// <summary>
 	/// Load a Control Scheme.
@@ -121,7 +128,7 @@ public static class Sinput {
 
 		//Debug.Log("load scheme asset!");
 
-		schemeLoaded = false;
+		currentControlScheme = null;
 
 		//make sure we know what gamepads are connected
 		//and load their common mappings if they are needed
@@ -187,18 +194,10 @@ public static class Sinput {
 		//make sure controls have any gamepad-relevant stuff set correctly
 		RefreshGamepadControls();
 
-		schemeLoaded = true;
+		currentControlScheme = scheme;
 		lastUpdateFrame = -99;
-	}
 
-	[RuntimeInitializeOnLoadMethod]
-	private static void Initialize() {
-		Debug.Log("Sinput Initialize");
-		// Create a gameobject that will call SinputUpdate every frame before any other script (-32000 script execution order)
-		var goUpdater = new GameObject("Sinput updater");
-		goUpdater.AddComponent<SinputSystems.SInputUpdater>();
-
-		SinputUpdate();
+		Debug.Log("Control Scheme loaded");
 	}
 
 	static int lastUpdateFrame = -99;
@@ -212,20 +211,20 @@ public static class Sinput {
 
 		UnityEngine.Profiling.Profiler.BeginSample("Sinput.Update");
 		try {
-			if (!schemeLoaded) LoadControlScheme("MainControlScheme", true);
+			if (currentControlScheme == null) LoadControlScheme("MainControlScheme", true);
 
-			//check if connected gamepads have changed
+			// Check if connected gamepads have changed
 			CheckGamepads();
 
-			//update controls
-			if (null != controls) {
+			// Update controls
+			if (controls != null) {
 				for (int i = 0; i < controls.Length; i++) {
-					controls[i].Update();//resetAxisButtonStates);
+					controls[i].Update();
 				}
 			}
 
-			//update our smart controls
-			if (null != smartControls) {
+			// Update our smart controls
+			if (smartControls != null) {
 				for (int i = 0; i < smartControls.Length; i++) {
 					smartControls[i].Update();
 				}
@@ -249,12 +248,12 @@ public static class Sinput {
 	}
 
 
-	//update gamepads
+	// Update gamepads
 	static int lastCheckedGamepadRefreshFrame = -99;
 	/// <summary>
 	/// Checks whether connected gamepads have changed.
-	/// <para>This is called before every input check so it is uneccesary for you to use it.</para>
 	/// </summary>
+	/// <param name="refreshGamepadsNow">This is called before every input check so it is uneccesary for you to use it.</param>
 	public static void CheckGamepads(bool refreshGamepadsNow = false) {
 		if (Time.frameCount == lastCheckedGamepadRefreshFrame && !refreshGamepadsNow) return;
 		lastCheckedGamepadRefreshFrame = Time.frameCount;
@@ -263,50 +262,42 @@ public static class Sinput {
 
 		var tempInputGamepads = Input.GetJoystickNames();
 		if (connectedGamepads != tempInputGamepads.Length) refreshGamepadsNow = true; //number of connected gamepads has changed
-		if (!refreshGamepadsNow && nextGamepadCheck < Time.frameCount) {
-			//this check is for the rare case gamepads get re-ordered in a single frame & the length of GetJoystickNames() stays the same
-			nextGamepadCheck = Time.frameCount + 500;
-			for (int i = 0; i < connectedGamepads; i++) {
-				if (!_gamepads[i].Equals(tempInputGamepads[i], StringComparison.InvariantCultureIgnoreCase)) refreshGamepadsNow = true;
-			}
-		}
+		// This check is for the rare case gamepads get re-ordered in a single frame & the length of GetJoystickNames() stays the same
+		for (int i = 0; i < connectedGamepads; i++)
+			if (!_gamepads[i].Equals(tempInputGamepads[i], StringComparison.InvariantCultureIgnoreCase))
+				refreshGamepadsNow = true;
+
 		if (refreshGamepadsNow) {
 			//Debug.Log("Refreshing gamepads");
 
-			//connected gamepads have changed, lets update them
+			// Connected gamepads have changed, lets update them
 			_gamepads = tempInputGamepads; // reuse array given that we already have generated it using Input.GetJoystickNames()
 			for (int i = 0; i < _gamepads.Length; i++) {
 				_gamepads[i] = tempInputGamepads[i].ToUpper();
 			}
 
-			//reload common mapping information for any new gamepads
+			// Reload common mapping information for any new gamepads
 			SinputSystems.CommonGamepadMappings.ReloadCommonMaps();
 
-			//refresh control information relating to gamepads
-			if (schemeLoaded) RefreshGamepadControls();
-
-			refreshGamepadsNow = false;
+			// Refresh control information relating to gamepads
+			if (currentControlScheme != null) RefreshGamepadControls();
 		}
 	}
 
 	private static void RefreshGamepadControls() {
-		//if (null != _controls) {
 		for (int i = 0; i < controls.Length; i++) {
-			//reapply common bindings
+			// Reapply common bindings
 			controls[i].ReapplyCommonBindings();
 
-			//reset axis button states
+			// Reset axis button states
 			//_controls[i].ResetAxisButtonStates();
 
-			//make sure inputs are linked to correct gamepad slots
+			// Make sure inputs are linked to correct gamepad slots
 			controls[i].SetAllowedInputSlots();
 		}
-		//}
-		//if (null != smartControls) {
 		for (int i = 0; i < smartControls.Length; i++) {
 			smartControls[i].Init();
 		}
-		//}
 	}
 
 
@@ -323,7 +314,7 @@ public static class Sinput {
 		}
 		T casted = found as T;
 		if (null == casted) {
-			Debug.LogError("Sinput Error: Control \"" + name + "\" is not of type " + typeof(T).Name + ".");
+			Debug.LogError("Sinput Error: Control \"" + name + "\" is not of type " + typeof(T).Name + ". It is of type " + found.GetType());
 		}
 		return casted;
 	}
@@ -342,7 +333,7 @@ public static class Sinput {
 	/// <para>will return InputDeviceSlot.any if no device pressed the button this frame</para>
 	/// <para>use it for 'Pres A to join!' type multiplayer, and instantiate a player for the returned slot (if it isn't DeviceSlot.any)</para>
 	/// </summary>
-	public static SinputSystems.InputDeviceSlot GetSlotPress(SinputSystems.BaseControl controlWithName) {
+	internal static SinputSystems.InputDeviceSlot GetSlotPress(SinputSystems.BaseControl controlWithName) {
 		//like GetButtonDown() but returns ~which~ keyboard/gamepad input slot pressed the control
 		//use it for 'Pres A to join!' type multiplayer, and instantiate a player for the returned slot (if it isn't DeviceSlot.any)
 

@@ -27,17 +27,24 @@ namespace SinputSystems {
 
 		// Must be called when Sinput is first called and after gamepads are plugged in or removed
 		public static void ReloadCommonMaps() {
-			//Debug.Log("Loading common mapping");
+			Debug.Log("(Re?)Loading common mappings for gamepads");
 
 			CommonMapping[] commonMappingAssets = Resources.LoadAll<CommonMapping>("");
 			string[] gamepads = Sinput.gamepads;
 			controllerMappings = new CommonMapping[gamepads.Length];
 
+			CommonMapping defaultMapping = null;
+			foreach (var commonMapping in commonMappingAssets) {
+				if (commonMapping.name == "DefaultMapping") {
+					defaultMapping = commonMapping;
+					break;
+				}
+			}
+
 			for (int g = 0; g < gamepads.Length; g++) {
 				// For each common mapping, find which gamepad slots it applies to. Inputs built from common mappings will only check slots which match
-
 				foreach (var commonMapping in commonMappingAssets) {
-					if (commonMapping.os == ThisOS && commonMapping.names.Any(n => n.ToUpper() == gamepads[g])) {
+					if ((commonMapping.operatingSystem & ThisOS) != 0 && commonMapping.names.Any(n => n.ToUpper() == gamepads[g])) {
 						controllerMappings[g] = commonMapping;
 						goto EndSearchingCommonMapping;
 					}
@@ -46,7 +53,7 @@ namespace SinputSystems {
 				for (int k = 0; true; k++) {
 					bool indexFound = false;
 					foreach (var commonMapping in commonMappingAssets) {
-						if (commonMapping.os == ThisOS) {
+						if ((commonMapping.operatingSystem & ThisOS) != 0) {
 							if (k < commonMapping.partialNames.Count) {
 								indexFound = true;
 								if (gamepads[g].Contains(commonMapping.partialNames[k].ToUpper())) {
@@ -59,10 +66,19 @@ namespace SinputSystems {
 					if (!indexFound) break;
 				}
 
-				EndSearchingCommonMapping:
-				if (null != controllerMappings[g]) {
-					Debug.Log("Controller [" + gamepads[g] + "] was assigned to mapping [" + controllerMappings[g].name + "]");
+				if (null == controllerMappings[g]) {
+					Debug.Log("Controller [" + gamepads[g] + "] has no matching mapping. Using default (may not match at all. Default's default is xbox mapping).");
+					if (null != defaultMapping) {
+						controllerMappings[g] = defaultMapping;
+					}
+					else {
+						Debug.Log("Default common mapping for gamepads not found (DefaultMapping).");
+						continue;
+					}
 				}
+
+				EndSearchingCommonMapping:
+				Debug.Log("Controller [" + gamepads[g] + "] assigned to mapping [" + controllerMappings[g].name + "]");
 			}
 		}
 

@@ -10,93 +10,87 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 39d42286b245743bfbb10bfa223892e5, type: 3}
-  m_Name: XbOne_osx
+  m_Name: PS3
   m_EditorClassIdentifier: 
   names:
-  - MICROSOFT XBOX ONE WIRED CONTROLLER
-  - MICROSOFT XBOX ONE WIRELESS CONTROLLER
-  - MICROSOFT XBOX ONE CONTROLLER
+  - Sony PLAYSTATION(R)3 Controller
   partialNames:
-  - one
-  - xbox
-  - microsoft
-  isDefault: 1
-  os: 1
+  - PS3
+  - Playstation
+  - Sony
+  operatingSystem: 1
   buttons:
   - buttonType: 1
-    vrButtonType: 0
-    buttonNumber: 16
-    displayName: A
+    buttonNumber: 14
+    displayName: Cross
     displaySprite: {fileID: 0}
   - buttonType: 2
-    vrButtonType: 0
-    buttonNumber: 17
-    displayName: B
+    buttonNumber: 13
+    displayName: Circle
     displaySprite: {fileID: 0}
   - buttonType: 3
-    vrButtonType: 0
-    buttonNumber: 18
-    displayName: X
+    buttonNumber: 15
+    displayName: Square
     displaySprite: {fileID: 0}
   - buttonType: 4
-    vrButtonType: 0
-    buttonNumber: 19
-    displayName: Y
+    buttonNumber: 12
+    displayName: Triangle
     displaySprite: {fileID: 0}
   - buttonType: 5
-    vrButtonType: 0
-    buttonNumber: 13
-    displayName: LB
+    buttonNumber: 10
+    displayName: L1
     displaySprite: {fileID: 0}
   - buttonType: 6
-    vrButtonType: 0
-    buttonNumber: 14
-    displayName: RB
+    buttonNumber: 11
+    displayName: R1
     displaySprite: {fileID: 0}
   - buttonType: 9
-    vrButtonType: 0
-    buttonNumber: 11
+    buttonNumber: 1
     displayName: L3
     displaySprite: {fileID: 0}
   - buttonType: 10
-    vrButtonType: 0
-    buttonNumber: 12
+    buttonNumber: 2
     displayName: R3
     displaySprite: {fileID: 0}
   - buttonType: 23
-    vrButtonType: 0
-    buttonNumber: 9
+    buttonNumber: 3
     displayName: Start
     displaySprite: {fileID: 0}
   - buttonType: 24
-    vrButtonType: 0
-    buttonNumber: 10
-    displayName: Back
+    buttonNumber: 0
+    displayName: Select
     displaySprite: {fileID: 0}
   - buttonType: 11
-    vrButtonType: 0
     buttonNumber: 7
-    displayName: DPAD Left
+    displayName: Left
     displaySprite: {fileID: 0}
   - buttonType: 12
-    vrButtonType: 0
-    buttonNumber: 8
-    displayName: DPAD Right
+    buttonNumber: 5
+    displayName: Right
     displaySprite: {fileID: 0}
   - buttonType: 13
-    vrButtonType: 0
-    buttonNumber: 5
-    displayName: DPAD Up
+    buttonNumber: 4
+    displayName: Up
     displaySprite: {fileID: 0}
   - buttonType: 14
-    vrButtonType: 0
     buttonNumber: 6
-    displayName: DPAD Down
+    displayName: Down
+    displaySprite: {fileID: 0}
+  - buttonType: 7
+    buttonNumber: 8
+    displayName: L2
+    displaySprite: {fileID: 0}
+  - buttonType: 8
+    buttonNumber: 9
+    displayName: R2
+    displaySprite: {fileID: 0}
+  - buttonType: 25
+    buttonNumber: 16
+    displayName: Home
     displaySprite: {fileID: 0}
   axis:
   - buttonType: 15
-    vrButtonType: 0
-    axisNumber: 1
+    axisNumber: 0
     invert: 1
     clamp: 1
     deadZone: 0
@@ -109,8 +103,7 @@ MonoBehaviour:
     displayName: Left
     displaySprite: {fileID: 0}
   - buttonType: 16
-    vrButtonType: 0
-    axisNumber: 1
+    axisNumber: 0
     invert: 0
     clamp: 1
     deadZone: 0
@@ -123,8 +116,7 @@ MonoBehaviour:
     displayName: Right
     displaySprite: {fileID: 0}
   - buttonType: 17
-    vrButtonType: 0
-    axisNumber: 2
+    axisNumber: 1
     invert: 1
     clamp: 1
     deadZone: 0
@@ -137,8 +129,7 @@ MonoBehaviour:
     displayName: Up
     displaySprite: {fileID: 0}
   - buttonType: 18
-    vrButtonType: 0
-    axisNumber: 2
+    axisNumber: 1
     invert: 0
     clamp: 1
     deadZone: 0
@@ -151,8 +142,7 @@ MonoBehaviour:
     displayName: Down
     displaySprite: {fileID: 0}
   - buttonType: 19
-    vrButtonType: 0
-    axisNumber: 3
+    axisNumber: 2
     invert: 1
     clamp: 1
     deadZone: 0
@@ -165,8 +155,7 @@ MonoBehaviour:
     displayName: R_Left
     displaySprite: {fileID: 0}
   - buttonType: 20
-    vrButtonType: 0
-    axisNumber: 3
+    axisNumber: 2
     invert: 0
     clamp: 1
     deadZone: 0
@@ -179,8 +168,7 @@ MonoBehaviour:
     displayName: R_Right
     displaySprite: {fileID: 0}
   - buttonType: 21
-    vrButtonType: 0
-    axisNumber: 4
+    axisNumber: 3
     invert: 1
     clamp: 1
     deadZone: 0
@@ -193,8 +181,7 @@ MonoBehaviour:
     displayName: R_Up
     displaySprite: {fileID: 0}
   - buttonType: 22
-    vrButtonType: 0
-    axisNumber: 4
+    axisNumber: 3
     invert: 0
     clamp: 1
     deadZone: 0
@@ -206,32 +193,3 @@ MonoBehaviour:
     defaultVal: 0
     displayName: R_Down
     displaySprite: {fileID: 0}
-  - buttonType: 7
-    vrButtonType: 0
-    axisNumber: 5
-    invert: 0
-    clamp: 0
-    deadZone: 0
-    compareGreater: 1
-    compareVal: 0.4
-    rescaleAxis: 1
-    rescaleAxisMin: -1
-    rescaleAxisMax: 1
-    defaultVal: 0
-    displayName: LT
-    displaySprite: {fileID: 0}
-  - buttonType: 8
-    vrButtonType: 0
-    axisNumber: 6
-    invert: 0
-    clamp: 0
-    deadZone: 0
-    compareGreater: 1
-    compareVal: 0.4
-    rescaleAxis: 1
-    rescaleAxisMin: -1
-    rescaleAxisMax: 1
-    defaultVal: 0
-    displayName: RT
-    displaySprite: {fileID: 0}
-  isXRdevice: 0

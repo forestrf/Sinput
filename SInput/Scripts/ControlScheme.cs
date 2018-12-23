@@ -4,15 +4,8 @@ using UnityEngine;
 namespace SinputSystems {
 	[CreateAssetMenu(fileName = "New Control Scheme", menuName = "Sinput/Control Scheme", order = 0)]
 	public class ControlScheme : ScriptableObject {
-
 		public List<ControlSetup> controls = new List<ControlSetup>();
 		public List<SmartControlSetup> smartControls = new List<SmartControlSetup>();
-
-		//settings
-		//public string name = "";
-		//public bool exposeMouseSensitivityOption = true;
-		//public bool mouseAndKeyboardAreDistinct = false;
-		//public List<string> 
 
 		public ControlScheme() {
 			//add all the default controls
@@ -104,37 +97,36 @@ namespace SinputSystems {
 
 			//now we create the default smart controls
 			SmartControlSetup newSmartControl = NewSmartControlSetup("Horizontal", "Left", "Right");
-			this.smartControls.Add(newSmartControl);
+			smartControls.Add(newSmartControl);
 
 			newSmartControl = NewSmartControlSetup("Vertical", "Down", "Up");
-			this.smartControls.Add(newSmartControl);
+			smartControls.Add(newSmartControl);
 
 			newSmartControl = NewSmartControlSetup("Look Horizontal", "Look Left", "Look Right");
-			this.smartControls.Add(newSmartControl);
+			smartControls.Add(newSmartControl);
 
 			newSmartControl = NewSmartControlSetup("Look Vertical", "Look Down", "Look Up");
-			this.smartControls.Add(newSmartControl);
-
+			smartControls.Add(newSmartControl);
 		}
 
 
 
 		[System.Serializable]
 		public struct ControlSetup {
-			public string name;// = "New Control";
-			public List<KeyboardInputType> keyboardInputs;// = new List<InputSetup>();
+			public string name; // = "New Control";
+			public List<KeyboardInputType> keyboardInputs; // = new List<InputSetup>();
 			public List<CommonGamepadInputs> gamepadInputs;
 			public List<MouseInputType> mouseInputs;
 			public List<string> virtualInputs;
 		}
 		[System.Serializable]
 		public struct SmartControlSetup {
-			public string name;// = "New Mix Control";
+			public string name; // = "New Mix Control";
 			public string positiveControl;
 			public string negativeControl;
 
-			public float scale;// =1f;
-			public bool invert;//default inversion setting
+			public float scale; // =1f;
+			public bool invert; // Default inversion setting
 		}
 
 		private ControlSetup NewControlSetup(string name) {
@@ -157,7 +149,5 @@ namespace SinputSystems {
 			};
 			return newSmartControl;
 		}
-
 	}
-
 }

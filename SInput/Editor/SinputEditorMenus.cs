@@ -9,8 +9,8 @@ public class SinputEditorMenus {
 		//Debug.Log("Doing Something...");
 		//Debug.Log("Writing new Input Manager asset to \"ProjectSettings/InputManager.asset\"...");
 
-		int joystickNumber = Sinput.MAXCONNECTEDGAMEPADS;
-		int axisNumber = Sinput.MAXAXISPERGAMEPAD;
+		int joystickNumber = Sinput.MAX_CONNECTED_GAMEPADS;
+		int axisNumber = Sinput.MAX_AXIS_PER_GAMEPAD;
 
 		string inputManagerAssetLocation = "ProjectSettings/InputManager.asset";
 

@@ -203,7 +203,7 @@ namespace SinputSystems {
 
 			if (isNewBinding) commonMappings.Add(gamepadButtonOrAxis);
 			List<DeviceInput> applicableMapInputs = CommonGamepadMappings.GetApplicableMaps(gamepadButtonOrAxis);
-			
+
 			AddGamepadInputs(applicableMapInputs);
 		}
 		private void AddGamepadInputs(List<DeviceInput> applicableMapInputs) {

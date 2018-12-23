@@ -10,80 +10,62 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 39d42286b245743bfbb10bfa223892e5, type: 3}
-  m_Name: PS2_win
+  m_Name: PS4
   m_EditorClassIdentifier: 
   names:
-  - Twin USB Joystick
-  partialNames: []
-  os: 2
+  - Sony Computer Entertainment Wireless Controller
+  partialNames:
+  - PS4
+  - Playstation
+  - Sony
+  operatingSystem: 1
   buttons:
   - buttonType: 1
-    vrButtonType: 0
-    buttonNumber: 2
-    displayName: Cross
-    displaySprite: {fileID: 21300000, guid: e3254f0b1c9ec4745a465f32f0c9627d, type: 3}
-  - buttonType: 2
-    vrButtonType: 0
     buttonNumber: 1
+    displayName: Cross
+    displaySprite: {fileID: 0}
+  - buttonType: 2
+    buttonNumber: 2
     displayName: Circle
-    displaySprite: {fileID: 21300000, guid: 7b2e91c9237187541b279b3523391a1f, type: 3}
+    displaySprite: {fileID: 0}
   - buttonType: 3
-    vrButtonType: 0
-    buttonNumber: 3
-    displayName: Square
-    displaySprite: {fileID: 21300000, guid: 46e32f80dc257e8479719b164c68ab91, type: 3}
-  - buttonType: 4
-    vrButtonType: 0
     buttonNumber: 0
+    displayName: Square
+    displaySprite: {fileID: 0}
+  - buttonType: 4
+    buttonNumber: 3
     displayName: Triangle
-    displaySprite: {fileID: 21300000, guid: 9be289b1290102c47a0c26bf3e0cd826, type: 3}
+    displaySprite: {fileID: 0}
   - buttonType: 5
-    vrButtonType: 0
-    buttonNumber: 6
+    buttonNumber: 4
     displayName: L1
-    displaySprite: {fileID: 21300000, guid: e38b8a29ff638b241a7801e97e6fe82f, type: 3}
+    displaySprite: {fileID: 0}
   - buttonType: 6
-    vrButtonType: 0
-    buttonNumber: 7
+    buttonNumber: 5
     displayName: R1
-    displaySprite: {fileID: 21300000, guid: 0a39d0d62c8dc274287d922eace3cea2, type: 3}
+    displaySprite: {fileID: 0}
   - buttonType: 9
-    vrButtonType: 0
     buttonNumber: 10
     displayName: L3
-    displaySprite: {fileID: 21300000, guid: 5c76ec703bb1ba34f92573336be47797, type: 3}
+    displaySprite: {fileID: 0}
   - buttonType: 10
-    vrButtonType: 0
     buttonNumber: 11
     displayName: R3
-    displaySprite: {fileID: 21300000, guid: 8b4da7c07dbd2094689c9d373cf6ddbf, type: 3}
+    displaySprite: {fileID: 0}
   - buttonType: 23
-    vrButtonType: 0
     buttonNumber: 9
-    displayName: Start
-    displaySprite: {fileID: 21300000, guid: b619b141851d3d14eb7a6610b96fea5d, type: 3}
+    displayName: Options
+    displaySprite: {fileID: 0}
   - buttonType: 24
-    vrButtonType: 0
-    buttonNumber: 8
-    displayName: Select
-    displaySprite: {fileID: 21300000, guid: e18684345ff8fb348a903163a7d63953, type: 3}
-  - buttonType: 7
-    vrButtonType: 0
-    buttonNumber: 4
-    displayName: L2
-    displaySprite: {fileID: 21300000, guid: 3793c98982a27604ea2dd6c13474341c, type: 3}
-  - buttonType: 8
-    vrButtonType: 0
-    buttonNumber: 5
-    displayName: R2
-    displaySprite: {fileID: 21300000, guid: ddba96b03273b16498e2e6760692fd5a, type: 3}
+    buttonNumber: 13
+    displayName: Touchpad
+    displaySprite: {fileID: 0}
   axis:
   - buttonType: 15
-    vrButtonType: 0
-    axisNumber: 1
+    axisNumber: 0
     invert: 1
     clamp: 1
-    deadZone: 0.15
+    deadZone: 0.06
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -93,11 +75,10 @@ MonoBehaviour:
     displayName: Left
     displaySprite: {fileID: 0}
   - buttonType: 16
-    vrButtonType: 0
-    axisNumber: 1
+    axisNumber: 0
     invert: 0
     clamp: 1
-    deadZone: 0.15
+    deadZone: 0.06
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -107,11 +88,10 @@ MonoBehaviour:
     displayName: Right
     displaySprite: {fileID: 0}
   - buttonType: 17
-    vrButtonType: 0
-    axisNumber: 2
+    axisNumber: 1
     invert: 1
     clamp: 1
-    deadZone: 0.15
+    deadZone: 0.06
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -121,11 +101,10 @@ MonoBehaviour:
     displayName: Up
     displaySprite: {fileID: 0}
   - buttonType: 18
-    vrButtonType: 0
-    axisNumber: 2
+    axisNumber: 1
     invert: 0
     clamp: 1
-    deadZone: 0.15
+    deadZone: 0.06
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -135,11 +114,10 @@ MonoBehaviour:
     displayName: Down
     displaySprite: {fileID: 0}
   - buttonType: 19
-    vrButtonType: 0
-    axisNumber: 4
+    axisNumber: 2
     invert: 1
     clamp: 1
-    deadZone: 0.15
+    deadZone: 0.06
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -149,11 +127,10 @@ MonoBehaviour:
     displayName: R_Left
     displaySprite: {fileID: 0}
   - buttonType: 20
-    vrButtonType: 0
-    axisNumber: 4
+    axisNumber: 2
     invert: 0
     clamp: 1
-    deadZone: 0.15
+    deadZone: 0.06
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -163,11 +140,10 @@ MonoBehaviour:
     displayName: R_Right
     displaySprite: {fileID: 0}
   - buttonType: 21
-    vrButtonType: 0
     axisNumber: 3
     invert: 1
     clamp: 1
-    deadZone: 0.15
+    deadZone: 0.06
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -177,11 +153,10 @@ MonoBehaviour:
     displayName: R_Up
     displaySprite: {fileID: 0}
   - buttonType: 22
-    vrButtonType: 0
     axisNumber: 3
     invert: 0
     clamp: 1
-    deadZone: 0.15
+    deadZone: 0.06
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -190,53 +165,62 @@ MonoBehaviour:
     defaultVal: 0
     displayName: R_Down
     displaySprite: {fileID: 0}
+  - buttonType: 7
+    axisNumber: 4
+    invert: 0
+    clamp: 0
+    deadZone: 0
+    compareGreater: 1
+    compareVal: 0.4
+    rescaleAxis: 1
+    rescaleAxisMin: -1
+    rescaleAxisMax: 1
+    defaultVal: 0
+    displayName: L2
+    displaySprite: {fileID: 0}
+  - buttonType: 8
+    axisNumber: 5
+    invert: 0
+    clamp: 0
+    deadZone: 0
+    compareGreater: 1
+    compareVal: 0.4
+    rescaleAxis: 1
+    rescaleAxisMin: -1
+    rescaleAxisMax: 1
+    defaultVal: 0
+    displayName: R2
+    displaySprite: {fileID: 0}
   - buttonType: 11
-    vrButtonType: 0
-    axisNumber: 5
+    axisNumber: 6
     invert: 1
-    clamp: 0
-    deadZone: 0.15
+    clamp: 1
+    deadZone: 0
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
     rescaleAxisMin: 0
     rescaleAxisMax: 1
     defaultVal: 0
-    displayName: D_Left
-    displaySprite: {fileID: 21300000, guid: 5479e9247b703fc46983b349614d9225, type: 3}
+    displayName: DPAD Left
+    displaySprite: {fileID: 0}
   - buttonType: 12
-    vrButtonType: 0
-    axisNumber: 5
+    axisNumber: 6
     invert: 0
-    clamp: 0
-    deadZone: 0.15
+    clamp: 1
+    deadZone: 0
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
     rescaleAxisMin: 0
     rescaleAxisMax: 1
     defaultVal: 0
-    displayName: D_Right
-    displaySprite: {fileID: 21300000, guid: f5811ca3df128354a9da263047d8a029, type: 3}
+    displayName: DPAD Right
+    displaySprite: {fileID: 0}
   - buttonType: 13
-    vrButtonType: 0
-    axisNumber: 6
-    invert: 0
-    clamp: 0
-    deadZone: 0
-    compareGreater: 1
-    compareVal: 0.4
-    rescaleAxis: 0
-    rescaleAxisMin: 0
-    rescaleAxisMax: 1
-    defaultVal: 0
-    displayName: D_Up
-    displaySprite: {fileID: 21300000, guid: 958758fa7f0e0b446a0e52a08ad6a57b, type: 3}
-  - buttonType: 14
-    vrButtonType: 0
-    axisNumber: 6
+    axisNumber: 0
     invert: 1
-    clamp: 0
+    clamp: 1
     deadZone: 0
     compareGreater: 1
     compareVal: 0.4
@@ -244,6 +228,18 @@ MonoBehaviour:
     rescaleAxisMin: 0
     rescaleAxisMax: 1
     defaultVal: 0
-    displayName: D_Down
-    displaySprite: {fileID: 21300000, guid: a9c932d31b847d140ac71b4e2241f35e, type: 3}
-  isXRdevice: 0
+    displayName: DPAD Up
+    displaySprite: {fileID: 0}
+  - buttonType: 14
+    axisNumber: 0
+    invert: 0
+    clamp: 1
+    deadZone: 0
+    compareGreater: 1
+    compareVal: 0.4
+    rescaleAxis: 0
+    rescaleAxisMin: 0
+    rescaleAxisMax: 1
+    defaultVal: 0
+    displayName: DPAD Down
+    displaySprite: {fileID: 0}

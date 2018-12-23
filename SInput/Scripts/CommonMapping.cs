@@ -9,7 +9,7 @@ namespace SinputSystems {
 		public List<string> names = new List<string>();//names of gamepads that this mapping can apply to
 		public List<string> partialNames = new List<string>();//if an exact name match isn't found for a pad, use this mapping if it has a partial match with this
 
-		public OSFamily os = OSFamily.Windows;
+		public OSFamily operatingSystem = OSFamily.Windows;
 
 		public List<GamepadButtonInput> buttons = new List<GamepadButtonInput>();
 		public List<GamepadAxisInput> axis = new List<GamepadAxisInput>();
@@ -26,6 +26,7 @@ namespace SinputSystems {
 		[System.Serializable]
 		public struct GamepadAxisInput {
 			public CommonGamepadInputs buttonType;
+			[Tooltip("0-based index")]
 			public int axisNumber;
 			public bool invert;
 			public bool clamp; // Applied AFTER invert, to keep input result between 0 and 1

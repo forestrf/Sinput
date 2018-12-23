@@ -135,7 +135,7 @@ namespace SinputSystems.Rebinding {
 
 			for (int i = 0; i < padCount; i++) {
 				for (int a = 0; a < allGamepadAxis[i].axisValues.Length; a++) {
-					float presentValue = Input.GetAxisRaw(SInputEnums.GetAxisString(i, a));
+					float presentValue = Input.GetAxisRaw(SInputEnums.GetGamepadAxisString(i, a));
 					if (AcceptChangesFromSlot(i + 1) && allGamepadAxis[i].measuredFirstChange[a] && allGamepadAxis[i].axisValues[a] != presentValue) {
 						float restingValue = 0f;
 						if (allGamepadAxis[i].zeroTime[a] >= allGamepadAxis[i].minusOneTime[a] && allGamepadAxis[i].zeroTime[a] >= allGamepadAxis[i].plusOneTime[a]) {
@@ -151,7 +151,7 @@ namespace SinputSystems.Rebinding {
 							//axis value has changed enough to register as an actual change and for us to have recorded enough properties to get a picture of how it works
 							changeFound = true;
 							changedPadAxis.padIndex = i;
-							changedPadAxis.inputIndex = a + 1;
+							changedPadAxis.inputIndex = a;
 
 							changedPadAxis.axisMotionIsPositive = presentValue > allGamepadAxis[i].axisValues[a];
 							changedPadAxis.restingValue = restingValue;
@@ -212,21 +212,21 @@ namespace SinputSystems.Rebinding {
 			int padCount = Input.GetJoystickNames().Length;
 			allGamepadAxis = new gamepadState[padCount];
 			for (int i = 0; i < padCount; i++) {
-				allGamepadAxis[i].axisValues = new float[Sinput.MAXAXISPERGAMEPAD];
+				allGamepadAxis[i].axisValues = new float[Sinput.MAX_AXIS_PER_GAMEPAD];
 
-				allGamepadAxis[i].zeroTime = new float[Sinput.MAXAXISPERGAMEPAD];
-				allGamepadAxis[i].plusOneTime = new float[Sinput.MAXAXISPERGAMEPAD];
-				allGamepadAxis[i].minusOneTime = new float[Sinput.MAXAXISPERGAMEPAD];
-				allGamepadAxis[i].minRecordedValue = new float[Sinput.MAXAXISPERGAMEPAD];
-				allGamepadAxis[i].maxRecordedValue = new float[Sinput.MAXAXISPERGAMEPAD];
+				allGamepadAxis[i].zeroTime = new float[Sinput.MAX_AXIS_PER_GAMEPAD];
+				allGamepadAxis[i].plusOneTime = new float[Sinput.MAX_AXIS_PER_GAMEPAD];
+				allGamepadAxis[i].minusOneTime = new float[Sinput.MAX_AXIS_PER_GAMEPAD];
+				allGamepadAxis[i].minRecordedValue = new float[Sinput.MAX_AXIS_PER_GAMEPAD];
+				allGamepadAxis[i].maxRecordedValue = new float[Sinput.MAX_AXIS_PER_GAMEPAD];
 
-				allGamepadAxis[i].measuredFirstChange = new bool[Sinput.MAXAXISPERGAMEPAD];
+				allGamepadAxis[i].measuredFirstChange = new bool[Sinput.MAX_AXIS_PER_GAMEPAD];
 
 
 				for (int a = 0; a < allGamepadAxis[i].axisValues.Length; a++) {
 					allGamepadAxis[i].measuredFirstChange[a] = false;
 
-					allGamepadAxis[i].axisValues[a] = Input.GetAxisRaw(SInputEnums.GetAxisString(i, a));
+					allGamepadAxis[i].axisValues[a] = Input.GetAxisRaw(SInputEnums.GetGamepadAxisString(i, a));
 
 					allGamepadAxis[i].zeroTime[a] = 0f;
 					allGamepadAxis[i].plusOneTime[a] = 0f;
@@ -235,7 +235,7 @@ namespace SinputSystems.Rebinding {
 					allGamepadAxis[i].maxRecordedValue[a] = allGamepadAxis[i].axisValues[a];
 				}
 
-				allGamepadAxis[i].buttonValues = new bool[Sinput.MAXBUTTONSPERGAMEPAD];
+				allGamepadAxis[i].buttonValues = new bool[Sinput.MAX_BUTTONS_PER_GAMEPAD];
 				for (int b = 0; b < allGamepadAxis[i].buttonValues.Length; b++) {
 					KeyCode buttonCode = (KeyCode) Enum.Parse(typeof(KeyCode), string.Format("Joystick{0}Button{1}", (i + 1), b));
 					allGamepadAxis[i].buttonValues[b] = Input.GetKeyDown(buttonCode);

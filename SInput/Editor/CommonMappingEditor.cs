@@ -11,7 +11,7 @@ public class CommonMappingEditor : Editor {
 	List<bool> axisEditFoldouts = new List<bool>();
 
 	public override void OnInspectorGUI() {
-
+		serializedObject.Update();
 		CommonMapping padMapping = (CommonMapping) target;
 		EditorGUI.BeginChangeCheck();
 
@@ -23,7 +23,8 @@ public class CommonMappingEditor : Editor {
 
 		if (currentPanel == 0) {
 			//Gamepad general menu
-			padMapping.os = (OSFamily) EditorGUILayout.EnumPopup("Operating System:", padMapping.os);
+			EditorGUILayout.PropertyField(serializedObject.FindProperty("operatingSystem"));
+			serializedObject.ApplyModifiedProperties();
 			EditorGUILayout.Space();
 			EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
 
@@ -177,7 +178,7 @@ public class CommonMappingEditor : Editor {
 				CommonMapping.GamepadAxisInput newAxisInput = new CommonMapping.GamepadAxisInput();
 				newAxisInput.buttonType = CommonGamepadInputs.NOBUTTON;
 
-				newAxisInput.axisNumber = 1;
+				newAxisInput.axisNumber = 0;
 				newAxisInput.invert = false;
 				newAxisInput.clamp = false; //applied AFTER invert, to keep input result between 0 and 1
 
