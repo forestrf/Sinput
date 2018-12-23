@@ -124,7 +124,6 @@ namespace SinputSystems {
 			public string name;// = "New Control";
 			public List<KeyboardInputType> keyboardInputs;// = new List<InputSetup>();
 			public List<CommonGamepadInputs> gamepadInputs;
-			public List<CommonXRInputs> xrInputs;
 			public List<MouseInputType> mouseInputs;
 			public List<string> virtualInputs;
 		}
@@ -143,7 +142,6 @@ namespace SinputSystems {
 				name = name,
 				keyboardInputs = new List<KeyboardInputType>(),
 				gamepadInputs = new List<CommonGamepadInputs>(),
-				xrInputs = new List<CommonXRInputs>(),
 				mouseInputs = new List<MouseInputType>(),
 				virtualInputs = new List<string>()
 			};

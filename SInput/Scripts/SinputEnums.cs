@@ -497,48 +497,6 @@ namespace SinputSystems {
 		HOME = 25,//AKA system
 	}
 
-	public enum CommonXRInputs {
-		NOBUTTON = 0,
-		BUTTON1_L = 1,
-		BUTTON1_R = 2,
-		BUTTON2_L = 3,
-		BUTTON2_R = 4,
-
-		STICK_PRESS_L = 5,
-		STICK_PRESS_R = 6,
-		STICK_TOUCH_L = 7,
-		STICK_TOUCH_R = 8,
-
-		STICK_LEFT_L = 9,
-		STICK_RIGHT_L = 10,
-		STICK_UP_L = 11,
-		STICK_DOWN_L = 12,
-		STICK_LEFT_R = 13,
-		STICK_RIGHT_R = 14,
-		STICK_UP_R = 15,
-		STICK_DOWN_R = 16,
-
-		TRIGGER_L = 17,
-		TRIGGER_R = 18,
-
-		GRIP_L = 19,
-		GRIP_R = 20,
-
-		STICK_X_L = 21,
-		STICK_Y_L = 22,
-		STICK_X_R = 23,
-		STICK_Y_R = 24,
-
-		FINGER_INDEX_L = 25,
-		FINGER_INDEX_R = 26,
-		FINGER_MIDDLE_L = 27,
-		FINGER_MIDDLE_R = 28,
-		FINGER_RING_L = 29,
-		FINGER_RING_R = 30,
-		FINGER_PINKY_L = 31,
-		FINGER_PINKY_R = 32,
-	}
-
 	public static class SInputEnums {
 		public static readonly KeyboardInputType[] KeyboardInputTypes = (KeyboardInputType[]) Enum.GetValues(typeof(KeyboardInputType));
 		public static readonly MouseInputType[] MouseInputTypes = (MouseInputType[]) Enum.GetValues(typeof(MouseInputType));

@@ -93,10 +93,8 @@ namespace SinputSystems {
 			List<Control> controls = new List<Control>();
 			for (int c = 0; c < schemeToReplace.Length; c++) {
 				controls.Add(new Control(schemeToReplace[c].name));
-				controls[c].commonMappings = new List<CommonGamepadInputs>();
-				for (int b = 0; b < schemeToReplace[c].commonMappings.Count; b++) {
-					controls[c].commonMappings.Add(schemeToReplace[c].commonMappings[b]);
-				}
+				controls[c].commonMappings.Clear();
+				controls[c].commonMappings.AddRange(schemeToReplace[c].commonMappings);
 			}
 
 			//now add saved data to the list (and to other places)
@@ -146,13 +144,13 @@ namespace SinputSystems {
 								if (currentInput.inputType == InputDeviceType.Keyboard) {
 									currentInput.keyboardKeyCode = (KeyCode) Enum.Parse(typeof(KeyCode), thisLine[4]);
 								}
-								if (currentInput.inputType == InputDeviceType.Mouse) {
+								else if (currentInput.inputType == InputDeviceType.Mouse) {
 									currentInput.mouseInputType = (MouseInputType) Enum.Parse(typeof(MouseInputType), thisLine[4]);
 								}
-								if (currentInput.inputType == InputDeviceType.GamepadButton) {
+								else if (currentInput.inputType == InputDeviceType.GamepadButton) {
 									currentInput.gamepadButtonNumber = int.Parse(thisLine[4]);
 								}
-								if (currentInput.inputType == InputDeviceType.GamepadAxis) {
+								else if (currentInput.inputType == InputDeviceType.GamepadAxis) {
 									currentInput.gamepadAxisNumber = int.Parse(thisLine[4]);
 									currentInput.invertAxis = thisLine[5] == "True";
 									currentInput.clampAxis = thisLine[6] == "True";
@@ -160,7 +158,7 @@ namespace SinputSystems {
 									currentInput.rescaleAxisMin = float.Parse(thisLine[8]);
 									currentInput.rescaleAxisMax = float.Parse(thisLine[9]);
 								}
-								if (currentInput.inputType == InputDeviceType.Virtual) {
+								else if (currentInput.inputType == InputDeviceType.Virtual) {
 									currentInput.virtualInputID = thisLine[4];
 								}
 
@@ -328,16 +326,16 @@ namespace SinputSystems {
 			for (int s = 0; s < Sinput.smartControls.Length; s++) {
 				saveStr += Sinput.smartControls[s].name + "\n";
 				//inversion settings for each slot
-				for (int i = 0; i < Sinput.totalPossibleDeviceSlots; i++) {
+				for (int i = 0; i < Sinput.TotalPossibleDeviceSlots; i++) {
 					saveStr += Sinput.smartControls[s].inversion[i].ToString();
-					if (i < Sinput.totalPossibleDeviceSlots - 1) saveStr += seperator;
+					if (i < Sinput.TotalPossibleDeviceSlots - 1) saveStr += seperator;
 				}
 				saveStr += "\n";
 
 				//scale settings for each slot
-				for (int i = 0; i < Sinput.totalPossibleDeviceSlots; i++) {
+				for (int i = 0; i < Sinput.TotalPossibleDeviceSlots; i++) {
 					saveStr += Sinput.smartControls[s].scales[i].ToString();
-					if (i < Sinput.totalPossibleDeviceSlots - 1) saveStr += seperator;
+					if (i < Sinput.TotalPossibleDeviceSlots - 1) saveStr += seperator;
 				}
 				saveStr += "\n";
 			}

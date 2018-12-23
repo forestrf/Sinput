@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace SinputSystems {
@@ -13,18 +12,15 @@ namespace SinputSystems {
 		public bool isToggle = false;
 
 		//list of inputs we will check when the control is polled
-		public List<DeviceInput> inputs = new List<DeviceInput>();
+		public readonly List<DeviceInput> inputs = new List<DeviceInput>();
+		public readonly List<CommonGamepadInputs> commonMappings = new List<CommonGamepadInputs>();
 
-		public List<CommonGamepadInputs> commonMappings = new List<CommonGamepadInputs>();
-		public List<CommonXRInputs> commonXRMappings = new List<CommonXRInputs>();
-
-		//control constructor
 		public Control(string controlName) {
 			name = controlName;
 		}
 
 		private readonly ControlState[] controlStates = ((Func<ControlState[]>) (() => {
-			ControlState[] controlStates = new ControlState[Sinput.totalPossibleDeviceSlots];
+			ControlState[] controlStates = new ControlState[Sinput.TotalPossibleDeviceSlots];
 			for (int i = 0; i < controlStates.Length; i++) {
 				controlStates[i] = new ControlState();
 			}
@@ -206,25 +202,8 @@ namespace SinputSystems {
 			Sinput.CheckGamepads();
 
 			if (isNewBinding) commonMappings.Add(gamepadButtonOrAxis);
-			List<DeviceInput> applicableMapInputs = CommonGamepadMappings.GetApplicableMaps(gamepadButtonOrAxis, CommonXRInputs.NOBUTTON);
-
-			for (int i = 0; i < applicableMapInputs.Count; i++) {
-				applicableMapInputs[i].commonXRMappingType = CommonXRInputs.NOBUTTON;
-			}
-
-			AddGamepadInputs(applicableMapInputs);
-		}
-		public void AddGamepadInput(CommonXRInputs gamepadButtonOrAxis) { AddGamepadInput(gamepadButtonOrAxis, true); }
-		private void AddGamepadInput(CommonXRInputs gamepadButtonOrAxis, bool isNewBinding) {
-			Sinput.CheckGamepads();
-
-			if (isNewBinding) commonXRMappings.Add(gamepadButtonOrAxis);
-			List<DeviceInput> applicableMapInputs = CommonGamepadMappings.GetApplicableMaps(CommonGamepadInputs.NOBUTTON, gamepadButtonOrAxis);
-
-			for (int i = 0; i < applicableMapInputs.Count; i++) {
-				applicableMapInputs[i].commonMappingType = CommonGamepadInputs.NOBUTTON;
-			}
-
+			List<DeviceInput> applicableMapInputs = CommonGamepadMappings.GetApplicableMaps(gamepadButtonOrAxis);
+			
 			AddGamepadInputs(applicableMapInputs);
 		}
 		private void AddGamepadInputs(List<DeviceInput> applicableMapInputs) {
@@ -271,7 +250,6 @@ namespace SinputSystems {
 			DeviceInput input = new DeviceInput(InputDeviceType.Mouse);
 			input.mouseInputType = mouseInputType;
 			input.commonMappingType = CommonGamepadInputs.NOBUTTON;
-			input.commonXRMappingType = CommonXRInputs.NOBUTTON;
 			inputs.Add(input);
 		}
 
@@ -279,7 +257,6 @@ namespace SinputSystems {
 			DeviceInput input = new DeviceInput(InputDeviceType.Virtual);
 			input.virtualInputID = virtualInputID;
 			input.commonMappingType = CommonGamepadInputs.NOBUTTON;
-			input.commonXRMappingType = CommonXRInputs.NOBUTTON;
 			inputs.Add(input);
 			VirtualInputs.AddInput(virtualInputID);
 		}
@@ -292,20 +269,10 @@ namespace SinputSystems {
 					i--;
 				}
 			}
-			for (int i = 0; i < inputs.Count; i++) {
-				if (inputs[i].commonXRMappingType != CommonXRInputs.NOBUTTON) {
-					inputs.RemoveAt(i);
-					i--;
-				}
-			}
-
 
 
 			for (int i = 0; i < commonMappings.Count; i++) {
 				AddGamepadInput(commonMappings[i], false);
-			}
-			for (int i = 0; i < commonXRMappings.Count; i++) {
-				AddGamepadInput(commonXRMappings[i], false);
 			}
 
 			// Also recheck allowed slots for custom bound pads (their inputs have a device name, common bound stuff don't)

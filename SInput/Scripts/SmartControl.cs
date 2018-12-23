@@ -14,8 +14,8 @@ namespace SinputSystems {
 		public SmartControl(string controlName) {
 			name = controlName;
 
-			values = new float[Sinput.totalPossibleDeviceSlots];
-			valuePrefersDeltaUse = new bool[Sinput.totalPossibleDeviceSlots];
+			values = new float[Sinput.TotalPossibleDeviceSlots];
+			valuePrefersDeltaUse = new bool[Sinput.TotalPossibleDeviceSlots];
 		}
 
 		// Values for each slot's input
@@ -64,7 +64,7 @@ namespace SinputSystems {
 			for (int slot = 0; slot < values.Length; slot++) {
 
 				bool positivePrefersDelta, negativePrefersDelta;
-				values[slot] = Sinput.AxisCheck(positiveControlRef, out positivePrefersDelta, (InputDeviceSlot) slot) - Sinput.AxisCheck(negativeControlRef, out negativePrefersDelta, (InputDeviceSlot) slot);
+				values[slot] = Sinput.AxisCheck(positiveControlRef, (InputDeviceSlot) slot, out positivePrefersDelta) - Sinput.AxisCheck(negativeControlRef, (InputDeviceSlot) slot, out negativePrefersDelta);
 
 				if (inversion[slot]) values[slot] *= -1f;
 

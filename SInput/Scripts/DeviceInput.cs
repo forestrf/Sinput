@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace SinputSystems {
@@ -41,7 +40,6 @@ namespace SinputSystems {
 		//////////// ~ gamepad specific stuff ~ ////////////
 		public InputDeviceSlot allowedSlot = (InputDeviceSlot) (-1); // Slots that this input is allowed to check
 		public CommonGamepadInputs commonMappingType; //if this is set, this input is a preset/default
-		public CommonXRInputs commonXRMappingType;
 		public int gamepadButtonNumber; // Button number for if this input is controlled by a gamepad button
 
 		public int gamepadAxisNumber; // Axis number for if this input is controlled by a gamepad axis

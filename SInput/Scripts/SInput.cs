@@ -3,22 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 // Don't use `using SinputSystems;` to avoid conflicts
 
-
 public static class Sinput {
 
 	//Fixed number of gamepad things unity can handle, used mostly by GamepadDebug and InputManagerReplacementGenerator.
 	//Sinput can handle as many of these as you want to throw at it buuuuut, unty can only handle so many and Sinput is wrapping unity input for now
 	//You can try bumping up the range of these but you might have trouble
 	//(EG, you can probably get axis of gamepads in slots over 8, but maybe not buttons?)
-	public static int MAXCONNECTEDGAMEPADS { get { return 11; } }
-	public static int MAXAXISPERGAMEPAD { get { return 28; } }
-	public static int MAXBUTTONSPERGAMEPAD { get { return 20; } }
+	public static readonly int MAXCONNECTEDGAMEPADS = 11;
+	public static readonly int MAXAXISPERGAMEPAD = 28;
+	public static readonly int MAXBUTTONSPERGAMEPAD = 20;
 
 
 	/// <summary>
 	/// Total possible device slots that Sinput may detect. (Including keyboard, mouse, virtual, and any slots)
 	/// </summary>
-	public static readonly int totalPossibleDeviceSlots = Enum.GetValues(typeof(SinputSystems.InputDeviceSlot)).Length;
+	public static readonly int TotalPossibleDeviceSlots = Enum.GetValues(typeof(SinputSystems.InputDeviceSlot)).Length;
 
 	//overall mouse sensitivity
 	/// <summary>
@@ -37,49 +36,35 @@ public static class Sinput {
 	/// </summary>
 	public static string controlSchemeName = "ControlScheme";
 
-	//the control scheme, set it with SetControlScheme()
 	private static Dictionary<string, SinputSystems.BaseControl> ControlsDict = new Dictionary<string, SinputSystems.BaseControl>();
 
 	//the control scheme, set it with SetControlScheme()
-	private static SinputSystems.Control[] _controls;
+	public static SinputSystems.Control[] controls { get; private set; }
+	public static SinputSystems.SmartControl[] smartControls { get; private set; }
+
 	/// <summary>
 	/// Returns a copy of the current Sinput control list
-	/// <para>Note: This is not the fastest thing so don't go calling it in a loop every frame, make yourself a local copy.</para>
 	/// </summary>
-	public static SinputSystems.Control[] controls {
-		get {
-			//make a copy of the controls so we're definitely not returning something that will effect _controls
-			SinputSystems.Control[] returnControlList = new SinputSystems.Control[_controls.Length];
-			for (int i = 0; i < _controls.Length; i++) {
-				returnControlList[i] = new SinputSystems.Control(_controls[i].name);
-				for (int k = 0; k < _controls[i].commonMappings.Count; k++) {
-					returnControlList[i].commonMappings.Add(_controls[i].commonMappings[k]);
-				}
-
-				returnControlList[i].inputs = new List<SinputSystems.DeviceInput>();
-				for (int k = 0; k < _controls[i].inputs.Count; k++) {
-					returnControlList[i].inputs.Add(_controls[i].inputs[k]);
-				}
-			}
-
-			return returnControlList;
+	public static SinputSystems.Control[] GetControlsCopy() {
+		//make a copy of the controls so we're definitely not returning something that will effect _controls
+		var returnControlList = new SinputSystems.Control[controls.Length];
+		for (int i = 0; i < controls.Length; i++) {
+			returnControlList[i] = new SinputSystems.Control(controls[i].name);
+			returnControlList[i].commonMappings.AddRange(controls[i].commonMappings);
+			returnControlList[i].inputs.AddRange(controls[i].inputs);
 		}
-		//set { Init(); _controls = value; }
+
+		return returnControlList;
 	}
 
 	/// <summary>
 	/// Fill <paramref name="inputs"/> with the inputs that represent the specified control.
 	/// The inputs are ordered by last input device used to first used (TO DO).
-	/// TO DO: The first element in the array matches the current input in use.
 	/// Useful to get the input's name and prompt sprite.
 	/// </summary>
 	public static void FillInputsForControl(List<SinputSystems.DeviceInput> inputs, string controlName, SinputSystems.InputDeviceSlot playerSlot) {
 		GetControlByName(controlName).FillInputs(inputs, playerSlot);
-		inputs.Sort((a, b) => {
-			int aIndex = GetIndexLastUsedDeviceSlot(a.allowedSlot);
-			int bIndex = GetIndexLastUsedDeviceSlot(b.allowedSlot);
-			return -aIndex.CompareTo(bIndex);
-		});
+		inputs.Sort((a, b) => GetIndexLastUsedDeviceSlot(b.allowedSlot).CompareTo(GetIndexLastUsedDeviceSlot(a.allowedSlot)));
 	}
 
 	private static int GetIndexLastUsedDeviceSlot(SinputSystems.InputDeviceSlot inputSlot) {
@@ -90,8 +75,6 @@ public static class Sinput {
 		}
 		return -1;
 	}
-
-	public static SinputSystems.SmartControl[] smartControls { get; private set; }
 
 	//gamepads list is checked every GetButton/GetAxis call, when it updates all common mapped inputs are reapplied appropriately
 	static int nextGamepadCheck = -99;
@@ -104,9 +87,6 @@ public static class Sinput {
 	/// Number of connected gamepads that Sinput is aware of.
 	/// </summary>
 	public static int connectedGamepads { get { return _gamepads.Length; } }
-
-	//XR stuff
-	private static SinputSystems.XR.SinputXR xr = new SinputSystems.XR.SinputXR();
 
 	//public static ControlScheme controlScheme;
 	private static bool schemeLoaded = false;
@@ -164,9 +144,6 @@ public static class Sinput {
 			for (int k = 0; k < scheme.controls[i].virtualInputs.Count; k++) {
 				newControl.AddVirtualInput(scheme.controls[i].virtualInputs[k]);
 			}
-			for (int k = 0; k < scheme.controls[i].xrInputs.Count; k++) {
-				newControl.AddGamepadInput(scheme.controls[i].xrInputs[k]);
-			}
 
 			loadedControls.Add(newControl);
 			if (ControlsDict.ContainsKey(newControl.name)) {
@@ -174,7 +151,7 @@ public static class Sinput {
 			}
 			ControlsDict.Add(newControl.name, newControl);
 		}
-		_controls = loadedControls.ToArray();
+		controls = loadedControls.ToArray();
 
 		//Generate smartControls from controlScheme asset
 		List<SinputSystems.SmartControl> loadedSmartControls = new List<SinputSystems.SmartControl>();
@@ -185,9 +162,9 @@ public static class Sinput {
 			newControl.negativeControl = scheme.smartControls[i].negativeControl;
 			//newControl.scale = scheme.smartControls[i].scale;
 
-			newControl.inversion = new bool[totalPossibleDeviceSlots];
-			newControl.scales = new float[totalPossibleDeviceSlots];
-			for (int k = 0; k < totalPossibleDeviceSlots; k++) {
+			newControl.inversion = new bool[TotalPossibleDeviceSlots];
+			newControl.scales = new float[TotalPossibleDeviceSlots];
+			for (int k = 0; k < TotalPossibleDeviceSlots; k++) {
 				newControl.inversion[k] = scheme.smartControls[i].invert;
 				newControl.scales[k] = scheme.smartControls[i].scale;
 			}
@@ -204,7 +181,7 @@ public static class Sinput {
 		//now load any saved control scheme with custom rebound inputs
 		if (loadCustomControls && SinputSystems.SinputFileIO.SaveDataExists(controlSchemeName)) {
 			//Debug.Log("Found saved binding!");
-			_controls = SinputSystems.SinputFileIO.LoadControls(_controls, controlSchemeName);
+			controls = SinputSystems.SinputFileIO.LoadControls(controls, controlSchemeName);
 		}
 
 		//make sure controls have any gamepad-relevant stuff set correctly
@@ -216,9 +193,9 @@ public static class Sinput {
 
 	[RuntimeInitializeOnLoadMethod]
 	private static void Initialize() {
+		Debug.Log("Sinput Initialize");
 		// Create a gameobject that will call SinputUpdate every frame before any other script (-32000 script execution order)
 		var goUpdater = new GameObject("Sinput updater");
-		goUpdater.hideFlags = HideFlags.HideAndDontSave;
 		goUpdater.AddComponent<SinputSystems.SInputUpdater>();
 
 		SinputUpdate();
@@ -240,13 +217,10 @@ public static class Sinput {
 			//check if connected gamepads have changed
 			CheckGamepads();
 
-			//update XR stuff
-			xr.Update();
-
 			//update controls
-			if (null != _controls) {
-				for (int i = 0; i < _controls.Length; i++) {
-					_controls[i].Update();//resetAxisButtonStates);
+			if (null != controls) {
+				for (int i = 0; i < controls.Length; i++) {
+					controls[i].Update();//resetAxisButtonStates);
 				}
 			}
 
@@ -311,24 +285,21 @@ public static class Sinput {
 			//refresh control information relating to gamepads
 			if (schemeLoaded) RefreshGamepadControls();
 
-			//xr stuff too
-			xr.UpdateJoystickIndeces();
-
 			refreshGamepadsNow = false;
 		}
 	}
 
 	private static void RefreshGamepadControls() {
 		//if (null != _controls) {
-		for (int i = 0; i < _controls.Length; i++) {
+		for (int i = 0; i < controls.Length; i++) {
 			//reapply common bindings
-			_controls[i].ReapplyCommonBindings();
+			controls[i].ReapplyCommonBindings();
 
 			//reset axis button states
 			//_controls[i].ResetAxisButtonStates();
 
 			//make sure inputs are linked to correct gamepad slots
-			_controls[i].SetAllowedInputSlots();
+			controls[i].SetAllowedInputSlots();
 		}
 		//}
 		//if (null != smartControls) {
@@ -459,13 +430,15 @@ public static class Sinput {
 	/// <summary>
 	/// Returns the raw value of a Sinput Control or Smart Control.
 	/// </summary>
-	public static float GetAxisRaw(string controlName, SinputSystems.InputDeviceSlot slot) { return AxisCheck(GetControlByName(controlName), out var _, slot); }
+	public static float GetAxisRaw(string controlName, SinputSystems.InputDeviceSlot slot) { return GetAxisRaw(controlName, slot, out var _); }
 
-	internal static float AxisCheck(SinputSystems.BaseControl control, SinputSystems.InputDeviceSlot slot) {
-		bool _;
-		return AxisCheck(control, out _, slot);
-	}
-	internal static float AxisCheck(SinputSystems.BaseControl control, out bool prefersDeltaUse, SinputSystems.InputDeviceSlot slot) {
+	/// <summary>
+	/// Returns the raw value of a Sinput Control or Smart Control.
+	/// </summary>
+	/// <param name="prefersDeltaUse">If true, the value is a delta. If false, the value is an offset from a center, like a joystick, and must be multiplied by Time.deltaTime</param>
+	public static float GetAxisRaw(string controlName, SinputSystems.InputDeviceSlot slot, out bool prefersDeltaUse) { return AxisCheck(GetControlByName(controlName), slot, out prefersDeltaUse); }
+
+	internal static float AxisCheck(SinputSystems.BaseControl control, SinputSystems.InputDeviceSlot slot, out bool prefersDeltaUse) {
 		prefersDeltaUse = true; // Defaults to true, but doesn't matter because when default, the value returned is 0
 
 		if (null == control) return 0f;
@@ -477,12 +450,17 @@ public static class Sinput {
 	/// <summary>
 	/// Returns a Vector2 made with GetAxis() values applied to x and y
 	/// </summary>
-	public static Vector2 GetVector(string controlNameA, string controlNameB, SinputSystems.InputDeviceSlot slot, bool normalClip = true) { return Vector2Check(GetControlByName(controlNameA), GetControlByName(controlNameB), slot, normalClip); }
+	public static Vector2 GetVector(string controlNameA, string controlNameB, SinputSystems.InputDeviceSlot slot, bool normalClip = true) { return Vector2Check(GetControlByName(controlNameA), GetControlByName(controlNameB), slot, out var _, normalClip); }
+	/// <summary>
+	/// Returns a Vector2 made with GetAxis() values applied to x and y
+	/// </summary>
+	/// <param name="prefersDeltaUse">If true, the value is a delta. If false, the value is an offset from a center, like a joystick, and must be multiplied by Time.deltaTime</param>
+	public static Vector2 GetVector(string controlNameA, string controlNameB, SinputSystems.InputDeviceSlot slot, out bool prefersDeltaUse, bool normalClip = true) { return Vector2Check(GetControlByName(controlNameA), GetControlByName(controlNameB), slot, out prefersDeltaUse, normalClip); }
 
-	static Vector2 Vector2Check(SinputSystems.BaseControl controlA, SinputSystems.BaseControl controlB, SinputSystems.InputDeviceSlot slot, bool normalClip) {
+	static Vector2 Vector2Check(SinputSystems.BaseControl controlA, SinputSystems.BaseControl controlB, SinputSystems.InputDeviceSlot slot, out bool prefersDeltaUse, bool normalClip) {
 		Vector2 returnVec2;
-		returnVec2.x = AxisCheck(controlA, slot);
-		returnVec2.y = AxisCheck(controlB, slot);
+		returnVec2.x = AxisCheck(controlA, slot, out prefersDeltaUse);
+		returnVec2.y = AxisCheck(controlB, slot, out prefersDeltaUse);
 
 		if (normalClip) {
 			var magnitude = returnVec2.magnitude;
@@ -497,13 +475,18 @@ public static class Sinput {
 	/// <summary>
 	/// Returns a Vector3 made with GetAxis() values applied to x, y, and z
 	/// </summary>
-	public static Vector3 GetVector(string controlNameA, string controlNameB, string controlNameC, SinputSystems.InputDeviceSlot slot, bool normalClip = true) { return Vector3Check(GetControlByName(controlNameA), GetControlByName(controlNameB), GetControlByName(controlNameC), slot, normalClip); }
+	public static Vector3 GetVector(string controlNameA, string controlNameB, string controlNameC, SinputSystems.InputDeviceSlot slot, bool normalClip = true) { return Vector3Check(GetControlByName(controlNameA), GetControlByName(controlNameB), GetControlByName(controlNameC), slot, out var _, normalClip); }
+	/// <summary>
+	/// Returns a Vector3 made with GetAxis() values applied to x, y, and z
+	/// </summary>
+	/// <param name="prefersDeltaUse">If true, the value is a delta. If false, the value is an offset from a center, like a joystick, and must be multiplied by Time.deltaTime</param>
+	public static Vector3 GetVector(string controlNameA, string controlNameB, string controlNameC, SinputSystems.InputDeviceSlot slot, out bool prefersDeltaUse, bool normalClip = true) { return Vector3Check(GetControlByName(controlNameA), GetControlByName(controlNameB), GetControlByName(controlNameC), slot, out prefersDeltaUse, normalClip); }
 
-	static Vector3 Vector3Check(SinputSystems.BaseControl controlA, SinputSystems.BaseControl controlB, SinputSystems.BaseControl controlC, SinputSystems.InputDeviceSlot slot, bool normalClip) {
+	static Vector3 Vector3Check(SinputSystems.BaseControl controlA, SinputSystems.BaseControl controlB, SinputSystems.BaseControl controlC, SinputSystems.InputDeviceSlot slot, out bool prefersDeltaUse, bool normalClip) {
 		Vector3 returnVec3;
-		returnVec3.x = AxisCheck(controlA, slot);
-		returnVec3.y = AxisCheck(controlB, slot);
-		returnVec3.z = AxisCheck(controlC, slot);
+		returnVec3.x = AxisCheck(controlA, slot, out prefersDeltaUse);
+		returnVec3.y = AxisCheck(controlB, slot, out prefersDeltaUse);
+		returnVec3.z = AxisCheck(controlC, slot, out prefersDeltaUse);
 
 		if (normalClip) {
 			var magnitude = returnVec3.magnitude;
@@ -513,25 +496,6 @@ public static class Sinput {
 		}
 
 		return returnVec3;
-	}
-
-	//frame delta preference
-	/// <summary>
-	/// Returns false if the value returned by GetAxis(controlName) on this frame should NOT be multiplied by delta time.
-	/// <para>For example, this will return true for gamepad stick values, false for mouse movement values</para>
-	/// </summary>
-	public static bool PrefersDeltaUse(string controlName, SinputSystems.InputDeviceSlot slot) { return PrefersDeltaUse(GetControlByName(controlName), slot); }
-	/// <summary>
-	/// Returns false if the value returned by GetAxis(controlName) on this frame should NOT be multiplied by delta time.
-	/// <para>For example, this will return true for gamepad stick values, false for mouse movement values</para>
-	/// </summary>
-	public static bool PrefersDeltaUse(SinputSystems.BaseControl control, SinputSystems.InputDeviceSlot slot) {
-		if (null == control) return false;
-
-		bool preferDelta;
-		var value = control.GetAxisState(slot, out preferDelta);
-
-		return preferDelta;
 	}
 
 
@@ -573,7 +537,7 @@ public static class Sinput {
 		if (null == smartControl) return;
 
 		if (slot == SinputSystems.InputDeviceSlot.any) {
-			for (int k = 0; k < totalPossibleDeviceSlots; k++) {
+			for (int k = 0; k < TotalPossibleDeviceSlots; k++) {
 				smartControl.inversion[k] = invert;
 			}
 		}
@@ -607,7 +571,7 @@ public static class Sinput {
 		if (null == smartControl) return;
 
 		if (slot == SinputSystems.InputDeviceSlot.any) {
-			for (int k = 0; k < totalPossibleDeviceSlots; k++) {
+			for (int k = 0; k < TotalPossibleDeviceSlots; k++) {
 				smartControl.scales[k] = scale;
 			}
 		}

@@ -35,10 +35,10 @@ namespace SinputSystems.Rebinding {
 
 		void Init() {
 			Sinput.LoadControlScheme("MainControlScheme", false);
-			controlsDefaults = Sinput.controls;
+			controlsDefaults = Sinput.GetControlsCopy();
 
 			Sinput.LoadControlScheme("MainControlScheme", true);
-			controls = Sinput.controls;
+			controls = Sinput.GetControlsCopy();
 
 			InitSettingsPanels();
 

@@ -15,13 +15,9 @@ namespace SinputSystems {
 		public List<GamepadAxisInput> axis = new List<GamepadAxisInput>();
 
 
-		public bool isXRdevice = false;//use commongamepadinputs or commonvrinputs
-
-
 		[System.Serializable]
 		public struct GamepadButtonInput {
 			public CommonGamepadInputs buttonType;
-			public CommonXRInputs vrButtonType;
 			public int buttonNumber;
 			public string displayName;
 			public Sprite displaySprite;
@@ -30,7 +26,6 @@ namespace SinputSystems {
 		[System.Serializable]
 		public struct GamepadAxisInput {
 			public CommonGamepadInputs buttonType;
-			public CommonXRInputs vrButtonType;
 			public int axisNumber;
 			public bool invert;
 			public bool clamp; // Applied AFTER invert, to keep input result between 0 and 1

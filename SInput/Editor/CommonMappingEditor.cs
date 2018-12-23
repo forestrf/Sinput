@@ -68,11 +68,6 @@ public class CommonMappingEditor : Editor {
 			}
 
 			EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
-			bool wasVR = padMapping.isXRdevice;
-			padMapping.isXRdevice = EditorGUILayout.Toggle("Is VR device", padMapping.isXRdevice);
-			if (padMapping.isXRdevice != wasVR) {
-				//Debug.LogError("NEED TO CHANGE ANY EXISTING STUFF! TO MATCH!");
-			}
 		}
 
 		if (currentPanel == 1) {
@@ -86,12 +81,7 @@ public class CommonMappingEditor : Editor {
 			for (int i = 0; i < padMapping.buttons.Count; i++) {
 				EditorGUILayout.BeginHorizontal();
 				var activeButton = padMapping.buttons[i];
-				if (!padMapping.isXRdevice) {
-					activeButton.buttonType = (CommonGamepadInputs) EditorGUILayout.EnumPopup(padMapping.buttons[i].buttonType);
-				}
-				else {
-					activeButton.vrButtonType = (CommonXRInputs) EditorGUILayout.EnumPopup(padMapping.buttons[i].vrButtonType);
-				}
+				activeButton.buttonType = (CommonGamepadInputs) EditorGUILayout.EnumPopup(padMapping.buttons[i].buttonType);
 				activeButton.buttonNumber = EditorGUILayout.IntField(padMapping.buttons[i].buttonNumber);
 				activeButton.displayName = SinputFileIO.SanitiseStringForSaving(EditorGUILayout.TextField(activeButton.displayName));
 				activeButton.displaySprite = (Sprite) EditorGUILayout.ObjectField(GUIContent.none, activeButton.displaySprite, typeof(Sprite), false);
@@ -106,7 +96,6 @@ public class CommonMappingEditor : Editor {
 				//add button mapping name here
 				CommonMapping.GamepadButtonInput newButtonInput = new CommonMapping.GamepadButtonInput();
 				newButtonInput.buttonType = CommonGamepadInputs.NOBUTTON;
-				newButtonInput.vrButtonType = CommonXRInputs.NOBUTTON;
 				newButtonInput.displayName = "[?]";
 				newButtonInput.buttonNumber = 0;
 				padMapping.buttons.Add(newButtonInput);
@@ -124,22 +113,12 @@ public class CommonMappingEditor : Editor {
 			CommonMapping.GamepadAxisInput activeAxis = new CommonMapping.GamepadAxisInput();
 			bool delete = false;
 			for (int i = 0; i < padMapping.axis.Count; i++) {
-				if (!padMapping.isXRdevice) {
-					axisEditFoldouts[i] = EditorGUILayout.Foldout(axisEditFoldouts[i], padMapping.axis[i].buttonType.ToString(), true);
-				}
-				else {
-					axisEditFoldouts[i] = EditorGUILayout.Foldout(axisEditFoldouts[i], padMapping.axis[i].vrButtonType.ToString(), true);
-				}
+				axisEditFoldouts[i] = EditorGUILayout.Foldout(axisEditFoldouts[i], padMapping.axis[i].buttonType.ToString(), true);
 				if (axisEditFoldouts[i]) {
 					delete = false;
 					activeAxis = padMapping.axis[i];
 					EditorGUILayout.BeginHorizontal();
-					if (!padMapping.isXRdevice) {
-						activeAxis.buttonType = (CommonGamepadInputs) EditorGUILayout.EnumPopup(activeAxis.buttonType);
-					}
-					else {
-						activeAxis.vrButtonType = (CommonXRInputs) EditorGUILayout.EnumPopup(activeAxis.vrButtonType);
-					}
+					activeAxis.buttonType = (CommonGamepadInputs) EditorGUILayout.EnumPopup(activeAxis.buttonType);
 					if (GUILayout.Button("x")) delete = true;
 					EditorGUILayout.EndHorizontal();
 
@@ -197,7 +176,6 @@ public class CommonMappingEditor : Editor {
 				//add axis mapping name here
 				CommonMapping.GamepadAxisInput newAxisInput = new CommonMapping.GamepadAxisInput();
 				newAxisInput.buttonType = CommonGamepadInputs.NOBUTTON;
-				newAxisInput.vrButtonType = CommonXRInputs.NOBUTTON;
 
 				newAxisInput.axisNumber = 1;
 				newAxisInput.invert = false;

@@ -22,9 +22,6 @@ public class ControlSchemeEditor : Editor {
 
 	string activeControlName = "";
 
-	private bool showXR = false;
-	private bool showVirtuals = false;
-
 	private Texture2D MakeTex(int width, int height, Color col) {
 		Color[] pix = new Color[width * height];
 		for (int i = 0; i < pix.Length; ++i) {
@@ -53,33 +50,10 @@ public class ControlSchemeEditor : Editor {
 		currentPanel = GUILayout.Toolbar(currentPanel, strs);
 		EditorGUILayout.Space();
 
-		if (currentPanel == 0) {
-			GUILayout.BeginHorizontal();
-			showVirtuals = EditorGUILayout.Toggle("Virtual Inputs", showVirtuals);
-			bool wasShowingXR = showXR;
-			showXR = EditorGUILayout.Toggle("XR Inputs", showXR);
-			if (wasShowingXR != showXR && showXR) {
-				//toggled XR. lets check if this control scheme has xr lists
-				//older versions of sinput didn't have xr so this saves those older control schemes
-				for (int i = 0; i < controlScheme.controls.Count; i++) {
-
-					if (controlScheme.controls[i].xrInputs == null) {
-						ControlScheme.ControlSetup controlSetup = controlScheme.controls[i];
-						controlSetup.xrInputs = new List<CommonXRInputs>();
-						controlScheme.controls[i] = controlSetup;
-					}
-
-				}
-			}
-			GUILayout.EndHorizontal();
-		}
-
 		EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
 
 		if (currentPanel == 0) {
 			//show controls list
-
-
 
 			if (controlFoldoutAnims.Count != controlScheme.controls.Count) {
 				//controlFoldouts = new List<bool>();
@@ -244,73 +218,37 @@ public class ControlSchemeEditor : Editor {
 					EditorGUILayout.Space();
 
 					//virtual inputs
-					if (showVirtuals) {
+					EditorGUILayout.BeginHorizontal();
+					EditorGUILayout.BeginVertical();
+					//column a
+					EditorGUILayout.LabelField("Virtual Inputs:");
+
+					EditorGUILayout.EndVertical();
+					EditorGUILayout.BeginVertical();
+					//column b
+					for (int k = 0; k < activeControl.virtualInputs.Count; k++) {
 						EditorGUILayout.BeginHorizontal();
-						EditorGUILayout.BeginVertical();
-						//column a
-						EditorGUILayout.LabelField("Virtual Inputs:");
 
-						EditorGUILayout.EndVertical();
-						EditorGUILayout.BeginVertical();
-						//column b
-						for (int k = 0; k < activeControl.virtualInputs.Count; k++) {
-							EditorGUILayout.BeginHorizontal();
-							activeControl.virtualInputs[k] = EditorGUILayout.TextField(activeControl.virtualInputs[k]);
-							activeControl.virtualInputs[k] = SinputSystems.SinputFileIO.SanitiseStringForSaving(activeControl.virtualInputs[k]);
-							if (GUILayout.Button("x", EditorStyles.miniButton)) {
-								activeControl.virtualInputs.RemoveAt(k);
-								k--;
-							}
-							EditorGUILayout.EndHorizontal();
+						activeControl.virtualInputs[k] = SinputFileIO.SanitiseStringForSaving(EditorGUILayout.TextField(activeControl.virtualInputs[k]));
+						if (GUILayout.Button("x", EditorStyles.miniButton)) {
+							activeControl.virtualInputs.RemoveAt(k);
+							k--;
 						}
-
-						EditorGUILayout.BeginHorizontal();
-						if (GUILayout.Button("+", GUILayout.Width(40))) {
-							activeControl.virtualInputs.Add("");
-						}
-						GUILayout.FlexibleSpace();
 						EditorGUILayout.EndHorizontal();
-
-						EditorGUILayout.EndVertical();
-						EditorGUILayout.EndHorizontal();
-
-						EditorGUILayout.Space();
 					}
 
-					//XR inputs
-					if (showXR) {
-						EditorGUILayout.BeginHorizontal();
-						EditorGUILayout.BeginVertical();
-						//column a
-						EditorGUILayout.LabelField("XR Inputs:");
-
-						EditorGUILayout.EndVertical();
-						EditorGUILayout.BeginVertical();
-						//column b
-						for (int k = 0; k < activeControl.xrInputs.Count; k++) {
-							EditorGUILayout.BeginHorizontal();
-							activeControl.xrInputs[k] = (CommonXRInputs) EditorGUILayout.EnumPopup(activeControl.xrInputs[k]);
-							if (GUILayout.Button("x", EditorStyles.miniButton)) {
-								activeControl.xrInputs.RemoveAt(k);
-								k--;
-							}
-							EditorGUILayout.EndHorizontal();
-						}
-
-						EditorGUILayout.BeginHorizontal();
-						if (GUILayout.Button("+", GUILayout.Width(40))) {
-							activeControl.xrInputs.Add(CommonXRInputs.NOBUTTON);
-						}
-						GUILayout.FlexibleSpace();
-						EditorGUILayout.EndHorizontal();
-
-						EditorGUILayout.EndVertical();
-						EditorGUILayout.EndHorizontal();
-
-						controlScheme.controls[i] = activeControl;
-
-						EditorGUILayout.Space();
+					EditorGUILayout.BeginHorizontal();
+					if (GUILayout.Button("+", GUILayout.Width(40))) {
+						activeControl.virtualInputs.Add("");
 					}
+					GUILayout.FlexibleSpace();
+					EditorGUILayout.EndHorizontal();
+
+					EditorGUILayout.EndVertical();
+					EditorGUILayout.EndHorizontal();
+
+					EditorGUILayout.Space();
+					
 					//EditorGUILayout.Space();
 					//EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
 
@@ -350,7 +288,6 @@ public class ControlSchemeEditor : Editor {
 				newControl.name = "New Control";
 				newControl.keyboardInputs = new List<KeyboardInputType>();
 				newControl.gamepadInputs = new List<CommonGamepadInputs>();
-				newControl.xrInputs = new List<CommonXRInputs>();
 				newControl.mouseInputs = new List<MouseInputType>();
 				newControl.virtualInputs = new List<string>();
 				controlScheme.controls.Add(newControl);
