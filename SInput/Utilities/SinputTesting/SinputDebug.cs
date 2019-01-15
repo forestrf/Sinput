@@ -4,18 +4,40 @@ using UnityEngine;
 namespace SinputSystems.Examples {
 	public class SinputDebug : MonoBehaviour {
 		public ControlScheme controlScheme;
+		public GUISkin skin;
 
 		private void Awake() {
 			Sinput.LoadControlScheme(controlScheme, true);
 		}
 
 		private void OnGUI() {
+			if (skin) GUI.skin = skin;
+
 			var gamepads = Sinput.gamepads;
 			GUILayout.Label("Gamepad count: " + gamepads.Length);
 			if (Sinput.currentControlScheme != null) {
 				GUILayout.Label("Current control scheme name: " + Sinput.currentControlScheme.name);
 
 				GUILayout.BeginHorizontal();
+
+				GUILayout.BeginVertical("box");
+				GUILayout.Label("Any input");
+				GUILayout.Label("Keyboard, Mouse and Gamepads");
+				GUILayout.Label("NO Gamepad layout");
+				
+				GUILayout.BeginVertical("box");
+				GUILayout.Label("Mapped readings");
+				foreach (var control in Sinput.controls) {
+					Label(control.name, control.GetAxisState(InputDeviceSlot.any, out var _));
+				}
+				foreach (var smartControl in Sinput.smartControls) {
+					Label(smartControl.name, smartControl.GetAxisState(InputDeviceSlot.any, out var _));
+				}
+				GUILayout.EndVertical();
+
+				GUILayout.EndVertical();
+
+
 				for (int i = 0; i < gamepads.Length; i++) {
 					GUILayout.BeginVertical("box");
 					GUILayout.Label("Gamepad index: " + i);

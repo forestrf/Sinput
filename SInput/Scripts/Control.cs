@@ -48,40 +48,46 @@ namespace SinputSystems {
 			float controlStateValueAbs = 0f;
 			controlState.valuePrefersDeltaUse = true;
 
-			foreach (var input in inputs) {
-				var v = input.AxisCheck(slot);
-				var vAbs = Math.Abs(v);
+			// When the Application is not focused, all inputs are zeroed.
+			// Gamepads mappings sometimes have released states different than 0.
+			// Because of this, if the Application is not focused we skip the actual input reading using any gamepad layout and use 0.
 
-				//update axis-as-button and button state (When checking axis we also check for button state)
-				switch (input.inputType) {
-					case InputDeviceType.GamepadAxis:
-						controlState.held |= v > input.axisButtoncompareVal;
-						break;
-					case InputDeviceType.Mouse:
-						controlState.held |= vAbs > 0.5f;
-						break;
-					case InputDeviceType.Keyboard:
-					case InputDeviceType.GamepadButton:
-						controlState.held |= v == 1;
-						break;
-					case InputDeviceType.Virtual:
-						// Meh. Would be better to unify GetVirtualButton and GetVirtualAxis
-						controlState.held |= VirtualInputs.GetVirtualButton(input.virtualInputID);
-						break;
-					case InputDeviceType.XR:
-						// TO DO
-						break;
-				}
+			if (Application.isFocused) {
+				foreach (var input in inputs) {
+					var v = input.AxisCheck(slot);
+					var vAbs = Math.Abs(v);
 
-				if (vAbs > controlStateValueAbs) {
-					//this is the value we're going with
-					controlState.value = v;
-					controlStateValueAbs = vAbs;
-					//now find out if what set this value was something we shouldn't multiply by deltaTime
-					controlState.valuePrefersDeltaUse =
-						input.inputType != InputDeviceType.Mouse ||
-						input.mouseInputType < MouseInputType.MouseMoveLeft ||
-						input.mouseInputType > MouseInputType.MouseScroll;
+					//update axis-as-button and button state (When checking axis we also check for button state)
+					switch (input.inputType) {
+						case InputDeviceType.GamepadAxis:
+							controlState.held |= v > input.axisButtoncompareVal;
+							break;
+						case InputDeviceType.Mouse:
+							controlState.held |= vAbs > 0.5f;
+							break;
+						case InputDeviceType.Keyboard:
+						case InputDeviceType.GamepadButton:
+							controlState.held |= v == 1;
+							break;
+						case InputDeviceType.Virtual:
+							// Meh. Would be better to unify GetVirtualButton and GetVirtualAxis
+							controlState.held |= VirtualInputs.GetVirtualButton(input.virtualInputID);
+							break;
+						case InputDeviceType.XR:
+							// TO DO
+							break;
+					}
+
+					if (vAbs > controlStateValueAbs) {
+						//this is the value we're going with
+						controlState.value = v;
+						controlStateValueAbs = vAbs;
+						//now find out if what set this value was something we shouldn't multiply by deltaTime
+						controlState.valuePrefersDeltaUse =
+							input.inputType != InputDeviceType.Mouse ||
+							input.mouseInputType < MouseInputType.MouseMoveLeft ||
+							input.mouseInputType > MouseInputType.MouseScroll;
+					}
 				}
 			}
 

@@ -123,7 +123,7 @@ GameObject:
   - component: {fileID: 1146263049}
   - component: {fileID: 1146263048}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: Debug gui
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -142,6 +142,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controlScheme: {fileID: 11400000, guid: 12ff55a2a381a4e25a2124e03c09204b, type: 2}
+  skin: {fileID: 11400000, guid: 3733a3cba4724ce45b423041575ae13c, type: 2}
 --- !u!4 &1146263049
 Transform:
   m_ObjectHideFlags: 0
