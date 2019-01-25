@@ -65,7 +65,7 @@ MonoBehaviour:
     axisNumber: 0
     invert: 1
     clamp: 1
-    deadZone: 0.1
+    deadZone: 0.2
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -78,7 +78,7 @@ MonoBehaviour:
     axisNumber: 0
     invert: 0
     clamp: 1
-    deadZone: 0.1
+    deadZone: 0.2
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -91,7 +91,7 @@ MonoBehaviour:
     axisNumber: 1
     invert: 1
     clamp: 1
-    deadZone: 0.1
+    deadZone: 0.2
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -104,7 +104,7 @@ MonoBehaviour:
     axisNumber: 1
     invert: 0
     clamp: 1
-    deadZone: 0.1
+    deadZone: 0.2
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -117,7 +117,7 @@ MonoBehaviour:
     axisNumber: 3
     invert: 1
     clamp: 1
-    deadZone: 0.1
+    deadZone: 0.2
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -130,7 +130,7 @@ MonoBehaviour:
     axisNumber: 3
     invert: 0
     clamp: 1
-    deadZone: 0.1
+    deadZone: 0.2
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -143,7 +143,7 @@ MonoBehaviour:
     axisNumber: 4
     invert: 1
     clamp: 1
-    deadZone: 0.1
+    deadZone: 0.2
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
@@ -156,7 +156,7 @@ MonoBehaviour:
     axisNumber: 4
     invert: 0
     clamp: 1
-    deadZone: 0
+    deadZone: 0.2
     compareGreater: 1
     compareVal: 0.4
     rescaleAxis: 0
