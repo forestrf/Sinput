@@ -27,8 +27,8 @@ namespace SinputSystems {
 			inputType = type;
 
 			if (type == InputDeviceType.Keyboard) allowedSlot = InputDeviceSlot.keyboardAndMouse;
-			if (type == InputDeviceType.Mouse) allowedSlot = InputDeviceSlot.keyboardAndMouse;
-			if (type == InputDeviceType.Virtual) allowedSlot = InputDeviceSlot.virtual1;
+			else if (type == InputDeviceType.Mouse) allowedSlot = InputDeviceSlot.keyboardAndMouse;
+			else if (type == InputDeviceType.Virtual) allowedSlot = InputDeviceSlot.virtual1;
 		}
 
 		//////////// ~ keyboard specific stuff ~ ////////////
