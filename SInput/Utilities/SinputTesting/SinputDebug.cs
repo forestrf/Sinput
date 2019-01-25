@@ -24,7 +24,7 @@ namespace SinputSystems.Examples {
 				GUILayout.Label("Any input");
 				GUILayout.Label("Keyboard, Mouse and Gamepads");
 				GUILayout.Label("NO Gamepad layout");
-				
+
 				GUILayout.BeginVertical("box");
 				GUILayout.Label("Mapped readings");
 				foreach (var control in Sinput.controls) {

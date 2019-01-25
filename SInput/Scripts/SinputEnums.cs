@@ -540,7 +540,7 @@ namespace SinputSystems {
 		/// <param name="axis">0-index based (starts from 0)</param>
 		public static string GetGamepadAxisString(int gamepad, int axis) {
 			if (gamepad < 0 || gamepad >= Sinput.MAX_CONNECTED_GAMEPADS) { Debug.LogError("Invalid gamepad: " + gamepad); return ""; }
-			if (axis < 0 || axis >= Sinput.MAX_AXIS_PER_GAMEPAD) {Debug.LogError("Invalid axis: " + axis); return ""; }
+			if (axis < 0 || axis >= Sinput.MAX_AXIS_PER_GAMEPAD) { Debug.LogError("Invalid axis: " + axis); return ""; }
 			return GamepadAxisStrings[gamepad * Sinput.MAX_AXIS_PER_GAMEPAD + axis];
 		}
 	}
