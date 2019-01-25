@@ -102,7 +102,6 @@ namespace SinputSystems {
 				int slotIndex = ((int) slot) - 1;
 
 
-
 				// Don't check slots without a connected gamepad
 				if (Sinput.connectedGamepads <= slotIndex) return 0;
 
