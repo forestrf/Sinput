@@ -77,6 +77,26 @@ namespace SinputSystems.Examples {
 
 					GUILayout.EndVertical();
 				}
+
+				for (int i = (int) InputDeviceSlot.gamepad16 + 1; i < Sinput.TotalPossibleDeviceSlots; i++) {
+					GUILayout.BeginVertical("box");
+					GUILayout.Label("slot index: " + i);
+					GUILayout.Label("Gamepad name: " + ((InputDeviceSlot) i).ToString());
+					GUILayout.Label("NO Gamepad layout");
+					
+					GUILayout.BeginVertical("box");
+					GUILayout.Label("Mapped readings");
+					foreach (var control in Sinput.controls) {
+						Label(control.name, control.GetAxisState((InputDeviceSlot) i, out var _));
+					}
+					foreach (var smartControl in Sinput.smartControls) {
+						Label(smartControl.name, smartControl.GetAxisState((InputDeviceSlot) i, out var _));
+					}
+					GUILayout.EndVertical();
+
+					GUILayout.EndVertical();
+				}
+
 				GUILayout.EndHorizontal();
 			}
 			else {
