@@ -151,7 +151,7 @@ namespace SinputSystems {
 				controlState.repeatTime = Sinput.buttonRepeatWait + Sinput.buttonRepeat;
 			}
 			if (controlState.held) {
-				controlState.repeatTime -= Time.deltaTime;
+				controlState.repeatTime -= Time.unscaledDeltaTime;
 				if (controlState.repeatTime < 0f) {
 					controlState.repeatTime = Sinput.buttonRepeat;
 					controlState.repeatPressed = true;
