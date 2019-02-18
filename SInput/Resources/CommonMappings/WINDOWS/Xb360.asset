@@ -162,7 +162,7 @@ MonoBehaviour:
     rescaleAxis: 0
     rescaleAxisMin: 0
     rescaleAxisMax: 1
-    defaultVal: 0.1
+    defaultVal: 0
     displayName: R_Down
     displaySprite: {fileID: 0}
   - buttonType: 7

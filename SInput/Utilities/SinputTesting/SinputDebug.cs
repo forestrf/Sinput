@@ -83,7 +83,7 @@ namespace SinputSystems.Examples {
 					GUILayout.Label("slot index: " + i);
 					GUILayout.Label("Gamepad name: " + ((InputDeviceSlot) i).ToString());
 					GUILayout.Label("NO Gamepad layout");
-					
+
 					GUILayout.BeginVertical("box");
 					GUILayout.Label("Mapped readings");
 					foreach (var control in Sinput.controls) {
